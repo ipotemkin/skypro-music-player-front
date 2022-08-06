@@ -1,0 +1,43 @@
+:root {
+  --placeholder-color: #D0CECE;
+}
+
+.input-field {
+  /* margin-top: 8px; */
+  /* margin-bottom: 30px; */
+  width: 278px;
+  height: 40px;
+
+  border: none;
+  border-bottom: 1px solid #D0CECE;
+  outline: none;
+
+  font-size: 18px;
+  line-height: 24px;
+}
+
+/* Современные браузеры ----------------------------  */
+.input-field::placeholder {color: var(--placeholder-color);}
+
+/* WebKit, Edge ----------------------------  */
+.input-field::-webkit-input-placeholder {color: var(--placeholder-color);}
+   
+/* Edge ----------------------------  */
+.input-field::-ms-input-placeholder {color: var(--placeholder-color);}
+   
+/* Firefox 4-18 ----------------------------  */
+.input-field:-moz-placeholder {color: var(--placeholder-color);opacity: 1;}
+   
+/* Firefox 19+ ----------------------------  */
+.input-field::-moz-placeholder {color: var(--placeholder-color);opacity: 1;}
+   
+/* IE 10-11 ----------------------------  */
+.input-field:-ms-input-placeholder {color: var(--placeholder-color);}
+
+.input-field__error {
+  position: absolute;
+  color: red;
+  font-size: 0.8rem;
+  font-family: sans-serif;
+  font-style: italic;
+}
