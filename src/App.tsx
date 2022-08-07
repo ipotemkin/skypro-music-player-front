@@ -4,14 +4,26 @@
 import './App.css';
 import { LoginForm } from './features/LoginForm/LoginForm';
 import { SideMenu } from './features/SideMenu/SideMenu';
+import { Track, TrackType } from './features/Track/Track';
+import { Tracks } from './pages/Tracks/Tracks';
+
+const sampleTrack: TrackType = {
+  title: 'Guilt',
+  author: 'Nero',
+  album: 'Welcome Reality',
+  time: '4:45'
+}
 
 function App() {
   return (
     <div className="App">
-      <SideMenu />
+      {/* <SideMenu /> */}
+      {/* <Tracks /> */}
+      <Track track={sampleTrack} />
+
       <header className="App-header">
         
-        <LoginForm />
+        {/* <LoginForm /> */}
 
 
         {/* <img src={logo} className="App-logo" alt="logo" />
