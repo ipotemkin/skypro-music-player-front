@@ -5,6 +5,7 @@ import './App.css';
 import { LoginForm } from './features/LoginForm/LoginForm';
 import { SideMenu } from './features/SideMenu/SideMenu';
 import { Track, TrackType } from './features/Track/Track';
+import { TrackList } from './features/TrackList/TrackList';
 import { Tracks } from './pages/Tracks/Tracks';
 
 const sampleTrack: TrackType = {
@@ -14,12 +15,34 @@ const sampleTrack: TrackType = {
   time: '4:45'
 }
 
+const sampleTrack2: TrackType = {
+  title: 'Guilt2',
+  author: 'Nero2',
+  album: 'Welcome Reality2',
+  time: '4:45'
+}
+
+const sampleTrack3: TrackType = {
+  title: 'Guilt3',
+  author: 'Nero3',
+  album: 'Welcome Reality3',
+  time: '3:00'
+}
+
+
+const sampleTrackList: TrackType[] = [
+  sampleTrack,
+  sampleTrack2,
+  sampleTrack3
+]
+
 function App() {
   return (
     <div className="App">
       {/* <SideMenu /> */}
       {/* <Tracks /> */}
-      <Track track={sampleTrack} />
+
+      <TrackList tracks={sampleTrackList} />
 
       <header className="App-header">
         

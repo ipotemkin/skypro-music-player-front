@@ -21,7 +21,7 @@ type TrackProps = {
 
 export const Track: FC<TrackProps> = ({ track }) => {
   return (
-    <div className="playlist__item">
+    // <div className="playlist__item">
       <div className={cnTrack()}>
         <div className={cnTrack('title')}>
           <div className={cnTrack('title-image')}>
@@ -43,7 +43,7 @@ export const Track: FC<TrackProps> = ({ track }) => {
           <img className={cnTrack('time-svg')} alt="time" src={like}/>
           <span className={cnTrack('time-text')}>{track.time}</span>
         </div>
-      </div>
+      {/* </div> */}
     </div>
   )
 }
