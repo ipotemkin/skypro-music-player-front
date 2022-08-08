@@ -4,10 +4,12 @@
 import './App.css';
 import { Filter } from './features/Filter/Filter';
 import { FilterButton } from './features/FilterButton/FilterButton';
+import { Search } from './features/Search/Search';
 // import { LoginForm } from './features/LoginForm/LoginForm';
 // import { SideMenu } from './features/SideMenu/SideMenu';
 import { TrackType } from './features/Track/Track';
-import { TrackList } from './features/TrackList/TrackList';
+// import { TrackList } from './features/TrackList/TrackList';
+import { Tracks } from './pages/Tracks/Tracks';
 // import { Tracks } from './pages/Tracks/Tracks';
 
 const sampleTrack: TrackType = {
@@ -43,11 +45,12 @@ function App() {
     <div className="App">
       {/* <SideMenu /> */}
       {/* <Tracks /> */}
-
-      <TrackList tracks={sampleTrackList} />
+      {/* <TrackList tracks={sampleTrackList} /> */}
 
       <div style={{ backgroundColor: 'black', paddingBottom: 100 }}>
-        <Filter />
+        {/* <Search /> */}
+        <Tracks />
+        {/* <Filter /> */}
         {/* <FilterButton onClick={() => console.log('click')} stickerCount={5}>фильтр по жанру</FilterButton> */}
       </div>
 

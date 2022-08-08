@@ -14,7 +14,7 @@ type TrackListProps = {
 
 export const TrackList: FC<TrackListProps> = ({ tracks }) => {
   return (
-    <div style={{ backgroundColor: 'black' }}>
+    <div style={{ backgroundColor: 'black', width: 700 }}>
       <div className={cnContent('title')}>
         <div className={cnTrackList('title', 'col01')}>ТРЕК</div>
         <div className={cnTrackList('title', 'col02')}>ИСПОЛНИТЕЛЬ</div>
