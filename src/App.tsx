@@ -1,6 +1,7 @@
 // import React from 'react';
 // import logo from './logo.svg';
 // import { Counter } from './features/counter/Counter';
+import { Routes } from './routes';
 import './App.css';
 import { Filter } from './features/Filter/Filter';
 import { FilterButton } from './features/FilterButton/FilterButton';
@@ -44,7 +45,7 @@ function App() {
   return (
     <div className="App">
 
-      <Tracks />
+      <Routes />
 
       {/* <header className="App-header">
       </header> */}

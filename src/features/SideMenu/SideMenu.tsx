@@ -5,6 +5,7 @@ import logo from './assets/logo.png'
 import './SideMenu.css'
 
 import { cnSideMenu } from './SideMenu.classname'
+import { Link } from 'react-router-dom'
 
 type SideMenuProps = {
 
@@ -30,9 +31,9 @@ export const SideMenu: FC<SideMenuProps> = () => {
       </div>
       <div className={cnSideMenu('menu')} style={{ display: menuShown ? 'block' : 'none' } }>
         <ul className={cnSideMenu('menu__list')}>
-          <li className={cnSideMenu('menu__item')}><a href="http://" className={cnSideMenu('menu__link')}>Главное</a></li>
-          <li className={cnSideMenu('menu__item')}><a href="http://" className={cnSideMenu('menu__link')}>Мой плейлист</a></li>
-          <li className={cnSideMenu('menu__item')}><a href="http://" className={cnSideMenu('menu__link')}>Войти</a></li>
+          <li className={cnSideMenu('menu__item')}><Link to="/tracks" className={cnSideMenu('menu__link')}>Главное</Link></li>
+          <li className={cnSideMenu('menu__item')}><Link to="/playlist" className={cnSideMenu('menu__link')}>Мой плейлист</Link></li>
+          <li className={cnSideMenu('menu__item')}><Link to="/login" className={cnSideMenu('menu__link')}>Выйти</Link></li>
         </ul>
       </div>
     </nav>

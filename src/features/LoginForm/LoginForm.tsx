@@ -8,6 +8,7 @@ import { Button } from '../Button/Button'
 
 import './LoginForm.css'
 import { InputField } from '../InputField/InputField'
+import { useNavigate } from 'react-router-dom'
 
 type LoginFormProps = {
 }
@@ -23,6 +24,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
     errorPasswordsDiffer: false,
     enableSubmit: true
   })
+  let navigate = useNavigate()
   
   // const enter = () => console.log('enter')
   
@@ -87,6 +89,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
     if (isFormValid()) {
       // здесь должен быть выход из формы
       console.log({ 'username': form.username, 'password': form.password })
+      navigate('/tracks')
     } 
   }
 
