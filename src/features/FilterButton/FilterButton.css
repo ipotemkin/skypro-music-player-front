@@ -1,0 +1,28 @@
+.filter-button {
+  /* font-style: normal;
+  font-weight: 400; */
+  font-size: 16px;
+  line-height: 24px;
+  border: 1px solid #FFFFFF;
+  border-radius: 60px;
+  padding: 6px 20px;
+
+  box-sizing: border-box;
+
+  background: transparent;
+  color: #FFFFFF;
+}
+
+.filter-button:hover {
+  color: #D9B6FF;
+  border-color: #D9B6FF;
+}
+
+.filter-button:active {
+  color: #AD61FF;
+  border-color: #AD61FF;
+}
+
+.filter-button:not(:last-child) {
+  margin-right: 10px;
+}

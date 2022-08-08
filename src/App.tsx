@@ -2,6 +2,7 @@
 // import logo from './logo.svg';
 // import { Counter } from './features/counter/Counter';
 import './App.css';
+import { FilterButton } from './features/FilterButton/FilterButton';
 // import { LoginForm } from './features/LoginForm/LoginForm';
 // import { SideMenu } from './features/SideMenu/SideMenu';
 import { TrackType } from './features/Track/Track';
@@ -43,6 +44,10 @@ function App() {
       {/* <Tracks /> */}
 
       <TrackList tracks={sampleTrackList} />
+
+      <div style={{ backgroundColor: 'black', paddingBottom: 100 }}>
+        <FilterButton onClick={() => console.log('click')}>фильтр по жанру</FilterButton>
+      </div>
 
       <header className="App-header">
         
