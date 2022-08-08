@@ -1,71 +1,73 @@
 .side-menu {
-    width: 244px;
-    background-color: #181818;
-    padding: 20px 0 20px 36px;
+  width: 244px;
+  /* width: 400px; */
+  
+  background-color: #181818;
+  /* padding: 20px 0 20px 36px; */
+  padding: 20px 20px 20px 20px;
 
-    text-align: left;
-    font-family: sans-serif;
-  }
+  text-align: left;
+  font-family: sans-serif;
+}
 
 .side-menu:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
   
 .side-menu__logo {
-    width: 113.33px;
-    height: 43px;
-    padding: 13px 0 13px 0;
-    background-color: transparent;
-    margin-bottom: 20px;
+  width: 113.33px;
+  height: 43px;
+  padding: 13px 0 13px 0;
+  background-color: transparent;
+  margin-bottom: 20px;
 }
 
 .side-menu__logo__image {
-    width: 113.33px;
-    height: 17px;
-    color: #181818;
+  width: 113.33px;
+  height: 17px;
+  color: #181818;
 }
 
 .side-menu__burger {
-    width: 20px;
-    height: 36px;
-    padding: 13px 0;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-    -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
+  width: 20px;
+  height: 36px;
+  padding: 13px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+      flex-direction: column;
+  -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+      justify-content: space-between;
 }
 
 .side-menu__burger__line {
-    display: inline-block;
-    width: 100%;
-    height: 1px;
-    background-color: #D3D3D3;
+  display: inline-block;
+  width: 100%;
+  height: 1px;
+  background-color: #D3D3D3;
 }
 
 .side-menu__menu {
-    display: block;
-    visibility: visible;
+  display: block;
+  visibility: visible;
 }  
   
 .side-menu__menu__list {
-    padding: 18px 0 10px 0;
+  padding: 18px 0 10px 0;
 }
   
 .side-menu__menu__item {
-    padding: 5px 0;
-    margin-bottom: 16px;
+  padding: 5px 0;
+  margin-bottom: 16px;
 }
   
 .side-menu__menu__link {
-    color: #FFFFFF;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
+  color: #FFFFFF;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
 }
-  

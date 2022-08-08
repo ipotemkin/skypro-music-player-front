@@ -43,66 +43,11 @@ const sampleTrackList: TrackType[] = [
 function App() {
   return (
     <div className="App">
-      {/* <SideMenu /> */}
-      {/* <Tracks /> */}
-      {/* <TrackList tracks={sampleTrackList} /> */}
 
-      <div style={{ backgroundColor: 'black', paddingBottom: 100 }}>
-        {/* <Search /> */}
-        <Tracks />
-        {/* <Filter /> */}
-        {/* <FilterButton onClick={() => console.log('click')} stickerCount={5}>фильтр по жанру</FilterButton> */}
-      </div>
+      <Tracks />
 
-      <header className="App-header">
-        
-        {/* <LoginForm /> */}
-
-
-        {/* <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span> */}
-      </header>
+      {/* <header className="App-header">
+      </header> */}
     </div>
   );
 }

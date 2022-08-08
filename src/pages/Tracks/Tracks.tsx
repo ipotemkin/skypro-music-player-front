@@ -1,57 +1,36 @@
 import { Filter } from '../../features/Filter/Filter'
 import { TrackList } from '../../features/TrackList/TrackList'
-
-// import '../../index.css'
-
 import { TrackType } from '../../features/Track/Track';
-
 import { Search } from '../../features/Search/Search';
 import { SideMenu } from '../../features/SideMenu/SideMenu';
+import { Sidebar } from '../../features/Sidebar/Sidebar';
 
+
+import { cnTracks } from './Tracks.classname';
 import './Tracks.css'
-
-const sampleTrack: TrackType = {
-    title: 'Guilt',
-    author: 'Nero',
-    album: 'Welcome Reality',
-    time: '4:45'
-  }
-  
-  const sampleTrack2: TrackType = {
-    title: 'Guilt2',
-    author: 'Nero2',
-    album: 'Welcome Reality2',
-    time: '4:45'
-  }
-  
-  const sampleTrack3: TrackType = {
-    title: 'Guilt3',
-    author: 'Nero3',
-    album: 'Welcome Reality3',
-    time: '3:00'
-  }
-  
-  
-  const sampleTrackList: TrackType[] = [
-    sampleTrack,
-    sampleTrack2,
-    sampleTrack3
-  ]
+    
+const sampleTrackList: TrackType[] = [
+  {title: 'Guilt', author: 'Nero', album: 'Welcome Reality', time: '4:45'},
+  {title: 'Guilt2', author: 'Nero', album: 'Welcome Reality', time: '4:45'},
+  {title: 'Guilt3', author: 'Nero', album: 'Welcome Reality', time: '4:45'},
+  {title: 'Guilt4', author: 'Nero', album: 'Welcome Reality', time: '4:45'},
+  {title: 'Guilt5', author: 'Nero', album: 'Welcome Reality', time: '4:45'},
+  {title: 'Guilt6', author: 'Nero', album: 'Welcome Reality', time: '4:45'},
+  {title: 'Guilt7', author: 'Nero', album: 'Welcome Reality', time: '4:45'},
+  {title: 'Guilt8', author: 'Nero', album: 'Welcome Reality', time: '4:45'},
+]
   
 export const Tracks = () => {
   return (
-    <div className="canvas">
+    <div className={cnTracks()}>
       <SideMenu />
-      <div className="main__centerblock centerblock" style={{ backgroundColor: 'black' }}>
+      <div className={cnTracks('centerblock')}>
         <Search />
-        <h2 className="centerblock__h2" style={{ textAlign: 'left' }}>Треки</h2>
-        <div className="centerblock__filter filter">
-          <Filter />
-        </div>
-        <div className="centerblock__content">
-          <TrackList tracks={sampleTrackList}/>
-        </div>
+        <h2 className={cnTracks('centerblock__title')}>Треки</h2>
+        <Filter />
+        <TrackList tracks={sampleTrackList} />
       </div>
+      <Sidebar />
     </div>
   ) 
 }
