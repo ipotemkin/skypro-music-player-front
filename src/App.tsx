@@ -2,6 +2,7 @@
 // import logo from './logo.svg';
 // import { Counter } from './features/counter/Counter';
 import './App.css';
+import { Filter } from './features/Filter/Filter';
 import { FilterButton } from './features/FilterButton/FilterButton';
 // import { LoginForm } from './features/LoginForm/LoginForm';
 // import { SideMenu } from './features/SideMenu/SideMenu';
@@ -46,7 +47,8 @@ function App() {
       <TrackList tracks={sampleTrackList} />
 
       <div style={{ backgroundColor: 'black', paddingBottom: 100 }}>
-        <FilterButton onClick={() => console.log('click')} stickerCount={5}>фильтр по жанру</FilterButton>
+        <Filter />
+        {/* <FilterButton onClick={() => console.log('click')} stickerCount={5}>фильтр по жанру</FilterButton> */}
       </div>
 
       <header className="App-header">
