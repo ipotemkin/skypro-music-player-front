@@ -46,7 +46,7 @@ function App() {
       <TrackList tracks={sampleTrackList} />
 
       <div style={{ backgroundColor: 'black', paddingBottom: 100 }}>
-        <FilterButton onClick={() => console.log('click')}>фильтр по жанру</FilterButton>
+        <FilterButton onClick={() => console.log('click')} stickerCount={5}>фильтр по жанру</FilterButton>
       </div>
 
       <header className="App-header">
