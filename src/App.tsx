@@ -2,11 +2,11 @@
 // import logo from './logo.svg';
 // import { Counter } from './features/counter/Counter';
 import './App.css';
-import { LoginForm } from './features/LoginForm/LoginForm';
-import { SideMenu } from './features/SideMenu/SideMenu';
-import { Track, TrackType } from './features/Track/Track';
+// import { LoginForm } from './features/LoginForm/LoginForm';
+// import { SideMenu } from './features/SideMenu/SideMenu';
+import { TrackType } from './features/Track/Track';
 import { TrackList } from './features/TrackList/TrackList';
-import { Tracks } from './pages/Tracks/Tracks';
+// import { Tracks } from './pages/Tracks/Tracks';
 
 const sampleTrack: TrackType = {
   title: 'Guilt',
