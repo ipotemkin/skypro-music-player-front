@@ -14,40 +14,35 @@ type LoginFormProps = {
 }
 
 export const LoginForm: FC<LoginFormProps> = () => {
-  const [form, setForm] = useState({
+  const errorInitialState = {
+    errorUsername: false,
+    errorPassword: false,
+    errorPasswordsDiffer: false,
+  }
+  
+  const initialState = {
     username: '',
     password: '',
     passwordRepeat: '',
     register: false,
-    errorUsername: false,
-    errorPassword: false,
-    errorPasswordsDiffer: false,
-    enableSubmit: true
-  })
+    enableSubmit: true,
+    ...errorInitialState
+  }
+  
+  const [form, setForm] = useState(initialState)
   let navigate = useNavigate()
   
   // const enter = () => console.log('enter')
   
   const registerHandler = () => {
-    if (!form.register) {
-      setForm(prev => ({
-        ...prev,
-        register: true,
-        enableSubmit: false,
-        errorUsername: false,
-        errorPassword: false,
-        errorPasswordsDiffer: false,
-      }))
-    }
+    if (!form.register) setForm({ ...initialState, register: true, enableSubmit: false })
   }
 
   const getInputFieldHandler = (fieldName: string) => (e: React.ChangeEvent<HTMLInputElement>) => 
     setForm(prev => ({
       ...prev,
       [fieldName]: e.target.value,
-      errorUsername: false,
-      errorPassword: false,
-      errorPasswordsDiffer: false,
+      ...errorInitialState
     }))
   
 
@@ -87,6 +82,12 @@ export const LoginForm: FC<LoginFormProps> = () => {
     }
 
     if (isFormValid()) {
+
+      if (form.register) {
+        setForm(initialState)
+        return
+      }
+
       // здесь должен быть выход из формы
       console.log({ 'username': form.username, 'password': form.password })
       navigate('/tracks')
@@ -106,13 +107,6 @@ export const LoginForm: FC<LoginFormProps> = () => {
     if (form.errorPassword) return "Введите пароль"
     return ""
   }
-
-  // const resetErrors = () => setForm(prev => ({
-  //    ...prev,
-  //    errorUsername: false,
-  //    errorPassword: false,
-  //    errorPasswordsDiffer: false
-  // }))
   
   return (
     <form className={cnLoginForm()} onSubmit={onSubmitHandler}>
