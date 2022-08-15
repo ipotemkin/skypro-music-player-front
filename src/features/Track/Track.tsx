@@ -1,5 +1,7 @@
 import { FC } from 'react'
 
+import { ITrack } from '../../models'
+
 import { cnTrack } from './Track.classname'
 
 import './Track.css'
@@ -8,15 +10,15 @@ import './Track.css'
 import note from './assets/note.svg'
 import like from './assets/like.svg'
 
-export type TrackType = {
-  title: string
-  author: string
-  album: string
-  time: string
-}
+// export type TrackType = {
+//   title: string
+//   author: string
+//   album: string
+//   time: string
+// }
 
 type TrackProps = {
-  track: TrackType
+  track: ITrack
 }
 
 export const Track: FC<TrackProps> = ({ track }) => {
@@ -28,7 +30,7 @@ export const Track: FC<TrackProps> = ({ track }) => {
             <img src={note} className={cnTrack('title-svg')} alt="" />
           </div>
           <div className={cnTrack('title-text')}>
-            <a className="track__title-link" href="http://">{track.title}
+            <a className="track__title-link" href="http://">{track.name}
               <span className={cnTrack('title-span')}></span>
             </a>
           </div>
@@ -41,7 +43,7 @@ export const Track: FC<TrackProps> = ({ track }) => {
         </div>
         <div className={cnTrack('time')}>
           <img className={cnTrack('time-svg')} alt="time" src={like}/>
-          <span className={cnTrack('time-text')}>{track.time}</span>
+          <span className={cnTrack('time-text')}>{track.duration_in_seconds}</span>
         </div>
       {/* </div> */}
     </div>

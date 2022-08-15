@@ -1,6 +1,7 @@
 import { FC } from 'react'
 
-import { Track, TrackType } from '../Track/Track'
+import { Track } from '../Track/Track'
+import { ITrack } from '../../models'
 
 import { cnTrackList } from './TrackList.classname'
 import './TrackList.css'
@@ -8,7 +9,7 @@ import './TrackList.css'
 import iconWatch from './assets/watch.svg'
 
 type TrackListProps = {
-  tracks: TrackType[]
+  tracks: ITrack[]
 }
 
 export const TrackList: FC<TrackListProps> = ({ tracks }) => {
@@ -23,7 +24,7 @@ export const TrackList: FC<TrackListProps> = ({ tracks }) => {
         </div>
       </div>
       <div className={cnTrackList('playlist')}>
-        {tracks.map(track => <Track track={track} key={track.title}/>)}
+        {tracks.map(track => <Track track={track} key={track.id}/>)}
       </div>                        
     </div>
   ) 
