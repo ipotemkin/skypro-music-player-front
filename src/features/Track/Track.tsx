@@ -1,6 +1,7 @@
 import { FC } from 'react'
 
 import { ITrack } from '../../models'
+import { SecondsToMinSec } from '../../utils'
 
 import { cnTrack } from './Track.classname'
 
@@ -43,7 +44,8 @@ export const Track: FC<TrackProps> = ({ track }) => {
         </div>
         <div className={cnTrack('time')}>
           <img className={cnTrack('time-svg')} alt="time" src={like}/>
-          <span className={cnTrack('time-text')}>{track.duration_in_seconds}</span>
+          <span className={cnTrack('time-text')}>{SecondsToMinSec(+track.duration_in_seconds)}</span>
+          {/* <span className={cnTrack('time-text')}>{track.duration_in_seconds}</span> */}
         </div>
       {/* </div> */}
     </div>
