@@ -22,7 +22,7 @@
   border-color: #D9B6FF;
 }
 
-.filter-button:active {
+.filter-button:active, .filter-button_type_active {
   color: #AD61FF;
   border-color: #AD61FF;
 }

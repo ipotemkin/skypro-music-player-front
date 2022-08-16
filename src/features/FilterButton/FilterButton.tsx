@@ -7,12 +7,15 @@ type FilterButtonProps = {
   children: ReactNode,
   stickerCount?: number | undefined
   onClick?: (e: React.MouseEvent) => void
+  state?: 'primary' | 'active'
 }
 
-export const FilterButton: FC<FilterButtonProps> = ({ children, stickerCount=undefined, onClick }) => {
+export const FilterButton: FC<FilterButtonProps> = ({
+  children, stickerCount=undefined, onClick, state='primary'
+}) => {
   return (
     <button
-      className={cnFilterButton()}
+      className={cnFilterButton({ type: state })}
       onClick={onClick}
     >
       {children}
