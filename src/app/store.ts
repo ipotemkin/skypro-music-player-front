@@ -1,10 +1,13 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import { configureStore, ThunkAction, Action, getDefaultMiddleware } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/counterSlice';
+import { musicPlayerApi } from './MusicPlayer/music-player.api';
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+      counter: counterReducer,
+      [musicPlayerApi.reducerPath]: musicPlayerApi.reducer
   },
+  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(musicPlayerApi.middleware)
 });
 
 export type AppDispatch = typeof store.dispatch;
