@@ -8,8 +8,7 @@ import { useGetTracksQuery } from '../../app/MusicPlayer/music-player.api';
 export const useFilteredTracks = (query: string = '') => {
   const { isLoading, isError, data, error } = useGetTracksQuery(1);
 
-  const initialData: ITrack[] = [];
-  const [filteredData, setFilteredData] = useState(initialData);
+  const [filteredData, setFilteredData] = useState<ITrack[]>([]);
   
   useEffect(() => { if (data) filterData(data, query) }, [data, query]);
       

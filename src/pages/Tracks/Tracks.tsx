@@ -2,13 +2,10 @@ import { useState } from 'react';
 
 import { Filter, FilterStates } from '../../features/Filter/Filter'
 import { TrackList } from '../../features/TrackList/TrackList'
-// import { TrackType } from '../../features/Track/Track';
 import { Search } from '../../features/Search/Search';
 import { SideMenu } from '../../features/SideMenu/SideMenu';
 import { Sidebar } from '../../features/Sidebar/Sidebar';
-import { dataTracks } from '../../data';
 import { ITrack } from '../../models';
-
 
 import { cnTracks } from './Tracks.classname';
 import './Tracks.css'
@@ -16,17 +13,6 @@ import { useGetTracksQuery } from '../../app/MusicPlayer/music-player.api';
 import { useEffect } from 'react';
 import { useFilteredTracks } from './hooks';
     
-// const sampleTrackList: TrackType[] = [
-//   {title: 'Guilt', author: 'Nero', album: 'Welcome Reality', time: '4:45'},
-//   {title: 'Guilt2', author: 'Nero', album: 'Welcome Reality', time: '4:45'},
-//   {title: 'Guilt3', author: 'Nero', album: 'Welcome Reality', time: '4:45'},
-//   {title: 'Guilt4', author: 'Nero', album: 'Welcome Reality', time: '4:45'},
-//   {title: 'Guilt5', author: 'Nero', album: 'Welcome Reality', time: '4:45'},
-//   {title: 'Guilt6', author: 'Nero', album: 'Welcome Reality', time: '4:45'},
-//   {title: 'Guilt7', author: 'Nero', album: 'Welcome Reality', time: '4:45'},
-//   {title: 'Guilt8', author: 'Nero', album: 'Welcome Reality', time: '4:45'},
-// ]
-
 type FilterStatesNames = 'name' | 'release_date' | 'genre'
 
 const filterList: {
@@ -38,7 +24,6 @@ const filterList: {
   2: 'release_date',
   3: 'genre'
 }
-
   
 export const Tracks = () => {
   const [searchString, setSearchString] = useState('')
