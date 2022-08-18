@@ -1,31 +1,37 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 
 import { Filter, FilterStates } from '../../features/Filter/Filter'
 import { TrackList } from '../../features/TrackList/TrackList'
 import { Search } from '../../features/Search/Search';
 import { SideMenu } from '../../features/SideMenu/SideMenu';
 import { Sidebar } from '../../features/Sidebar/Sidebar';
-import { ITrack } from '../../models';
+// import { ITrack } from '../../models';
 
 import { cnTracks } from './Tracks.classname';
 import './Tracks.css'
-import { useGetTracksQuery } from '../../app/MusicPlayer/music-player.api';
-import { useEffect } from 'react';
+// import { useGetTracksQuery } from '../../app/MusicPlayer/music-player.api';
+// import { useEffect } from 'react';
 import { useFilteredTracks } from './hooks';
     
-type FilterStatesNames = 'name' | 'release_date' | 'genre'
+// type FilterStatesNames = 'name' | 'release_date' | 'genre'
 
-const filterList: {
-  1: 'name',
-  2: 'release_date',
-  3: 'genre'
-} = {
-  1: 'name',
-  2: 'release_date',
-  3: 'genre'
-}
+// const filterList: {
+//   1: 'name',
+//   2: 'release_date',
+//   3: 'genre'
+// } = {
+//   1: 'name',
+//   2: 'release_date',
+//   3: 'genre'
+// }
   
-export const Tracks = () => {
+type TracksProps = {
+  title: string
+  showFilter?: boolean
+  showSidebar?: boolean
+}
+
+export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar = false }) => {
   const [searchString, setSearchString] = useState('')
   const { isLoading, isError, data, error } = useFilteredTracks(searchString)
   const [ filter, setFilter ] = useState<FilterStates>(1)
@@ -69,15 +75,30 @@ export const Tracks = () => {
       <SideMenu />
       <div className={cnTracks('centerblock')}>
         <Search onChange={onChangeHandler} value={searchString}/>
-        <h2 className={cnTracks('centerblock__title')}>Треки</h2>
-        <Filter onFilterChange={onFilterChangeHandler}/>
+        <h2 className={cnTracks('centerblock__title')}>{title}</h2>
+        {showFilter &&
+          <div style={{ position: 'relative'}}>
+            <Filter onFilterChange={onFilterChangeHandler} />
+            <div style={{
+                backgroundColor: '#313131',
+                position: 'absolute',
+                padding: 18,
+                top: 50,
+                left: 96,
+                borderRadius: 10
+                }} >
+              Test
+            </div>
+          </div>
+        }
+        
         { isLoading && <p>Loading...</p>}
         { isError && <p>Error</p>}
         { data && <TrackList
           tracks={data}
         />}
       </div>
-      <Sidebar />
+      {showSidebar && <Sidebar />}
     </div>
   ) 
 }
