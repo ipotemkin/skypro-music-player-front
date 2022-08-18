@@ -1,15 +1,27 @@
-import { useState } from "react"
+import { FC, useState } from "react"
 import { FilterButton } from "../FilterButton/FilterButton"
 
 import { cnFilter } from "./Filter.classname"
 import './Filter.css'
 
-export const Filter = () => {
-  const [chosenButton, setChosenButton] = useState(1)
 
-  const handleClick = (buttonNumber: number) => setChosenButton(buttonNumber)
+export type FilterStates = 1 | 2 | 3
 
-  const getButtonState = (buttonNumber: number = 1) => chosenButton === buttonNumber ? 'active' : 'primary'
+type FilterProps = {
+  state?: FilterStates
+  onFilterChange?: (buttoNumber: FilterStates) => void
+}
+
+
+export const Filter: FC<FilterProps> = ({ state = 1, onFilterChange }) => {
+  const [chosenButton, setChosenButton] = useState(state)
+
+  const handleClick = (buttonNumber: FilterStates) => {
+    setChosenButton(buttonNumber)
+    if (onFilterChange) onFilterChange(buttonNumber)
+  }
+
+  const getButtonState = (buttonNumber: FilterStates = 1) => chosenButton === buttonNumber ? 'active' : 'primary'
   
   return (
     <div className={cnFilter()}>
