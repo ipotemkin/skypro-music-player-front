@@ -14,6 +14,7 @@ import { cnTracks } from './Tracks.classname';
 import './Tracks.css'
 import { useGetTracksQuery } from '../../app/MusicPlayer/music-player.api';
 import { useEffect } from 'react';
+import { useFilteredTracks } from './hooks';
     
 // const sampleTrackList: TrackType[] = [
 //   {title: 'Guilt', author: 'Nero', album: 'Welcome Reality', time: '4:45'},
@@ -40,31 +41,39 @@ const filterList: {
 
   
 export const Tracks = () => {
-  const { isLoading, isError, data, error } = useGetTracksQuery(1)
-
+  const [searchString, setSearchString] = useState('')
+  const { isLoading, isError, data, error } = useFilteredTracks(searchString)
   const [ filter, setFilter ] = useState<FilterStates>(1)
 
-  const initialData: ITrack[] = [] 
-  const [ filteredData, setFilteredData ] = useState<ITrack[]>(initialData)
-  
-  const [searchString, setSearchString] = useState('')
-
-  useEffect(() => {
-    if (data) filterData(data, filterList[filter], searchString)
-  }
-  , [data, searchString, filter])
-
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => setSearchString(e.target.value)
-
-  const filterData = (data: ITrack[], field: FilterStatesNames, query: string) => {
-      setFilteredData(data.filter((item: ITrack) => (
-        item[field] ?
-        item[field]!.toLocaleLowerCase().includes(query.toLocaleLowerCase()) :
-        null
-      )))
-  }
-
+  
   const onFilterChangeHandler = (filter: FilterStates) => setFilter(filter)
+
+  // const { isLoading, isError, data, error } = useGetTracksQuery(1)
+
+  // const [ filter, setFilter ] = useState<FilterStates>(1)
+
+  // const initialData: ITrack[] = [] 
+  // const [ filteredData, setFilteredData ] = useState<ITrack[]>(initialData)
+  
+  // const [searchString, setSearchString] = useState('')
+
+  // useEffect(() => {
+  //   if (data) filterData(data, filterList[filter], searchString)
+  // }
+  // , [data, searchString, filter])
+
+  // const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => setSearchString(e.target.value)
+
+  // const filterData = (data: ITrack[], field: FilterStatesNames, query: string) => {
+  //     setFilteredData(data.filter((item: ITrack) => (
+  //       item[field] ?
+  //       item[field]!.toLocaleLowerCase().includes(query.toLocaleLowerCase()) :
+  //       null
+  //     )))
+  // }
+
+  // const onFilterChangeHandler = (filter: FilterStates) => setFilter(filter)
 
   console.log('error -->', error)
   console.log('data -->', data)
@@ -80,7 +89,7 @@ export const Tracks = () => {
         { isLoading && <p>Loading...</p>}
         { isError && <p>Error</p>}
         { data && <TrackList
-          tracks={filteredData}
+          tracks={data}
         />}
       </div>
       <Sidebar />
