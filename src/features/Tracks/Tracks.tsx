@@ -11,7 +11,8 @@ import { cnTracks } from './Tracks.classname';
 import './Tracks.css'
 // import { useGetTracksQuery } from '../../app/MusicPlayer/music-player.api';
 // import { useEffect } from 'react';
-import { useFilteredTracks } from './hooks';
+import { useFilteredTracks, useGenres, useTrackNames, useYears } from './hooks';
+import { FilterPopup } from '../FilterPopup/FilterPopup';
     
 // type FilterStatesNames = 'name' | 'release_date' | 'genre'
 
@@ -24,7 +25,13 @@ import { useFilteredTracks } from './hooks';
 //   2: 'release_date',
 //   3: 'genre'
 // }
-  
+
+const songsList = [
+  'Song1', 'Song2', 'Song3', 'Song4', 'Song5',
+  'Song1', 'Song2', 'Song3', 'Song4', 'Song5',
+  'Song1', 'Song2', 'Song3', 'Song4', 'Song5',
+]
+
 type TracksProps = {
   title: string
   showFilter?: boolean
@@ -35,10 +42,22 @@ export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar
   const [searchString, setSearchString] = useState('')
   const { isLoading, isError, data, error } = useFilteredTracks(searchString)
   const [ filter, setFilter ] = useState<FilterStates>(1)
+  const { trackNames } = useTrackNames()
+  const { genres } = useGenres()
+  const { years } = useYears()
+  const [showFilterPopup, setShowFilterPopup] = useState(false)
 
-  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => setSearchString(e.target.value)
+  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchString(e.target.value)
+  }
   
-  const onFilterChangeHandler = (filter: FilterStates) => setFilter(filter)
+  const onFilterChangeHandler = (filterIn: FilterStates) => {
+    setFilter(filterIn)
+    setShowFilterPopup(filter === filterIn ? !showFilterPopup : true)
+    // console.log('showFilterPopup -->', showFilterPopup)
+  }
+
+  // console.log('genres -->', genres)
 
   // const { isLoading, isError, data, error } = useGetTracksQuery(1)
 
@@ -79,24 +98,15 @@ export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar
         {showFilter &&
           <div style={{ position: 'relative'}}>
             <Filter onFilterChange={onFilterChangeHandler} />
-            <div style={{
-                backgroundColor: '#313131',
-                position: 'absolute',
-                padding: 18,
-                top: 50,
-                left: 96,
-                borderRadius: 10
-                }} >
-              Test
-            </div>
+            {filter === 1 && <FilterPopup data={trackNames} shown={showFilterPopup}/>}
+            {filter === 2 && <FilterPopup data={genres} shown={showFilterPopup}/>}
+            {filter === 3 && <FilterPopup data={years} shown={showFilterPopup}/>}
           </div>
         }
         
         { isLoading && <p>Loading...</p>}
         { isError && <p>Error</p>}
-        { data && <TrackList
-          tracks={data}
-        />}
+        { data && <TrackList tracks={data} />}
       </div>
       {showSidebar && <Sidebar />}
     </div>

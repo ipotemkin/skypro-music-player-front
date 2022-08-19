@@ -1,0 +1,30 @@
+.filter-popup {
+  display: none;
+}
+
+.filter-popup_shown {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  overflow-y: auto; 
+
+  max-width: 400px;
+  max-height: 90px;
+
+  position: absolute;
+  top: 50px;
+  left: 96px;
+  
+  padding: 18px;
+  
+  background-color: #313131;
+  
+  border-radius: 10px;
+}
+
+.filter-popup__item:hover {
+  cursor: pointer;
+  color: #AD61FF;
+  text-decoration: underline;
+}
