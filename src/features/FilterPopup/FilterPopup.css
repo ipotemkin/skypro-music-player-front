@@ -28,3 +28,8 @@
   color: #AD61FF;
   text-decoration: underline;
 }
+
+.filter-popup__item_selected {
+  color: #AD61FF;
+  text-decoration: underline;
+}

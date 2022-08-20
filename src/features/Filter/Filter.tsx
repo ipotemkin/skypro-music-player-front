@@ -10,10 +10,11 @@ export type FilterStates = 1 | 2 | 3
 type FilterProps = {
   state?: FilterStates
   onFilterChange?: (buttoNumber: FilterStates) => void
+  stickers?: number[] 
 }
 
 
-export const Filter: FC<FilterProps> = ({ state = 1, onFilterChange }) => {
+export const Filter: FC<FilterProps> = ({ state = 1, onFilterChange, stickers = [] }) => {
   const [chosenButton, setChosenButton] = useState(state)
 
   const handleClick = (buttonNumber: FilterStates) => {
@@ -28,15 +29,17 @@ export const Filter: FC<FilterProps> = ({ state = 1, onFilterChange }) => {
       <span className={cnFilter('label')}>Искать по:</span>
       <FilterButton
         state={getButtonState(1)}
-        stickerCount={5}
+        stickerCount={stickers[0]}
         onClick={() => handleClick(1)}
       >исполнителю</FilterButton>
       <FilterButton
         state={getButtonState(2)}
+        stickerCount={stickers[1]}
         onClick={() => handleClick(2)}
       >году выпуска</FilterButton>
       <FilterButton
         state={getButtonState(3)}
+        stickerCount={stickers[2]}
         onClick={() => handleClick(3)}
       >жанру</FilterButton>
     </div>

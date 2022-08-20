@@ -17,3 +17,8 @@ export interface ITrack {
   track_file?: string;
   stared_user: number[];
 }
+
+export interface IFilterItem {
+  value: string;
+  selected: boolean;
+}

@@ -11,15 +11,17 @@ type FilterButtonProps = {
 }
 
 export const FilterButton: FC<FilterButtonProps> = ({
-  children, stickerCount=undefined, onClick, state='primary'
+  children, stickerCount=0, onClick, state='primary'
 }) => {
+  // const isSticker = (stickers: number) => stickers > 0
+  
   return (
     <button
       className={cnFilterButton({ type: state })}
       onClick={onClick}
     >
       {children}
-      {stickerCount && <p className={cnFilterButton('sticker')}>{stickerCount}</p>}
+      {(stickerCount > 0) && <p className={cnFilterButton('sticker')}>{stickerCount}</p>}
     </button>
   )
 }

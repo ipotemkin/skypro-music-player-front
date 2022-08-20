@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 
-import { ITrack } from '../../models';
+import { IFilterItem, ITrack } from '../../models';
 
 import { useGetTracksQuery } from '../../app/MusicPlayer/music-player.api';
 
+type FiledNames = 'author' | 'name' | 'genre';
 
 export const useFilteredTracks = (query: string = '') => {
   const { isLoading, isError, data, error } = useGetTracksQuery(1);
@@ -21,49 +22,37 @@ export const useFilteredTracks = (query: string = '') => {
   return { data: filteredData, isLoading, isError, error };
 }
 
-export const useTrackNames = (query: string = '') => {
-  const { isLoading, isError, data, error } = useGetTracksQuery(1);
-
-  const [filteredData, setFilteredData] = useState<string[]>([]);
-  
-  useEffect(() => { if (data) filterData(data, query) }, [data, query]);
-      
-  const filterData = (data: ITrack[], query: string) => {
-    const tempList: string[] = data.map((item: ITrack) => (item.name));
-    setFilteredData(Array.from(new Set(tempList)));
-  }
-  
-  return { trackNames: filteredData, isLoading, isError, error };
+const getFilterData = (data: ITrack[], field: FiledNames) => {
+  const tempList: string[] = data.map((item: ITrack) => (item[field])).filter(item => item !== '-');
+  const orderedList = Array.from(new Set(tempList)).sort();
+  return orderedList.map(i => ({ 'value': i, 'selected': false }));
 }
 
-export const useGenres = (query: string = '') => {
+const useFieldData = (field: FiledNames) => {
   const { isLoading, isError, data, error } = useGetTracksQuery(1);
-
-  const [filteredData, setFilteredData] = useState<string[]>([]);
-  
-  useEffect(() => { if (data) filterData(data, query) }, [data, query]);
-      
-  const filterData = (data: ITrack[], query: string) => {
-    const tempList: string[] = data.map((item: ITrack) => (item.genre));
-    setFilteredData(Array.from(new Set(tempList)));
-  }
-  
-  return { genres: filteredData, isLoading, isError, error };
+  const [filteredData, setFilteredData] = useState<IFilterItem[]>([]);
+  useEffect(() => { if (data) setFilteredData(getFilterData(data, field)) }, [data]);
+  return { data: filteredData, isLoading, isError, error };
 }
 
-export const useYears = (query: string = '') => {
-  const { isLoading, isError, data, error } = useGetTracksQuery(1);
+export const useTrackNames = () => ({ ...useFieldData('name') })
 
-  const [filteredData, setFilteredData] = useState<string[]>([]);
-  
-  useEffect(() => { if (data) filterData(data, query) }, [data, query]);
+export const useAuthors = () => ({ ...useFieldData('author') })
+
+export const useGenres = () => ({ ...useFieldData('genre') })
+
+export const useYears = () => {
+  const { isLoading, isError, data, error } = useGetTracksQuery(1);
+  const [filteredData, setFilteredData] = useState<IFilterItem[]>([]);
+
+  useEffect(() => { if (data) filterData(data) }, [data]);
       
-  const filterData = (data: ITrack[], query: string) => {
+  const filterData = (data: ITrack[]) => {
     const yearList = data.map((item: ITrack) => (item.release_date ? +item.release_date.split('-')[0] : 0));
     const uniqueList = Array.from(new Set(yearList)).filter(item => item !== 0);
     const orderedList = uniqueList.sort((a, b) => (b! - a!));
-    setFilteredData(orderedList.map(item => String(item)));
+    setFilteredData(orderedList.map(item => ({ 'value': String(item), 'selected': false })));
   }
   
-  return { years: filteredData, isLoading, isError, error };
+  return { data: filteredData, isLoading, isError, error };
 }
