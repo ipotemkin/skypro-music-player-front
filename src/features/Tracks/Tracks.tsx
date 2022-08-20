@@ -11,28 +11,9 @@ import { cnTracks } from './Tracks.classname';
 import './Tracks.css'
 // import { useGetTracksQuery } from '../../app/MusicPlayer/music-player.api';
 // import { useEffect } from 'react';
-import { useFilteredTracks, useGenres, useAuthors, useYears } from './hooks';
+import { useFilteredTracks, useGenres, useAuthors, useYears, FilterData } from './hooks';
 import { FilterPopup } from '../FilterPopup/FilterPopup';
 import { IFilterItem } from '../../models';
-    
-// type FilterStatesNames = 'name' | 'release_date' | 'genre'
-
-// const filterList: {
-//   1: 'name',
-//   2: 'release_date',
-//   3: 'genre'
-// } = {
-//   1: 'name',
-//   2: 'release_date',
-//   3: 'genre'
-// }
-
-
-// const songsList = [
-//   'Song1', 'Song2', 'Song3', 'Song4', 'Song5',
-//   'Song1', 'Song2', 'Song3', 'Song4', 'Song5',
-//   'Song1', 'Song2', 'Song3', 'Song4', 'Song5',
-// ]
 
 type TracksProps = {
   title: string
@@ -42,20 +23,29 @@ type TracksProps = {
 
 export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar = false }) => {
   const [ searchString, setSearchString ] = useState('')
-  const { isLoading, isError, data, error } = useFilteredTracks(searchString)
+  const [ filterQuery, setFilterQuery ] = useState<FilterData>({ field: 'author', query: ['Winn'] })
+  const { isLoading, isError, data, error } = useFilteredTracks(searchString, filterQuery)
   const [ filter, setFilter ] = useState<FilterStates>(1)
   const { data: authors } = useAuthors()
   const { data: genres } = useGenres()
   const { data: years } = useYears()
   const [ showFilterPopup, setShowFilterPopup ] = useState(false)
-  
-  const [ authorsStickers, setAuthorsStickers ] = useState(0)
-  const [ genresStickers, setGenresStickers ] = useState(0)
-  const [ yearsStickers, setYearsStickers ] = useState(0)
+  const [ stickers, setStickers ] = useState([0, 0, 0])
 
   useEffect(() => {
     if (!showFilterPopup) {
+      if (filter === 1) {
+        setFilterQuery({ field: 'author', query: getSelectedItems(authors) })
+      } else if (filter === 2) {
+        setFilterQuery({ field: 'release_date', query: getSelectedItems(years) })
+      } else {
+        setFilterQuery({ field: 'genre', query: getSelectedItems(genres) })
+      }
+
       console.group('Selected:')
+      console.log('data -->', data)
+      console.log('filter -->', filter)
+      console.log('filterQuery -->', filterQuery)
       console.log('author -->', getSelectedItems(authors))
       console.log('years -->', getSelectedItems(years))
       console.log('genres -->', getSelectedItems(genres))
@@ -63,15 +53,11 @@ export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar
     }
   }, [showFilterPopup])
 
-  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchString(e.target.value)
-  }
+  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => setSearchString(e.target.value)
   
   const onFilterChangeHandler = (filterIn: FilterStates) => {
     setFilter(filterIn)
     setShowFilterPopup(filter === filterIn ? !showFilterPopup : true)
-    console.log('genres -->', genres)
-    // console.log('showFilterPopup -->', showFilterPopup)
   }
 
   const getSelectedCount = (data: IFilterItem[]) => {
@@ -85,48 +71,15 @@ export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar
     return filteredData.map(item => item.value)
   }
 
-  // useEffect(() => {
-  //   setTrackNamesStickers(getSelectedCount(trackNames))
-  // }, [trackNames])
+  const onSelectAuthorsHandler = () => setStickers(prev => ([ getSelectedCount(authors), ...prev.slice(1, 3) ]))
 
-  const onSelectAuthorsHandler = () => setAuthorsStickers(getSelectedCount(authors))
+  const onSelectYearsHandler = () => setStickers(prev => ([ prev[0], getSelectedCount(years), prev[2] ]))
 
-  const onSelectGenresHandler = () => setGenresStickers(getSelectedCount(genres))
+  const onSelectGenresHandler = () => setStickers(prev => ([ ...prev.slice(0, 2), getSelectedCount(genres) ]))
 
-  const onSelectYearsHandler = () => setYearsStickers(getSelectedCount(years))
-
-
-  // console.log('genres -->', genres)
-
-  // const { isLoading, isError, data, error } = useGetTracksQuery(1)
-
-  // const [ filter, setFilter ] = useState<FilterStates>(1)
-
-  // const initialData: ITrack[] = [] 
-  // const [ filteredData, setFilteredData ] = useState<ITrack[]>(initialData)
-  
-  // const [searchString, setSearchString] = useState('')
-
-  // useEffect(() => {
-  //   if (data) filterData(data, filterList[filter], searchString)
-  // }
-  // , [data, searchString, filter])
-
-  // const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => setSearchString(e.target.value)
-
-  // const filterData = (data: ITrack[], field: FilterStatesNames, query: string) => {
-  //     setFilteredData(data.filter((item: ITrack) => (
-  //       item[field] ?
-  //       item[field]!.toLocaleLowerCase().includes(query.toLocaleLowerCase()) :
-  //       null
-  //     )))
-  // }
-
-  // const onFilterChangeHandler = (filter: FilterStates) => setFilter(filter)
-
-  console.log('error -->', error)
-  console.log('data -->', data)
-  console.log('isError -->', isError)
+  // console.log('error -->', error)
+  // console.log('data -->', data)
+  // console.log('isError -->', isError)
   
   return (
     <div className={cnTracks()}>
@@ -136,7 +89,7 @@ export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar
         <h2 className={cnTracks('centerblock__title')}>{title}</h2>
         {showFilter &&
           <div style={{ position: 'relative' }}>
-            <Filter onFilterChange={onFilterChangeHandler} stickers={[authorsStickers, yearsStickers, genresStickers]}/>
+            <Filter onFilterChange={onFilterChangeHandler} stickers={stickers}/>
             {filter === 1 && <FilterPopup data={authors} shown={showFilterPopup} onClick={onSelectAuthorsHandler}/>}
             {filter === 2 && <FilterPopup data={years} shown={showFilterPopup} onClick={onSelectYearsHandler}/>}
             {filter === 3 && <FilterPopup data={genres} shown={showFilterPopup} onClick={onSelectGenresHandler}/>}
