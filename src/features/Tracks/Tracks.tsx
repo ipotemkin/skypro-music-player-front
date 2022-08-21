@@ -57,10 +57,9 @@ export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar
     return res
   }
 
-  const getSelectedItems = (data: IFilterItem[]) => {
-    const filteredData = data.filter((item: IFilterItem) => item.selected)
-    return filteredData.map(item => item.value)
-  }
+  const getSelectedItems = (data: IFilterItem[]) => (
+    data.filter((el: IFilterItem) => el.selected).map(el => el.value)
+  )
 
   const onSelectAuthorsHandler = () => setStickers(prev => ([ getSelectedCount(authors), ...prev.slice(1, 3) ]))
 

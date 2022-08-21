@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 
 import { IFilterItem, ITrack } from '../../models';
-
 import { useGetTracksQuery } from '../../app/MusicPlayer/music-player.api';
 
 type FiledNames = 'author' | 'name' | 'genre' | 'release_date';
@@ -13,12 +12,13 @@ export type FilterData = {
 
 export const useFilteredTracks = (query: string = '', filter: FilterData = { field: 'author', query: [] }) => {
 
+  // DEBUG
   console.log('in useFilteredTracks');
   console.log('filter -->', filter);
 
   const { isLoading, isError, data, error } = useGetTracksQuery(1);
 
-  const [filteredData, setFilteredData] = useState<ITrack[]>([]);
+  const [ filteredData, setFilteredData ] = useState<ITrack[]>([]);
   
   useEffect(() => { if (data) filterData(data, query) }, [data, query, filter]);
       
@@ -47,7 +47,7 @@ const getFilterData = (data: ITrack[], field: FiledNames) => {
 
 const useFieldData = (field: FiledNames) => {
   const { isLoading, isError, data, error } = useGetTracksQuery(1);
-  const [filteredData, setFilteredData] = useState<IFilterItem[]>([]);
+  const [ filteredData, setFilteredData ] = useState<IFilterItem[]>([]);
   useEffect(() => { if (data) setFilteredData(getFilterData(data, field)) }, [data]);
   return { data: filteredData, isLoading, isError, error };
 }
@@ -60,7 +60,7 @@ export const useGenres = () => ({ ...useFieldData('genre') })
 
 export const useYears = () => {
   const { isLoading, isError, data, error } = useGetTracksQuery(1);
-  const [filteredData, setFilteredData] = useState<IFilterItem[]>([]);
+  const [ filteredData, setFilteredData ] = useState<IFilterItem[]>([]);
 
   useEffect(() => { if (data) filterData(data) }, [data]);
       
