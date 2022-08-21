@@ -15,7 +15,7 @@ type FilterPopupProps = {
 
 export const FilterPopup: FC<FilterPopupProps> = ({ data, shown = false, onClick }) => {
   // чтобы принудительно обновлять компонент 
-  const [flag, setFlag] = useState(false)
+  const [ flag, setFlag ] = useState(false)
   
   return (
     <div className={cnFilterPopup({'shown': shown})}>

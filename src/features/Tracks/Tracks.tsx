@@ -1,19 +1,16 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, useMemo} from 'react';
 
 import { Filter, FilterStates } from '../../features/Filter/Filter'
 import { TrackList } from '../../features/TrackList/TrackList'
 import { Search } from '../../features/Search/Search';
 import { SideMenu } from '../../features/SideMenu/SideMenu';
 import { Sidebar } from '../../features/Sidebar/Sidebar';
-// import { ITrack } from '../../models';
-
-import { cnTracks } from './Tracks.classname';
-import './Tracks.css'
-// import { useGetTracksQuery } from '../../app/MusicPlayer/music-player.api';
-// import { useEffect } from 'react';
 import { useFilteredTracks, useGenres, useAuthors, useYears, FilterData } from './hooks';
 import { FilterPopup } from '../FilterPopup/FilterPopup';
 import { IFilterItem } from '../../models';
+
+import { cnTracks } from './Tracks.classname';
+import './Tracks.css'
 
 type TracksProps = {
   title: string
@@ -23,7 +20,7 @@ type TracksProps = {
 
 export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar = false }) => {
   const [ searchString, setSearchString ] = useState('')
-  const [ filterQuery, setFilterQuery ] = useState<FilterData>({ field: 'author', query: ['Winn'] })
+  const [ filterQuery, setFilterQuery ] = useState<FilterData>({ field: 'author', query: [] })
   const { isLoading, isError, data, error } = useFilteredTracks(searchString, filterQuery)
   const [ filter, setFilter ] = useState<FilterStates>(1)
   const { data: authors } = useAuthors()
@@ -33,25 +30,19 @@ export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar
   const [ stickers, setStickers ] = useState([0, 0, 0])
 
   useEffect(() => {
-    if (!showFilterPopup) {
-      if (filter === 1) {
-        setFilterQuery({ field: 'author', query: getSelectedItems(authors) })
-      } else if (filter === 2) {
-        setFilterQuery({ field: 'release_date', query: getSelectedItems(years) })
-      } else {
-        setFilterQuery({ field: 'genre', query: getSelectedItems(genres) })
-      }
+    if (filter === 1) setFilterQuery({ field: 'author', query: getSelectedItems(authors) })
+    else if (filter === 2) setFilterQuery({ field: 'release_date', query: getSelectedItems(years) })
+    else setFilterQuery({ field: 'genre', query: getSelectedItems(genres) })
 
-      console.group('Selected:')
-      console.log('data -->', data)
-      console.log('filter -->', filter)
-      console.log('filterQuery -->', filterQuery)
-      console.log('author -->', getSelectedItems(authors))
-      console.log('years -->', getSelectedItems(years))
-      console.log('genres -->', getSelectedItems(genres))
-      console.groupEnd()
-    }
-  }, [showFilterPopup])
+    // console.group('Selected:')
+    // console.log('data -->', data)
+    // console.log('filter -->', filter)
+    // console.log('filterQuery -->', filterQuery)
+    // console.log('author -->', getSelectedItems(authors))
+    // console.log('years -->', getSelectedItems(years))
+    // console.log('genres -->', getSelectedItems(genres))
+    // console.groupEnd()
+  }, [showFilterPopup, stickers, filter])
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => setSearchString(e.target.value)
   
@@ -62,7 +53,7 @@ export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar
 
   const getSelectedCount = (data: IFilterItem[]) => {
     let res = 0
-    for ( let item of data) if (item.selected) res++
+    for (let item of data) if (item.selected) res++
     return res
   }
 

@@ -24,34 +24,17 @@ export const useFilteredTracks = (query: string = '', filter: FilterData = { fie
       
   const filterData = (data: ITrack[], query: string) => {
     setFilteredData(data.filter((item: ITrack) => {
-      if (filter.query.length && item[filter.field] !== 'release_date') {
+      let res = item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase());
+      if (filter.query.length) {
         return (
-          item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
-          && filter.query.some(el => item[filter.field]?.includes(el))    
-        )
+          item[filter.field] === 'release_date'
+          ? res && filter.query.some(el => new RegExp(`^${el}`).test(String(item[filter.field])))
+          : res && filter.query.some(el => item[filter.field]?.includes(el))
+        );
       }
-
-      if (filter.query.length && item[filter.field] === 'release_date') {
-        return (
-          item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
-        && filter.query.some(el => new RegExp(`^${el}`).test(String(item[filter.field])))    
-        )
-      }
-      return item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
+      return res;      
     }));
   }
-      // item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
-      // && ((filter.query.length && item[filter.field]) ? filter.query.some(el => item[filter.field]?.includes(el)) : true)
-
-      // if (filter.query.length) {
-      //   return (
-      //     item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase()) &&
-      //     filter.query.some(el => item[filter.field].includes(el))
-      //   )
-      // }
-      // return item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
-    // )));
-
   
   return { data: filteredData, isLoading, isError, error };
 }
