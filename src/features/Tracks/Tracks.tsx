@@ -1,15 +1,15 @@
-import { FC, useEffect, useState, useMemo} from 'react';
+import { FC, useEffect, useState } from 'react'
 
 import { Filter, FilterStates } from '../../features/Filter/Filter'
 import { TrackList } from '../../features/TrackList/TrackList'
-import { Search } from '../../features/Search/Search';
-import { SideMenu } from '../../features/SideMenu/SideMenu';
-import { Sidebar } from '../../features/Sidebar/Sidebar';
-import { useFilteredTracks, useGenres, useAuthors, useYears, FilterData } from './hooks';
-import { FilterPopup } from '../FilterPopup/FilterPopup';
-import { IFilterItem } from '../../models';
+import { Search } from '../../features/Search/Search'
+import { SideMenu } from '../../features/SideMenu/SideMenu'
+import { Sidebar } from '../../features/Sidebar/Sidebar'
+import { useFilteredTracks, useGenres, useAuthors, useYears, FilterData } from './hooks'
+import { FilterPopup } from '../FilterPopup/FilterPopup'
+import { IFilterItem } from '../../models'
 
-import { cnTracks } from './Tracks.classname';
+import { cnTracks } from './Tracks.classname'
 import './Tracks.css'
 
 type TracksProps = {
