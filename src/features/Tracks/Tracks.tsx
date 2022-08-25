@@ -11,6 +11,7 @@ import { IFilterItem } from '../../models'
 
 import { cnTracks } from './Tracks.classname'
 import './Tracks.css'
+import { useCookies } from 'react-cookie'
 
 type TracksProps = {
   title: string
@@ -19,6 +20,8 @@ type TracksProps = {
 }
 
 export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar = false }) => {
+  const [ cookies ] = useCookies(['access', 'refresh'])
+
   const [ searchString, setSearchString ] = useState('')
   const [ filterQuery, setFilterQuery ] = useState<FilterData>({ field: 'author', query: [] })
   const { isLoading, isError, data, error } = useFilteredTracks(searchString, filterQuery)
@@ -74,6 +77,7 @@ export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar
   return (
     <div className={cnTracks()}>
       <SideMenu />
+      <button onClick={() => { console.log('cookies in tracks -->', cookies) }}>tokens</button>
       <div className={cnTracks('centerblock')}>
         <Search onChange={onChangeHandler} value={searchString}/>
         <h2 className={cnTracks('centerblock__title')}>{title}</h2>

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useReducer, useState } from 'react'
 
 import { cnLoginForm } from './LoginForm.classname'
 import '../../index.css'
@@ -9,19 +9,39 @@ import { Button } from '../Button/Button'
 import './LoginForm.css'
 import { InputField } from '../InputField/InputField'
 import { useNavigate } from 'react-router-dom'
-import { useLoginUserMutation, ILoginUser } from '../../app/MusicPlayer/music-player.api'
+import { useLoginUserMutation, ILoginUser, useUserTokenMutation } from '../../app/MusicPlayer/music-player.api'
 // import { forEachChild } from 'typescript'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import { SerializedError } from '@reduxjs/toolkit'
+import { useCookies } from 'react-cookie'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { selectAccessToken, selectTokens, setToken } from '../../app/Auth/tokenSlice'
+import { convertCompilerOptionsFromJson } from 'typescript'
+
+interface IUserTokens {
+  access: string;
+  refresh: string;
+}
 
 type LoginFormProps = {
 }
 
 export const LoginForm: FC<LoginFormProps> = () => {
-  const [ LoginUser, { isError, data, error } ] = useLoginUserMutation()
+  const [ cookies, setCookies ] = useCookies(['access', 'refresh'])
+  const dispatch = useAppDispatch()
+  const tokens = useAppSelector(selectTokens)
+
+  if (cookies) {
+    console.log('cookies set')
+    dispatch(setToken({ access: cookies.access, refresh: cookies.refresh }))
+  }
+
+  // const [ LoginUser, { isError, data, error } ] = useLoginUserMutation()
   const [ username, setUsername ] = useState('')
   const [ loginError, setLoginError ] = useState(false)
-  
+
+  const [ getUserTokens, { isError, data, error } ] = useUserTokenMutation()
+
   const errorInitialState = {
     errorUsername: false,
     errorPassword: false,
@@ -41,8 +61,26 @@ export const LoginForm: FC<LoginFormProps> = () => {
   let navigate = useNavigate()
 
   useEffect(() => { 
-    if (data) setUsername(data.username)
-  }, [data])
+    // if (data) setUsername(data.username)
+    if (data) {
+      console.log('tokens -->', data)
+      setCookies('access', data.access)    
+      setCookies('refresh', data.refresh)
+      dispatch(setToken({ access: data.access, refresh: data.refresh }))
+    }
+    if (cookies) {
+      console.group('Cookies set:')
+      console.log('access -->', cookies.access)
+      console.log('refresh -->', cookies.refresh)
+      console.groupEnd()
+    }
+    if (tokens) {
+      console.group('Tokens in store:')
+      console.log('access -->', tokens.access)
+      console.log('refresh -->', tokens.refresh)
+      console.groupEnd();
+    }
+  }, [data, cookies, tokens])
 
   // const enter = () => console.log('enter')
   
@@ -126,7 +164,11 @@ export const LoginForm: FC<LoginFormProps> = () => {
 
   const loginUserHandler = async () => {
     try {
-      await LoginUser({ email: form.username, password: form.password }).unwrap()
+      // await LoginUser({ email: form.username, password: form.password }).unwrap()
+      const { data: newTokens } = await getUserTokens({ email: form.username, password: form.password }).unwrap()
+      console.log('newTokens -->', newTokens)
+
+      console.log(data)
     } catch {
       setLoginError(true)
     }
@@ -147,7 +189,8 @@ export const LoginForm: FC<LoginFormProps> = () => {
   
   return (
     <form className={cnLoginForm()} onSubmit={onSubmitHandler}>
-      { username && <p style={{ color: 'black' }}>{username}</p>}
+      {/* { username && <p style={{ color: 'black' }}>{username}</p>} */}
+      {/* { data && <p style={{ color: 'black' }}>{JSON.stringify(data)}</p>} */}
 
       <img src={logo} alt="logo" style={{ marginBottom: 30 }}/>
       

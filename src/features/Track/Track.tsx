@@ -10,6 +10,8 @@ import './Track.css'
 // import icon from './assets/sprite.svg'
 import note from './assets/note.svg'
 import like from './assets/like.svg'
+import { useAddTrackToFavoriteMutation } from '../../app/MusicPlayer/music-player.api'
+import { useCookies } from 'react-cookie'
 
 // export type TrackType = {
 //   title: string
@@ -23,6 +25,16 @@ type TrackProps = {
 }
 
 export const Track: FC<TrackProps> = ({ track }) => {
+  const [ cookies ] = useCookies(['access'])
+
+  const [ addTrackToFavorite, { isError, error } ] = useAddTrackToFavoriteMutation()
+
+  const addTrackToFavoriteHandler = async (trackId: number) => {
+    await addTrackToFavorite(trackId)
+    console.log(isError)
+    console.log(JSON.stringify(error))
+  }
+  
   return (
     // <div className="playlist__item">
       <div className={cnTrack()}>
@@ -43,7 +55,7 @@ export const Track: FC<TrackProps> = ({ track }) => {
           <a className={cnTrack('album-link')} href="http://">{track.album}</a>
         </div>
         <div className={cnTrack('time')}>
-          <img className={cnTrack('time-svg')} alt="time" src={like}/>
+          <img className={cnTrack('time-svg')} alt="time" src={like} onClick={() => addTrackToFavoriteHandler(track.id)}/>
           <span className={cnTrack('time-text')}>{SecondsToMinSec(+track.duration_in_seconds)}</span>
           {/* <span className={cnTrack('time-text')}>{track.duration_in_seconds}</span> */}
         </div>

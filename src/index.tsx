@@ -5,6 +5,9 @@ import { store } from './app/store';
 import { BrowserRouter} from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+import { CookiesProvider } from 'react-cookie';
+
 import './index.css';
 
 const container = document.getElementById('root')!;
@@ -13,9 +16,11 @@ const root = createRoot(container);
 root.render(
   // <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <CookiesProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </CookiesProvider>
     </Provider>
   // </React.StrictMode>
 );
