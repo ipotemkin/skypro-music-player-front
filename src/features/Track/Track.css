@@ -130,6 +130,11 @@
   stroke: #696969;
 }
 
+.track__time-svg_favorite {
+  /* fill: transparent; */
+  stroke: #FFFFFF;
+}
+
 .track__time-text {
   font-style: normal;
   font-weight: 400;

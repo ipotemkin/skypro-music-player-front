@@ -15,7 +15,15 @@ export interface ITrack {
   album: string;
   logo?: string | null;
   track_file?: string;
-  stared_user: number[];
+  stared_user: IStaredUser[];
+}
+
+export interface IStaredUser {
+  id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
 }
 
 export interface IFilterItem {
