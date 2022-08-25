@@ -31,10 +31,10 @@ export const LoginForm: FC<LoginFormProps> = () => {
   const dispatch = useAppDispatch()
   const tokens = useAppSelector(selectTokens)
 
-  if (cookies) {
-    console.log('cookies set')
-    dispatch(setToken({ access: cookies.access, refresh: cookies.refresh }))
-  }
+  // if (cookies) {
+  //   console.log('cookies set')
+  //   dispatch(setToken({ access: cookies.access, refresh: cookies.refresh }))
+  // }
 
   // const [ LoginUser, { isError, data, error } ] = useLoginUserMutation()
   const [ username, setUsername ] = useState('')
@@ -67,6 +67,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
       setCookies('access', data.access)    
       setCookies('refresh', data.refresh)
       dispatch(setToken({ access: data.access, refresh: data.refresh }))
+      navigate('/tracks')
     }
     if (cookies) {
       console.group('Cookies set:')
