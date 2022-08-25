@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react'
 
 import { IFilterItem, ITrack } from '../../models';
-import { useGetTracksQuery } from '../../app/MusicPlayer/music-player.api';
+import { useGetTracksQuery, useRefreshUserTokenMutation } from '../../app/MusicPlayer/music-player.api';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { selectRefreshToken, setToken } from '../../app/Auth/tokenSlice';
+import { useCookies } from 'react-cookie';
 
 type FiledNames = 'author' | 'name' | 'genre' | 'release_date';
 
@@ -12,6 +15,9 @@ export type FilterData = {
 
 export const useFilteredTracks = (query: string = '', filter: FilterData = { field: 'author', query: [] }) => {
 
+  const [ cookies, setCookies ] = useCookies(['access', 'refresh'])
+  const dispatch = useAppDispatch()
+
   // DEBUG
   console.log('in useFilteredTracks');
   console.log('filter -->', filter);
@@ -19,8 +25,35 @@ export const useFilteredTracks = (query: string = '', filter: FilterData = { fie
   const { isLoading, isError, data, error } = useGetTracksQuery();
 
   const [ filteredData, setFilteredData ] = useState<ITrack[]>([]);
+
+  const [ doRefreshToken ] = useRefreshUserTokenMutation()
+
+  const refreshToken = useAppSelector(selectRefreshToken)
+
+  const handleRefreshTokens = async (refreshTokenIn: string) => {
+    try {
+      const newTokens = await doRefreshToken(refreshTokenIn).unwrap()
+      const { access, refresh } = newTokens
+      setCookies('access', access)
+      setCookies('refresh', refresh)
+      dispatch(setToken({ access, refresh }))
+    } catch(err) {
+      console.log(err)
+    }   
+  }
   
-  useEffect(() => { if (data) filterData(data, query) }, [data, query, filter]);
+  useEffect( () => {
+    if (isError) {
+      if ('status' in error && error.status === 401) {
+        if (refreshToken) {
+          console.log('cokkies -->', cookies)
+          console.log('before handleRefreshTokens')
+          handleRefreshTokens(refreshToken)
+        }
+      }
+    }
+    if (data) filterData(data, query)
+  }, [data, query, filter, isError]);
       
   const filterData = (data: ITrack[], query: string) => {
     setFilteredData(data.filter((item: ITrack) => {

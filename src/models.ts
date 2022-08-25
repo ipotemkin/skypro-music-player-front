@@ -30,3 +30,8 @@ export interface IFilterItem {
   value: string;
   selected: boolean;
 }
+
+export interface IUserTokens {
+  access: string;
+  refresh: string;
+}

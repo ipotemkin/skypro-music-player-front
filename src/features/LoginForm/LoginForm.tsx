@@ -18,11 +18,6 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { selectAccessToken, selectTokens, setToken } from '../../app/Auth/tokenSlice'
 import { convertCompilerOptionsFromJson } from 'typescript'
 
-interface IUserTokens {
-  access: string;
-  refresh: string;
-}
-
 type LoginFormProps = {
 }
 
@@ -69,19 +64,25 @@ export const LoginForm: FC<LoginFormProps> = () => {
       dispatch(setToken({ access: data.access, refresh: data.refresh }))
       navigate('/tracks')
     }
-    if (cookies) {
-      console.group('Cookies set:')
-      console.log('access -->', cookies.access)
-      console.log('refresh -->', cookies.refresh)
-      console.groupEnd()
-    }
-    if (tokens) {
-      console.group('Tokens in store:')
-      console.log('access -->', tokens.access)
-      console.log('refresh -->', tokens.refresh)
-      console.groupEnd();
-    }
-  }, [data, cookies, tokens])
+    
+    // // DEBUG
+    // if (cookies) {
+    //   console.group('Cookies set:')
+    //   console.log('access -->', cookies.access)
+    //   console.log('refresh -->', cookies.refresh)
+    //   console.groupEnd()
+    // }
+    
+    // // DEBUG
+    // if (tokens) {
+    //   console.group('Tokens in store:')
+    //   console.log('access -->', tokens.access)
+    //   console.log('refresh -->', tokens.refresh)
+    //   console.groupEnd();
+    // }
+  
+  // }, [data, cookies, tokens])
+  }, [data])
 
   // const enter = () => console.log('enter')
   

@@ -1,6 +1,6 @@
 // import { build } from '@reduxjs/toolkit/dist/query/core/buildMiddleware/cacheLifecycle'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { ITrack } from '../../models'
+import { ITrack, IUserTokens } from '../../models'
 import { RootState } from '../store';
 
 export interface ILoginUser {
@@ -62,11 +62,11 @@ export const musicPlayerApi = createApi({
       })
     }),
     // refreshUserToken: build.mutation<ILoginUser, string>({
-    refreshUserToken: build.mutation({
+    refreshUserToken: build.mutation<IUserTokens, string> ({
       query: (body: string) => ({
         url: 'user/token/refresh/',
         method: 'POST',
-        body,
+        body: { 'refresh': body },
       })
     }),
     addTrackToFavorite: build.mutation({
@@ -90,6 +90,7 @@ export const {
   useGetTracksQuery,
   useLoginUserMutation,
   useUserTokenMutation,
+  useRefreshUserTokenMutation,
   useAddTrackToFavoriteMutation,
   useRemoveTrackFromFavoriteMutation
 } = musicPlayerApi
