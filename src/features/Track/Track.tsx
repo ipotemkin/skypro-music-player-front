@@ -10,53 +10,32 @@ import './Track.css'
 // import icon from './assets/sprite.svg'
 import note from './assets/note.svg'
 // import like from './assets/like.svg'
-import { useAddTrackToFavoriteMutation } from '../../app/MusicPlayer/music-player.api'
-import { useCookies } from 'react-cookie'
-
-// export type TrackType = {
-//   title: string
-//   author: string
-//   album: string
-//   time: string
-// }
+import { useAddTrackToFavoriteMutation, useRemoveTrackFromFavoriteMutation } from '../../app/MusicPlayer/music-player.api'
+// import { useCookies } from 'react-cookie'
+import { useAppSelector } from '../../app/hooks'
+import { selectAccessToken } from '../../app/Auth/tokenSlice'
 
 type TrackProps = {
   track: ITrack
 }
 
 export const Track: FC<TrackProps> = ({ track }) => {
-  const [ cookies ] = useCookies(['access'])
+  // const [ cookies ] = useCookies(['access'])
+  const token = useAppSelector(selectAccessToken)
+  console.log('Token in Track -->', token)
   
-  const isFavorite = () => (
-    track.stared_user.filter((el: IStaredUser) => el.id === getUserIdFromJWT(cookies.access)).length > 0
+  const favorite = (
+    track.stared_user.filter((el: IStaredUser) => el.id === getUserIdFromJWT(token!)).length > 0
   )
 
-  // переделать на state
-  const [ favorite, setFavorite ] = useState(isFavorite())
-    // track.stared_user.filter((el: IStaredUser) => el.id === getUserIdFromJWT(cookies.access)).length > 0
-  // )
+  const [ addTrackToFavorite ] = useAddTrackToFavoriteMutation()
+  const [ removeTrackFromFavorite ] = useRemoveTrackFromFavoriteMutation()
 
-  const [ addTrackToFavorite, { isError, error } ] = useAddTrackToFavoriteMutation()
-
-  const addTrackToFavoriteHandler = async (trackId: number) => {
-    await addTrackToFavorite(trackId)
-    console.log(isError)
-    console.log(JSON.stringify(error))
-  }
-
-  const removeTrackFromFavoriteHandler = async (trackId: number) => {
-    await addTrackToFavorite(trackId)
-    console.log(isError)
-    console.log(JSON.stringify(error))
-  }
-
-  const toggleFaforiteTrack = (trackId: number) => {
-    favorite ? removeTrackFromFavoriteHandler(trackId) : addTrackToFavorite(trackId)
-    setFavorite(isFavorite())
+  const toggleFaforiteTrack = async (trackId: number) => {
+    favorite ? await removeTrackFromFavorite(trackId) : await addTrackToFavorite(trackId)
   }
   
   return (
-    // <div className="playlist__item">
       <div className={cnTrack()}>
         <div className={cnTrack('title')}>
           <div className={cnTrack('title-image')}>
@@ -83,12 +62,8 @@ export const Track: FC<TrackProps> = ({ track }) => {
           >
             <path d="M8.34372 2.25572H8.36529C9.29718 1.44175 11.7563 0.165765 13.9565 1.76734C17.3111 4.20921 14.2458 9.5 8.36529 13H8.34372M8.34378 2.25572H8.32221C7.39032 1.44175 4.93121 0.165765 2.73102 1.76734C-0.623552 4.20921 2.44172 9.5 8.32221 13H8.34378"/>
           </svg>        
-
-          {/* <img className={cnTrack('time-svg', 'img-svg')} alt="time" src={like} onClick={() => addTrackToFavoriteHandler(track.id)}/> */}
           <span className={cnTrack('time-text')}>{SecondsToMinSec(+track.duration_in_seconds)}</span>
-          {/* <span className={cnTrack('time-text')}>{track.duration_in_seconds}</span> */}
         </div>
-      {/* </div> */}
     </div>
   )
 }

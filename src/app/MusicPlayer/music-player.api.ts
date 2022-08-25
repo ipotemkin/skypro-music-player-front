@@ -10,6 +10,7 @@ export interface ILoginUser {
 
 export const musicPlayerApi = createApi({
   reducerPath: 'music-player/api',
+  tagTypes: ['Tracks'],
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://51.250.72.80:8090/',
     // baseUrl: 'http://84.201.139.95:8000/',
@@ -37,22 +38,14 @@ export const musicPlayerApi = createApi({
     },
   }),
   endpoints: build => ({
-    getTracks: build.query ({
-      query: () => 'catalog/track/all/'
-
-        // {
-        // url: 'todos',
-        // url: 'catalog/track/all/',
-        // params: {
-        //   page: page
-        // },
-        // Headers: {
-        //   header: 'Access-Control-Allow-Origin: *'
-        // }
-        // Headers: {
-        //   Cookie: 'csrftoken=dVjAvz945M9pepzlSvPXecOkWe9h2sAWIzZGVPIAnSOQmR0lw46YR8aGiJVQvwTM'
-        // }
-      // }  
+    getTracks: build.query<ITrack[], void> ({
+      query: () => 'catalog/track/all/',
+      providesTags: (result) => result 
+        ? [
+          ...result.map(({ id }) => ({ type: 'Tracks' as const, id })),
+          { type: 'Tracks', id: 'LIST' },
+        ]
+        : [{ type: 'Tracks', id: 'LIST' }],
     }),
     loginUser: build.mutation({
       query: (body: ILoginUser) => ({
@@ -80,7 +73,15 @@ export const musicPlayerApi = createApi({
       query: (trackId: number) => ({
         url: `catalog/track/${trackId}/favorite/`,
         method: 'POST',
-      })
+      }),
+      invalidatesTags: [{ type: 'Tracks', id: 'LIST' }]
+    }),
+    removeTrackFromFavorite: build.mutation({
+      query: (trackId: number) => ({
+        url: `catalog/track/${trackId}/favorite/`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: [{ type: 'Tracks', id: 'LIST' }]
     })
   })
 })
@@ -89,5 +90,6 @@ export const {
   useGetTracksQuery,
   useLoginUserMutation,
   useUserTokenMutation,
-  useAddTrackToFavoriteMutation
+  useAddTrackToFavoriteMutation,
+  useRemoveTrackFromFavoriteMutation
 } = musicPlayerApi

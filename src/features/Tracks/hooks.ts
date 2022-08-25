@@ -16,7 +16,7 @@ export const useFilteredTracks = (query: string = '', filter: FilterData = { fie
   console.log('in useFilteredTracks');
   console.log('filter -->', filter);
 
-  const { isLoading, isError, data, error } = useGetTracksQuery(1);
+  const { isLoading, isError, data, error } = useGetTracksQuery();
 
   const [ filteredData, setFilteredData ] = useState<ITrack[]>([]);
   
@@ -46,7 +46,7 @@ const getFilterData = (data: ITrack[], field: FiledNames) => {
 }
 
 const useFieldData = (field: FiledNames) => {
-  const { isLoading, isError, data, error } = useGetTracksQuery(1);
+  const { isLoading, isError, data, error } = useGetTracksQuery();
   const [ filteredData, setFilteredData ] = useState<IFilterItem[]>([]);
   useEffect(() => { if (data) setFilteredData(getFilterData(data, field)) }, [data]);
   return { data: filteredData, isLoading, isError, error };
@@ -59,7 +59,7 @@ export const useAuthors = () => ({ ...useFieldData('author') })
 export const useGenres = () => ({ ...useFieldData('genre') })
 
 export const useYears = () => {
-  const { isLoading, isError, data, error } = useGetTracksQuery(1);
+  const { isLoading, isError, data, error } = useGetTracksQuery();
   const [ filteredData, setFilteredData ] = useState<IFilterItem[]>([]);
 
   useEffect(() => { if (data) filterData(data) }, [data]);

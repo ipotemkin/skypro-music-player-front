@@ -12,7 +12,7 @@ import { IFilterItem } from '../../models'
 import { cnTracks } from './Tracks.classname'
 import './Tracks.css'
 import { useCookies } from 'react-cookie'
-import counterSlice from '../counter/counterSlice'
+// import counterSlice from '../counter/counterSlice'
 import { getUserIdFromJWT, parseJWT } from '../../utils'
 
 type TracksProps = {
