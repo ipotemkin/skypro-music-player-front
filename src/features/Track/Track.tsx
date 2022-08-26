@@ -26,19 +26,18 @@ export const Track: FC<TrackProps> = ({ track }) => {
   const token = useAppSelector(selectAccessToken)
   const refreshToken = useAppSelector(selectRefreshToken)
   const handleRefreshToken = useRefreshToken()
-  console.log('Token in Track -->', token)
+  const [ addTrackToFavorite ] = useAddTrackToFavoriteMutation()
+  const [ removeTrackFromFavorite ] = useRemoveTrackFromFavoriteMutation()
 
   let navigate = useNavigate()
-
   
   const favorite = (
     track.stared_user.filter((el: IStaredUser) => el.id === getUserIdFromJWT(token!)).length > 0
   )
 
-  const [ addTrackToFavorite ] = useAddTrackToFavoriteMutation()
-  const [ removeTrackFromFavorite ] = useRemoveTrackFromFavoriteMutation()
+  console.log('Token in Track -->', token)
 
-  const toggleFaforiteTrack = async (trackId: number) => {
+  const toggleFavoriteTrack = async (trackId: number) => {
     console.log('toggleFavoriteTrack')
     try {
       favorite ? await removeTrackFromFavorite(trackId).unwrap() : await addTrackToFavorite(trackId).unwrap()
@@ -47,7 +46,7 @@ export const Track: FC<TrackProps> = ({ track }) => {
       console.log('refreshToken -->', refreshToken)
       if (refreshToken) {
         await handleRefreshToken(refreshToken)
-        toggleFaforiteTrack(trackId)
+        toggleFavoriteTrack(trackId)
       } else {
         console.error('No refresh token')
         navigate('/login')
@@ -77,7 +76,7 @@ export const Track: FC<TrackProps> = ({ track }) => {
         <div className={cnTrack('time')}>
           <svg
             className={cnTrack('time-svg', { favorite })}
-            onClick={() => toggleFaforiteTrack(track.id)}
+            onClick={() => toggleFavoriteTrack(track.id)}
             width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg"
           >
             <path d="M8.34372 2.25572H8.36529C9.29718 1.44175 11.7563 0.165765 13.9565 1.76734C17.3111 4.20921 14.2458 9.5 8.36529 13H8.34372M8.34378 2.25572H8.32221C7.39032 1.44175 4.93121 0.165765 2.73102 1.76734C-0.623552 4.20921 2.44172 9.5 8.32221 13H8.34378"/>

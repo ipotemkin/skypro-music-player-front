@@ -11,9 +11,7 @@ import { IFilterItem } from '../../models'
 
 import { cnTracks } from './Tracks.classname'
 import './Tracks.css'
-import { useCookies } from 'react-cookie'
-// import counterSlice from '../counter/counterSlice'
-import { getUserIdFromJWT, parseJWT } from '../../utils'
+// import { getUserIdFromJWT, parseJWT } from '../../utils'
 
 type TracksProps = {
   title: string
@@ -22,8 +20,6 @@ type TracksProps = {
 }
 
 export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar = false }) => {
-  const [ cookies ] = useCookies(['access', 'refresh'])
-
   const [ searchString, setSearchString ] = useState('')
   const [ filterQuery, setFilterQuery ] = useState<FilterData>({ field: 'author', query: [] })
   const { isLoading, isError, data, error } = useFilteredTracks(searchString, filterQuery)
@@ -79,11 +75,11 @@ export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar
   return (
     <div className={cnTracks()}>
       <SideMenu />
-      <button onClick={() => {
+      {/* <button onClick={() => {
         console.log('cookies in tracks -->', cookies)
         console.log(parseJWT(cookies.access))
         console.log(getUserIdFromJWT(cookies.access))
-      }}>tokens</button>
+      }}>tokens</button> */}
       <div className={cnTracks('centerblock')}>
         <Search onChange={onChangeHandler} value={searchString}/>
         <h2 className={cnTracks('centerblock__title')}>{title}</h2>
