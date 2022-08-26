@@ -13,7 +13,9 @@ import note from './assets/note.svg'
 import { useAddTrackToFavoriteMutation, useRemoveTrackFromFavoriteMutation } from '../../app/MusicPlayer/music-player.api'
 // import { useCookies } from 'react-cookie'
 import { useAppSelector } from '../../app/hooks'
-import { selectAccessToken } from '../../app/Auth/tokenSlice'
+import { selectAccessToken, selectRefreshToken } from '../../app/Auth/tokenSlice'
+import { useRefreshToken } from '../Tracks/hooks'
+import { useNavigate } from 'react-router-dom'
 
 type TrackProps = {
   track: ITrack
@@ -22,7 +24,12 @@ type TrackProps = {
 export const Track: FC<TrackProps> = ({ track }) => {
   // const [ cookies ] = useCookies(['access'])
   const token = useAppSelector(selectAccessToken)
+  const refreshToken = useAppSelector(selectRefreshToken)
+  const handleRefreshToken = useRefreshToken()
   console.log('Token in Track -->', token)
+
+  let navigate = useNavigate()
+
   
   const favorite = (
     track.stared_user.filter((el: IStaredUser) => el.id === getUserIdFromJWT(token!)).length > 0
@@ -32,7 +39,20 @@ export const Track: FC<TrackProps> = ({ track }) => {
   const [ removeTrackFromFavorite ] = useRemoveTrackFromFavoriteMutation()
 
   const toggleFaforiteTrack = async (trackId: number) => {
-    favorite ? await removeTrackFromFavorite(trackId) : await addTrackToFavorite(trackId)
+    console.log('toggleFavoriteTrack')
+    try {
+      favorite ? await removeTrackFromFavorite(trackId).unwrap() : await addTrackToFavorite(trackId).unwrap()
+    } catch (err) {
+      console.error('toggleFavoriteTrack -> catch err =', err)
+      console.log('refreshToken -->', refreshToken)
+      if (refreshToken) {
+        await handleRefreshToken(refreshToken)
+        toggleFaforiteTrack(trackId)
+      } else {
+        console.error('No refresh token')
+        navigate('/login')
+      }
+    }
   }
   
   return (

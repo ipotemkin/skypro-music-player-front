@@ -13,40 +13,53 @@ export type FilterData = {
   query: string[]
 }
 
+// export const useSetCookies = () => {
+//   const [ cookies, setCookies ] = useCookies(['access', 'refresh']);
+//   return [ setCookies, cookies ];
+// }
+
+// возвращает функцию для обновления access токена
+// запрашивает новый access token с помощью refresh token
+// монтирует его в cookies и strore
+// возвращает новый access token или ошибку
+export const useRefreshToken = () => {
+  const [ cookies, setCookies ] = useCookies(['access']);
+  const dispatch = useAppDispatch();
+  const [ doRefreshToken ] = useRefreshUserTokenMutation();
+  
+  const handleRefreshToken = async (refreshTokenIn: string) => {
+    try {
+      const { access } = await doRefreshToken(refreshTokenIn).unwrap();
+      setCookies('access', access);
+      dispatch(setToken({ access, refresh: refreshTokenIn }));
+      return { access };
+    } catch(err) {
+      console.log(err);
+      return { error: err };
+    }
+  }
+  
+  return handleRefreshToken;
+}
+
 export const useFilteredTracks = (query: string = '', filter: FilterData = { field: 'author', query: [] }) => {
 
-  const [ cookies, setCookies ] = useCookies(['access', 'refresh'])
-  const dispatch = useAppDispatch()
+  // const [ cookies, setCookies ] = useCookies(['access', 'refresh'])
+  // const dispatch = useAppDispatch()
 
   // DEBUG
   console.log('in useFilteredTracks');
   console.log('filter -->', filter);
 
   const { isLoading, isError, data, error } = useGetTracksQuery();
-
   const [ filteredData, setFilteredData ] = useState<ITrack[]>([]);
-
-  const [ doRefreshToken ] = useRefreshUserTokenMutation()
-
   const refreshToken = useAppSelector(selectRefreshToken)
-
-  const handleRefreshTokens = async (refreshTokenIn: string) => {
-    try {
-      const newTokens = await doRefreshToken(refreshTokenIn).unwrap()
-      const { access, refresh } = newTokens
-      setCookies('access', access)
-      setCookies('refresh', refresh)
-      dispatch(setToken({ access, refresh }))
-    } catch(err) {
-      console.log(err)
-    }   
-  }
+  const handleRefreshTokens = useRefreshToken();
   
   useEffect( () => {
     if (isError) {
       if ('status' in error && error.status === 401) {
         if (refreshToken) {
-          console.log('cokkies -->', cookies)
           console.log('before handleRefreshTokens')
           handleRefreshTokens(refreshToken)
         }
