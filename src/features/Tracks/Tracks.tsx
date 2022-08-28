@@ -5,7 +5,7 @@ import { TrackList } from '../../features/TrackList/TrackList'
 import { Search } from '../../features/Search/Search'
 import { SideMenu } from '../../features/SideMenu/SideMenu'
 import { Sidebar } from '../../features/Sidebar/Sidebar'
-import { useFilteredTracks, useGenres, useAuthors, useYears, FilterData } from './hooks'
+import { useFilteredTracks, FilterData, useFilterData } from './hooks'
 import { FilterPopup } from '../FilterPopup/FilterPopup'
 import { IFilterItem } from '../../models'
 
@@ -20,20 +20,27 @@ type TracksProps = {
 }
 
 export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar = false }) => {
+  const [ flag, setFlag ] = useState(false)
   const [ searchString, setSearchString ] = useState('')
   const [ filterQuery, setFilterQuery ] = useState<FilterData>({ field: 'author', query: [] })
   const { isLoading, isError, data, error } = useFilteredTracks(searchString, filterQuery)
   const [ filter, setFilter ] = useState<FilterStates>(1)
-  const { data: authors } = useAuthors()
-  const { data: genres } = useGenres()
-  const { data: years } = useYears()
+  
+  // const { data: authors } = useAuthors()
+  // const { data: genres } = useGenres()
+  // const { data: years } = useYears()
+
+  const filterData = useFilterData()
+
   const [ showFilterPopup, setShowFilterPopup ] = useState(false)
   const [ stickers, setStickers ] = useState([0, 0, 0])
 
+  // const filterAuthors = useAppSelector(selectFilterAuthors);
+
   useEffect(() => {
-    if (filter === 1) setFilterQuery({ field: 'author', query: getSelectedItems(authors) })
-    else if (filter === 2) setFilterQuery({ field: 'release_date', query: getSelectedItems(years) })
-    else setFilterQuery({ field: 'genre', query: getSelectedItems(genres) })
+    if (filter === 1) setFilterQuery({ field: 'author', query: getSelectedItems(filterData.author) })
+    else if (filter === 2) setFilterQuery({ field: 'release_date', query: getSelectedItems(filterData.release_date) })
+    else setFilterQuery({ field: 'genre', query: getSelectedItems(filterData.genre) })
 
     // console.group('Selected:')
     // console.log('data -->', data)
@@ -62,11 +69,16 @@ export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar
     data.filter((el: IFilterItem) => el.selected).map(el => el.value)
   )
 
-  const onSelectAuthorsHandler = () => setStickers(prev => ([ getSelectedCount(authors), ...prev.slice(1, 3) ]))
+  const onSelectAuthorsHandler = () => {
+    setFlag(!flag)
+    setStickers(prev => ([ getSelectedCount(filterData.author), ...prev.slice(1, 3) ]))
+    console.log('onSelectAuthorsHandler')
+    console.log('filterData.author -->', filterData.author)
+  }
 
-  const onSelectYearsHandler = () => setStickers(prev => ([ prev[0], getSelectedCount(years), prev[2] ]))
+  const onSelectYearsHandler = () => setStickers(prev => ([ prev[0], getSelectedCount(filterData.release_date), prev[2] ]))
 
-  const onSelectGenresHandler = () => setStickers(prev => ([ ...prev.slice(0, 2), getSelectedCount(genres) ]))
+  const onSelectGenresHandler = () => setStickers(prev => ([ ...prev.slice(0, 2), getSelectedCount(filterData.genre) ]))
 
   // console.log('error -->', error)
   // console.log('data -->', data)
@@ -86,9 +98,24 @@ export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar
         {showFilter &&
           <div style={{ position: 'relative' }}>
             <Filter onFilterChange={onFilterChangeHandler} stickers={stickers}/>
-            {filter === 1 && <FilterPopup data={authors} shown={showFilterPopup} onClick={onSelectAuthorsHandler}/>}
-            {filter === 2 && <FilterPopup data={years} shown={showFilterPopup} onClick={onSelectYearsHandler}/>}
-            {filter === 3 && <FilterPopup data={genres} shown={showFilterPopup} onClick={onSelectGenresHandler}/>}
+            {filter === 1 && <FilterPopup
+              data={filterData.author}
+              shown={showFilterPopup}
+              field={'author'}
+              onClick={onSelectAuthorsHandler}
+            />}
+            {filter === 2 && <FilterPopup
+              data={filterData.release_date}
+              shown={showFilterPopup}
+              field={'release_date'}
+              onClick={onSelectYearsHandler}
+            />}
+            {filter === 3 && <FilterPopup
+              data={filterData.genre}
+              shown={showFilterPopup}
+              field={'genre'}
+              onClick={onSelectGenresHandler}
+            />}
           </div>
         }
         

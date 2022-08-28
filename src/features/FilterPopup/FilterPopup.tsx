@@ -5,17 +5,24 @@ import { IFilterItem } from '../../models'
 import './FilterPopup.css'
 
 import { cnFilterPopup } from './FilterPopup.classname'
+import { useAppDispatch } from '../../app/hooks'
+import { toggleFilter, FieldNames } from '../../app/slices/FilterAuthorsSlice'
 
 
 type FilterPopupProps = {
   data: IFilterItem[];
   shown?: boolean;
+  field: FieldNames;
   onClick?: () => void;
 }
 
-export const FilterPopup: FC<FilterPopupProps> = ({ data, shown = false, onClick }) => {
+export const FilterPopup: FC<FilterPopupProps> = ({ data, shown = false, field, onClick }) => {
   // чтобы принудительно обновлять компонент 
-  const [ flag, setFlag ] = useState(false)
+  // const [ flag, setFlag ] = useState(false)
+  const dispatch = useAppDispatch()
+  console.group('FilterPopup:')
+  console.log('data -->', data)
+  console.groupEnd()
   
   return (
     <div className={cnFilterPopup({'shown': shown})}>
@@ -24,8 +31,11 @@ export const FilterPopup: FC<FilterPopupProps> = ({ data, shown = false, onClick
           className={cnFilterPopup('item', {'selected': item.selected})} 
           key={item.value}
           onClick={() => {
-            item.selected = !item.selected
-            setFlag(prev => !prev)
+            console.log('filter click!')
+            console.log(item.value)
+            dispatch(toggleFilter({ field, value: item.value }))
+            // item.selected = !item.selected
+            // setFlag(prev => !prev)
             if (onClick) onClick()
           }}
         >
