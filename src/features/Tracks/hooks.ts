@@ -14,11 +14,6 @@ export type FilterData = {
   query: string[]
 }
 
-// export const useSetCookies = () => {
-//   const [ cookies, setCookies ] = useCookies(['access', 'refresh']);
-//   return [ setCookies, cookies ];
-// }
-
 // возвращает функцию для обновления access токена
 // запрашивает новый access token с помощью refresh token
 // монтирует его в cookies и strore
@@ -86,87 +81,24 @@ export const useFilteredTracks = (query: string = '', filter: FilterData = { fie
   return { data: filteredData, isLoading, isError, error };
 }
 
-// const getFilterData = (data: ITrack[], field: FiledNames) => {
-//   const tempList: string[] = data.map((item: ITrack) => (item[field]!)).filter(item => item !== '-');
-//   const orderedList = Array.from(new Set(tempList)).sort();
-//   return orderedList.map(i => ({ value: i, selected: false }));
-// }
-
-// const useFieldData = (field: FiledNames) => {
-//   const { isLoading, isError, data, error } = useGetTracksQuery();
-//   const [ filteredData, setFilteredData ] = useState<IFilterItem[]>([]);
-//   useEffect(() => { if (data) setFilteredData(getFilterData(data, field)) }, [data]);
-//   return { data: filteredData, isLoading, isError, error };
-// }
-
-// const useFieldData = (field: FiledNames) => {
-//   const { isLoading, isError, data, error } = useGetTracksQuery();
-//   const [ filteredData, setFilteredData ] = useState<IFilterItem[]>([]);
-//   const dispatch = useAppDispatch();
-//   const selectedData = useAppSelector(selectFilterAuthors);
-//   dispatch(updateAuthors())
-
-//   useEffect(() => {
-//     if (data) setFilteredData(getFilterData(data, field))
-//   }, [data]);
-//   return { data: filteredData, isLoading, isError, error };
-// }
-
-// export const useFilterData = () => {
-//   const { isLoading, isError, data, error } = useGetTracksQuery();
-//   const [ filteredData, setFilteredData ] = useState<IFilterItem[]>([]);
-//   const dispatch = useAppDispatch();
-//   const selectedData = useAppSelector(selectFilterAuthors);
-//   console.log('useAppSelector test');
-//   useAppSelector((state) => console.log(state));
-
-//   useEffect(() => {
-//     if (selectedData.length) {
-//       // console.log('setting selectedData');
-//       // console.log('selectedData -->', selectedData);
-//       setFilteredData(selectedData);
-//       return;
-//     }}, [selectedData]
-//   );
-
-//   useEffect(() => {
-//     if (data) dispatch(updateAuthors(data.map((el: ITrack) => el.author)));
-//   }, [data]);
-
-//   return { data: filteredData, isLoading, isError, error };
-// }
-
 export const useFilterData = () => {
   const { data } = useGetTracksQuery();
-  const [ filteredData, setFilteredData ] = useState<IFilter>(initialState);
+  const [ filteredData, setFilteredData ] = useState<IFilter>(initialState.filter);
   const dispatch = useAppDispatch();
   const selectedData = useAppSelector(selectFilter);
+
+  console.log('selectedData -->', selectedData);
   
   useEffect(() => { if (data) dispatch(updateFilter(data)); }, [data]);
-  useEffect(() => { if (selectedData) setFilteredData(selectedData); }, [selectedData]);
+  useEffect(() => {
+    console.log('in useEffect selectedData');
+    if (selectedData) {
+      console.log('in useEffect selectedData before setFileteredData');
+      console.log('selectedData -->', selectedData);
+      setFilteredData(selectedData);
+    }
+  }, [selectedData]);
 
+  console.log('filteredData -->', filteredData);
   return filteredData;
 }
-
-
-// export const useTrackNames = () => ({ ...useFieldData('name') })
-
-// export const useAuthors = () => ({ ...useFieldData('author') })
-
-// export const useGenres = () => ({ ...useFieldData('genre') })
-
-// export const useYears = () => {
-//   const { isLoading, isError, data, error } = useGetTracksQuery();
-//   const [ filteredData, setFilteredData ] = useState<IFilterItem[]>([]);
-
-//   useEffect(() => { if (data) filterData(data) }, [data]);
-      
-//   const filterData = (data: ITrack[]) => {
-//     const yearList = data.map((item: ITrack) => (item.release_date ? +item.release_date.split('-')[0] : 0));
-//     const uniqueList = Array.from(new Set(yearList)).filter(item => item !== 0);
-//     const orderedList = uniqueList.sort((a, b) => (b! - a!));
-//     setFilteredData(orderedList.map(item => ({ 'value': String(item), 'selected': false })));
-//   }
-  
-//   return { data: filteredData, isLoading, isError, error };
-// }

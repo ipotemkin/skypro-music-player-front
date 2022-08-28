@@ -2,6 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IFilterItem, ITrack } from '../../models';
 import { RootState } from '../store';
 
+export interface IFilterSlice {
+  field: FieldNames;
+  stickers: number[];
+  filter: IFilter;
+}
+
 export interface IFilter {
   author: IFilterItem[];
   release_date: IFilterItem[];
@@ -13,10 +19,14 @@ export interface IFilterMark {
   value: string;
 }
 
-export const initialState: IFilter = {
-  author: [],
-  release_date: [],
-  genre: [],
+export const initialState: IFilterSlice = {
+  field: 'author',
+  stickers: [0, 0, 0 ],
+  filter: {
+    author: [],
+    release_date: [],
+    genre: [],  
+  }
 }
 
 export type FieldNames = 'author' | 'genre' | 'release_date';
@@ -75,12 +85,12 @@ export const filterSlice = createSlice({
     clearFilter: (state) => { state = initialState; },
     updateFilter: (state, action: PayloadAction<ITrack[]>) => {
       let field: FieldNames = 'author';
-      for (field in state) updateFilterByField(state, action.payload, field);
+      for (field in state.filter) updateFilterByField(state.filter, action.payload, field);
     },
-    markFilter: (state, action: PayloadAction<IFilterMark>) => setFilter(state, action.payload),
-    unmarkFilter: (state, action: PayloadAction<IFilterMark>) => setFilter(state, action.payload, false),
+    markFilter: (state, action: PayloadAction<IFilterMark>) => setFilter(state.filter, action.payload),
+    unmarkFilter: (state, action: PayloadAction<IFilterMark>) => setFilter(state.filter, action.payload, false),
     toggleFilter: (state, action: PayloadAction<IFilterMark>) => {
-      toggleFilterFunc(state, action.payload);
+      toggleFilterFunc(state.filter, action.payload);
       // state = { ...initialState };
       // state = {...newState};
       console.log('toggle');
@@ -90,8 +100,8 @@ export const filterSlice = createSlice({
 
 export const {clearFilter, updateFilter, toggleFilter } = filterSlice.actions;
 
-export const selectFilterByField = (state: RootState, field: FieldNames) => state.filter[field];
+export const selectFilterByField = (state: RootState, field: FieldNames) => state.filter.filter[field];
 
-export const selectFilter = (state: RootState) => state.filter;
+export const selectFilter = (state: RootState) => state.filter.filter;
 
 export default filterSlice.reducer;
