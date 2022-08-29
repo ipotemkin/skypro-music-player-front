@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IFilterItem, ITrack } from '../../models';
-import { RootState } from '../store';
+import { RootState } from '../../app/store';
 
 export interface IFilterSlice {
   field: FieldNames;

@@ -6,7 +6,7 @@ import './FilterPopup.css'
 
 import { cnFilterPopup } from './FilterPopup.classname'
 import { useAppDispatch } from '../../app/hooks'
-import { toggleFilter, FieldNames } from '../../app/slices/FilterAuthorsSlice'
+import { toggleFilter, FieldNames } from '../Filter/FilterSlice'
 
 
 type FilterPopupProps = {

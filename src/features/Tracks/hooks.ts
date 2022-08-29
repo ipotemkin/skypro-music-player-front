@@ -5,7 +5,7 @@ import { useGetTracksQuery, useRefreshUserTokenMutation } from '../../app/MusicP
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectRefreshToken, setToken } from '../../app/Auth/tokenSlice';
 import { useCookies } from 'react-cookie';
-import { IFilterSlice, initialState, selectFilter, updateFilter } from '../../app/slices/FilterAuthorsSlice';
+import { IFilterSlice, initialState, selectFilter, updateFilter } from '../Filter/FilterSlice';
 import { initFilterQuery } from '../../constants';
 
 // возвращает функцию для обновления access токена
