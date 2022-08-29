@@ -20,7 +20,7 @@ const fieldList: FieldNames[] = [ 'author', 'release_date', 'genre' ]
 const labelList = [ 'исполнителю', 'году выпуска', 'жанру' ]
 
 export const Filter: FC<FilterProps> = ({ state = 1 }) => {
-  const [chosenButton, setChosenButton] = useState<FilterStates>(state)
+  const [ chosenButton, setChosenButton ] = useState<FilterStates>(state)
   const [ showFilterPopup, setShowFilterPopup ] = useState<boolean>(false)
   const filterData = useFilterData()  
   const dispatch = useAppDispatch()
@@ -34,11 +34,7 @@ export const Filter: FC<FilterProps> = ({ state = 1 }) => {
 
   const getButtonState = (buttonNumber: FilterStates = 1) => chosenButton === buttonNumber ? 'active' : 'primary'
 
-  const getSelectedCount = (data: IFilterItem[]) => {
-    let res = 0
-    for (let item of data) if (item.selected) res++
-    return res
-  }
+  const getSelectedCount = (data: IFilterItem[]) => data.filter((el: IFilterItem) => el.selected).length
 
   return (
     <div className={cnFilter()}>
