@@ -57,6 +57,7 @@ export const Filter: FC<FilterProps> = ({ state = 1 }) => {
           state={getButtonState(schemaIndex)}
           stickerCount={getSelectedCount(filterData.filter[el])}
           onClick={() => handleClick(schemaIndex)}
+          key={schemaIndex}
         >{labelList[schemaIndex - 1]}</FilterButton>
       }
     )}
