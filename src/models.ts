@@ -35,3 +35,10 @@ export interface IUserTokens {
   access: string;
   refresh: string;
 }
+
+export type FiledNames = 'author' | 'name' | 'genre' | 'release_date';
+
+export type FilterData = {
+  field: FiledNames
+  query: string[]
+}

@@ -4,7 +4,6 @@ import { RootState } from '../store';
 
 export interface IFilterSlice {
   field: FieldNames;
-  stickers: number[];
   filter: IFilter;
 }
 
@@ -21,7 +20,6 @@ export interface IFilterMark {
 
 export const initialState: IFilterSlice = {
   field: 'author',
-  stickers: [0, 0, 0 ],
   filter: {
     author: [],
     release_date: [],
@@ -65,16 +63,12 @@ const setFilter = (state: IFilter, payload: IFilterMark, selected: boolean = tru
   const { field, value } = payload;
   const update_item = state[field].find((el: IFilterItem) => el.value === value);
   if (update_item) update_item.selected = selected;
-  // state[field] = {...state[field]};
 }
 
 const toggleFilterFunc = (state: IFilter, payload: IFilterMark) => {
   const { field, value } = payload;
   const update_item = state[field].find((el: IFilterItem) => el.value === value);
   if (update_item) update_item.selected = !update_item.selected;
-  // state = {...state};
-  // state[field] = [{ value: 'ARM2', selected: true }];
-  // return state;
 }
 
 
@@ -89,19 +83,15 @@ export const filterSlice = createSlice({
     },
     markFilter: (state, action: PayloadAction<IFilterMark>) => setFilter(state.filter, action.payload),
     unmarkFilter: (state, action: PayloadAction<IFilterMark>) => setFilter(state.filter, action.payload, false),
-    toggleFilter: (state, action: PayloadAction<IFilterMark>) => {
-      toggleFilterFunc(state.filter, action.payload);
-      // state = { ...initialState };
-      // state = {...newState};
-      console.log('toggle');
-    },
+    toggleFilter: (state, action: PayloadAction<IFilterMark>) => toggleFilterFunc(state.filter, action.payload),
+    setFilterField: (state, action: PayloadAction<FieldNames>) => { state.field = action.payload; },
   }
 });
 
-export const {clearFilter, updateFilter, toggleFilter } = filterSlice.actions;
+export const { clearFilter, updateFilter, toggleFilter, setFilterField } = filterSlice.actions;
 
 export const selectFilterByField = (state: RootState, field: FieldNames) => state.filter.filter[field];
 
-export const selectFilter = (state: RootState) => state.filter.filter;
+export const selectFilter = (state: RootState) => state.filter;
 
 export default filterSlice.reducer;

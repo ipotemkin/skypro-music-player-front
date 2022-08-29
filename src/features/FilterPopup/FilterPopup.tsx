@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 
 import { IFilterItem } from '../../models'
 
@@ -13,12 +13,9 @@ type FilterPopupProps = {
   data: IFilterItem[];
   shown?: boolean;
   field: FieldNames;
-  onClick?: () => void;
 }
 
-export const FilterPopup: FC<FilterPopupProps> = ({ data, shown = false, field, onClick }) => {
-  // чтобы принудительно обновлять компонент 
-  // const [ flag, setFlag ] = useState(false)
+export const FilterPopup: FC<FilterPopupProps> = ({ data, shown = false, field }) => {
   const dispatch = useAppDispatch()
   console.group('FilterPopup:')
   console.log('data -->', data)
@@ -34,9 +31,6 @@ export const FilterPopup: FC<FilterPopupProps> = ({ data, shown = false, field, 
             console.log('filter click!')
             console.log(item.value)
             dispatch(toggleFilter({ field, value: item.value }))
-            // item.selected = !item.selected
-            // setFlag(prev => !prev)
-            if (onClick) onClick()
           }}
         >
           {item.value}

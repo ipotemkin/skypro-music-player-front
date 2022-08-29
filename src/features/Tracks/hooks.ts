@@ -1,18 +1,12 @@
 import { useState, useEffect } from 'react'
 
-import { ITrack } from '../../models';
+import { FilterData, ITrack } from '../../models';
 import { useGetTracksQuery, useRefreshUserTokenMutation } from '../../app/MusicPlayer/music-player.api';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectRefreshToken, setToken } from '../../app/Auth/tokenSlice';
 import { useCookies } from 'react-cookie';
-import { IFilter, initialState, selectFilter, updateFilter } from '../../app/slices/FilterAuthorsSlice';
-
-type FiledNames = 'author' | 'name' | 'genre' | 'release_date';
-
-export type FilterData = {
-  field: FiledNames
-  query: string[]
-}
+import { IFilterSlice, initialState, selectFilter, updateFilter } from '../../app/slices/FilterAuthorsSlice';
+import { initFilterQuery } from '../../constants';
 
 // возвращает функцию для обновления access токена
 // запрашивает новый access token с помощью refresh token
@@ -38,10 +32,7 @@ export const useRefreshToken = () => {
   return handleRefreshToken;
 }
 
-export const useFilteredTracks = (query: string = '', filter: FilterData = { field: 'author', query: [] }) => {
-
-  // const [ cookies, setCookies ] = useCookies(['access', 'refresh'])
-  // const dispatch = useAppDispatch()
+export const useFilteredTracks = (query: string = '', filter: FilterData = initFilterQuery) => {
 
   // DEBUG
   console.log('in useFilteredTracks');
@@ -83,7 +74,7 @@ export const useFilteredTracks = (query: string = '', filter: FilterData = { fie
 
 export const useFilterData = () => {
   const { data } = useGetTracksQuery();
-  const [ filteredData, setFilteredData ] = useState<IFilter>(initialState.filter);
+  const [ filteredData, setFilteredData ] = useState<IFilterSlice>(initialState);
   const dispatch = useAppDispatch();
   const selectedData = useAppSelector(selectFilter);
 
