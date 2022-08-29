@@ -16,23 +16,20 @@ type FilterProps = {
   state?: FilterStates
 }
 
-export const Filter: FC<FilterProps> = ({ state = 1 }) => {
-  const [chosenButton, setChosenButton] = useState(state)
-  const filterData = useFilterData()
-  const [ filter, setFilter ] = useState<FilterStates>(1)
-  const [ showFilterPopup, setShowFilterPopup ] = useState(false)
-  
-  const dispatch = useAppDispatch()
-  
-  const fieldList: FieldNames[] = [ 'author', 'release_date', 'genre' ]
-  const labelList = [ 'исполнителю', 'году выпуска', 'жанру' ]
-  const fieldName = (fieldList.slice(filter - 1, filter) as unknown) as FieldNames
+const fieldList: FieldNames[] = [ 'author', 'release_date', 'genre' ]
+const labelList = [ 'исполнителю', 'году выпуска', 'жанру' ]
 
+export const Filter: FC<FilterProps> = ({ state = 1 }) => {
+  const [chosenButton, setChosenButton] = useState<FilterStates>(state)
+  const [ showFilterPopup, setShowFilterPopup ] = useState<boolean>(false)
+  const filterData = useFilterData()  
+  const dispatch = useAppDispatch()
+  const fieldName = fieldList[chosenButton - 1]
 
   const handleClick = (buttonNumber: FilterStates) => {
     setChosenButton(buttonNumber)
     dispatch(setFilterField(fieldList[buttonNumber - 1]))
-    onFilterChangeHandler(buttonNumber)
+    setShowFilterPopup(chosenButton === buttonNumber ? !showFilterPopup : true)
   }
 
   const getButtonState = (buttonNumber: FilterStates = 1) => chosenButton === buttonNumber ? 'active' : 'primary'
@@ -43,11 +40,6 @@ export const Filter: FC<FilterProps> = ({ state = 1 }) => {
     return res
   }
 
-  const onFilterChangeHandler = (filterIn: FilterStates) => {
-    setFilter(filterIn)
-    setShowFilterPopup(chosenButton === filterIn ? !showFilterPopup : true)
-  }
-    
   return (
     <div className={cnFilter()}>
       <span className={cnFilter('label')}>Искать по:</span>
