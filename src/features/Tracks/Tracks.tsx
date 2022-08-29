@@ -1,42 +1,28 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 
 import { Filter } from '../../features/Filter/Filter'
 import { TrackList } from '../../features/TrackList/TrackList'
 import { Search } from '../../features/Search/Search'
 import { SideMenu } from '../../features/SideMenu/SideMenu'
 import { Sidebar } from '../../features/Sidebar/Sidebar'
-import { useFilteredTracks, useFilterData } from './hooks'
-import { IFilterItem, FilterData } from '../../models'
+import { useFilteredTracks } from './hooks'
 import { cnTracks } from './Tracks.classname'
 import './Tracks.css'
-import { initFilterQuery } from '../../constants'
 // import { getUserIdFromJWT, parseJWT } from '../../utils'
 
 type TracksProps = {
   title: string
   showFilter?: boolean
   showSidebar?: boolean
+  hook: Function
 }
 
-export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar = false }) => {
+export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar = false, hook }) => {
   const [ searchString, setSearchString ] = useState('')
-  const [ filterQuery, setFilterQuery ] = useState<FilterData>(initFilterQuery)  
-  const { isLoading, isError, data } = useFilteredTracks(
-    searchString, showFilter ? filterQuery : initFilterQuery
-  )  
-  const filterData = useFilterData()
-
-  useEffect(() => {
-    const{ field, filter } = filterData
-    setFilterQuery({ field, query: getSelectedItems(filter[field]) })
-  }, [filterData])
+  const { isLoading, isError, data } = hook(searchString)  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setSearchString(e.target.value)
-  
-  const getSelectedItems = (data: IFilterItem[]) => (
-    data.filter((el: IFilterItem) => el.selected).map(el => el.value)
-  )
-  
+    
   return (
     <div className={cnTracks()}>
       <SideMenu />
