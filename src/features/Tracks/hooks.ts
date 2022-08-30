@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react'
 
-import { FilterData, IFilterItem, IStaredUser, ITrack } from '../../models';
+import { IFilterItem, IStaredUser, ITrack } from '../../models';
 import { useGetTracksQuery, useRefreshUserTokenMutation } from '../../app/MusicPlayer/music-player.api';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectAccessToken, selectRefreshToken, setToken } from '../../app/Auth/tokenSlice';
 import { useCookies } from 'react-cookie';
 import { IFilterSlice, initialState, selectFilter, updateFilter } from '../Filter/FilterSlice';
-import { initFilterQuery } from '../../constants';
 import { getUserIdFromJWT } from '../../utils';
 
 // возвращает функцию для обновления access токена
@@ -134,4 +133,14 @@ export const useFilterData = () => {
 
   console.log('filteredData -->', filteredData);
   return filteredData;
+}
+
+const checkUserToken = (token: string) => {
+  return true;
+}
+
+const useCurrentUserId = () => {
+  const token = useAppSelector(selectAccessToken);
+  if (token) checkUserToken(token);
+  
 }

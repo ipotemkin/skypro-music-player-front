@@ -20,3 +20,11 @@ export const parseJWT = (token: string) => {
 export const getUserIdFromJWT = (token: string) => {
   return parseJWT(token).user_id;
 }
+
+export const getJWTExpTime = (token: string) => {
+  return new Date(+parseJWT(token).exp*1000);
+}
+
+export const checkJWTExpTime = (token: string) => {
+  return new Date() < getJWTExpTime(token);
+}

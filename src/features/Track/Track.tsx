@@ -1,7 +1,7 @@
 import { FC, useState } from 'react'
 
 import { IStaredUser, ITrack } from '../../models'
-import { getUserIdFromJWT, SecondsToMinSec } from '../../utils'
+import { checkJWTExpTime, getUserIdFromJWT, SecondsToMinSec } from '../../utils'
 
 import { cnTrack } from './Track.classname'
 
@@ -39,6 +39,23 @@ export const Track: FC<TrackProps> = ({ track }) => {
 
   const toggleFavoriteTrack = async (trackId: number) => {
     console.log('toggleFavoriteTrack')
+    
+    // проверяем время эскпирации токена
+    if ((token && !checkJWTExpTime(token)) || !token) {
+      if (refreshToken) {
+        try {
+          await handleRefreshToken(refreshToken)
+        } catch {
+          navigate('/login')
+        }
+      }
+      else {
+        console.error('No refresh token')
+        navigate('/login')
+      }
+
+    }
+
     try {
       favorite ? await removeTrackFromFavorite(trackId).unwrap() : await addTrackToFavorite(trackId).unwrap()
     } catch (err) {
