@@ -1,8 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { ICollection, ITrack, IUserTokens } from '../../models'
+import { checkJWTExpTime } from '../../utils';
 import { RootState } from '../store';
 
 export interface ILoginUser {
+  email: string;
+  password: string;
+}
+
+export interface ISignupUser {
+  username: string;
   email: string;
   password: string;
 }
@@ -14,7 +21,7 @@ export const musicPlayerApi = createApi({
     baseUrl: 'http://51.250.72.80:8090/',
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).token.access;
-      if (token) headers.set('authorization', `Bearer ${token}`);
+      if (token && checkJWTExpTime(token)) headers.set('authorization', `Bearer ${token}`);
       console.log('headers token-->', token);
       return headers;
     },
@@ -32,6 +39,13 @@ export const musicPlayerApi = createApi({
     loginUser: build.mutation({
       query: (body: ILoginUser) => ({
         url: 'user/login/',
+        method: 'POST',
+        body,
+      })
+    }),
+    userSignup: build.mutation({
+      query: (body: ISignupUser) => ({
+        url: 'user/signup/',
         method: 'POST',
         body,
       })
@@ -79,6 +93,7 @@ export const musicPlayerApi = createApi({
 export const {
   useGetTracksQuery,
   useLoginUserMutation,
+  useUserSignupMutation,
   useUserTokenMutation,
   useRefreshUserTokenMutation,
   useAddTrackToFavoriteMutation,

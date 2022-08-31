@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useReducer, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 
 import { cnLoginForm } from './LoginForm.classname'
 import '../../index.css'
@@ -9,12 +9,12 @@ import { Button } from '../Button/Button'
 import './LoginForm.css'
 import { InputField } from '../InputField/InputField'
 import { useNavigate } from 'react-router-dom'
-import { useUserTokenMutation } from '../../app/MusicPlayer/music-player.api'
+import { ISignupUser, useUserSignupMutation, useUserTokenMutation } from '../../app/MusicPlayer/music-player.api'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import { SerializedError } from '@reduxjs/toolkit'
 import { useCookies } from 'react-cookie'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { selectTokens, setToken } from '../../app/Auth/tokenSlice'
+import { useAppDispatch } from '../../app/hooks'
+import { setToken } from '../../app/Auth/tokenSlice'
 
 type LoginFormProps = {
 }
@@ -22,18 +22,9 @@ type LoginFormProps = {
 export const LoginForm: FC<LoginFormProps> = () => {
   const [ cookies, setCookies ] = useCookies(['access', 'refresh'])
   const dispatch = useAppDispatch()
-  const tokens = useAppSelector(selectTokens)
-
-  // if (cookies) {
-  //   console.log('cookies set')
-  //   dispatch(setToken({ access: cookies.access, refresh: cookies.refresh }))
-  // }
-
-  // const [ LoginUser, { isError, data, error } ] = useLoginUserMutation()
-  const [ username, setUsername ] = useState('')
   const [ loginError, setLoginError ] = useState(false)
-
   const [ getUserTokens, { isError, data, error } ] = useUserTokenMutation()
+  const [ postUserSignup ] = useUserSignupMutation()
 
   const errorInitialState = {
     errorUsername: false,
@@ -54,7 +45,6 @@ export const LoginForm: FC<LoginFormProps> = () => {
   let navigate = useNavigate()
 
   useEffect(() => { 
-    // if (data) setUsername(data.username)
     if (data) {
       console.log('tokens -->', data)
       setCookies('access', data.access)    
@@ -62,33 +52,15 @@ export const LoginForm: FC<LoginFormProps> = () => {
       dispatch(setToken({ access: data.access, refresh: data.refresh }))
       navigate('/tracks')
     }
-    
-    // // DEBUG
-    // if (cookies) {
-    //   console.group('Cookies set:')
-    //   console.log('access -->', cookies.access)
-    //   console.log('refresh -->', cookies.refresh)
-    //   console.groupEnd()
-    // }
-    
-    // // DEBUG
-    // if (tokens) {
-    //   console.group('Tokens in store:')
-    //   console.log('access -->', tokens.access)
-    //   console.log('refresh -->', tokens.refresh)
-    //   console.groupEnd();
-    // }
-  
-  // }, [data, cookies, tokens])
   }, [data])
 
   // const enter = () => console.log('enter')
   
-  const registerHandler = () => {
+  const handleRegister = () => {
     if (!form.register) setForm({ ...initialState, register: true, enableSubmit: false })
   }
 
-  const getInputFieldHandler = (fieldName: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleGetInputField = (fieldName: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm(prev => ({
       ...prev,
       [fieldName]: e.target.value,
@@ -97,7 +69,6 @@ export const LoginForm: FC<LoginFormProps> = () => {
     setLoginError(false)
   }
   
-
   const isFormValid = () => {
     
     const usernameValid = isUsernameValid()
@@ -136,13 +107,20 @@ export const LoginForm: FC<LoginFormProps> = () => {
     if (isFormValid()) {
 
       if (form.register) {
+        handleUserSignup({
+          username: form.username,
+          email: form.username,
+          password: form.password
+        })
+        
         setForm(initialState)
+        console.log('user signup')
         return
       }
 
       // здесь должен быть выход из формы
       console.log({ 'username': form.username, 'password': form.password })
-      loginUserHandler()
+      handleLoginUser()
       // navigate('/tracks')
     }
 
@@ -162,7 +140,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
     return ""
   }
 
-  const loginUserHandler = async () => {
+  const handleLoginUser = async () => {
     try {
       // await LoginUser({ email: form.username, password: form.password }).unwrap()
       const { data: newTokens } = await getUserTokens({ email: form.username, password: form.password }).unwrap()
@@ -175,6 +153,14 @@ export const LoginForm: FC<LoginFormProps> = () => {
     
     console.log('data -->', data)
     console.log('isError -->', isError)
+  }
+
+  const handleUserSignup = async (payload: ISignupUser) => {
+    try {
+      await postUserSignup(payload).unwrap()
+    } catch (err) {
+      console.log(`user signup error: ${JSON.stringify(err)}`)
+    }
   }
 
   const getErrorMessage = (error: FetchBaseQueryError | SerializedError) => {
@@ -197,14 +183,14 @@ export const LoginForm: FC<LoginFormProps> = () => {
       <InputField
         placeholder="Логин"
         value={form.username}
-        onChange={getInputFieldHandler('username')}
+        onChange={handleGetInputField('username')}
         error={form.errorUsername ? "Введите имя пользователя" : ""}
       />
       <InputField
         type="password"
         placeholder="Пароль"
         value={form.password}
-        onChange={getInputFieldHandler('password')}
+        onChange={handleGetInputField('password')}
         error={getPasswordErrorMessage()}
       />
       
@@ -212,7 +198,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
         type="password"
         placeholder="Повторите пароль"
         value={form.passwordRepeat}
-        onChange={getInputFieldHandler('passwordRepeat')}
+        onChange={handleGetInputField('passwordRepeat')}
         error={getPasswordErrorMessage()}
       />}
       
@@ -225,7 +211,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
         buttonStyle={form.register ? "primary" : "secondary"}
         type={ form.register ? "submit" : "button"}
         // type="button"
-        onClick={registerHandler}
+        onClick={handleRegister}
       >
         Зарегистрироваться
       </Button>
