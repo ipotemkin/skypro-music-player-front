@@ -16,11 +16,12 @@ type TracksProps = {
   showFilter?: boolean
   showSidebar?: boolean
   hook: Function
+  collectionId?: number
 }
 
-export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar = false, hook }) => {
+export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar = false, hook, collectionId }) => {
   const [ searchString, setSearchString ] = useState('')
-  const { isLoading, isError, data } = hook(searchString)
+  const { isLoading, isError, data } = collectionId ? hook(searchString, collectionId) : hook(searchString)
   
   // const [ cookies ] = useCookies(['access', 'refresh'])
 
@@ -41,11 +42,11 @@ export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar
         <h2 className={cnTracks('centerblock__title')}>{title}</h2>
         {showFilter && <Filter />}
         { isLoading && <p>Loading...</p>}
-        { isError && <p>Error, isLoading={isLoading}</p>}
+        { isError && <p>Error</p>}
         { data && <TrackList tracks={data} />}
       </div>
       {showSidebar && <Sidebar />}
-      <Player />
+      {/* <Player /> */}
     </div>
   ) 
 }

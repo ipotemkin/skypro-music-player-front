@@ -42,3 +42,10 @@ export type FilterData = {
   field: FiledNames
   query: string[]
 }
+
+export interface ICollection {
+  id: number;
+  items: ITrack[];
+  owner: string;
+  name: string;
+}

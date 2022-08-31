@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
-import { IFilterItem, IStaredUser, ITrack } from '../../models';
-import { useGetTracksQuery, useRefreshUserTokenMutation } from '../../app/MusicPlayer/music-player.api';
+import { ICollection, IFilterItem, IStaredUser, ITrack } from '../../models';
+import { useGetCollectionQuery, useGetTracksQuery, useRefreshUserTokenMutation } from '../../app/MusicPlayer/music-player.api';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectAccessToken, selectRefreshToken, setToken } from '../../app/Auth/tokenSlice';
 import { useCookies } from 'react-cookie';
@@ -113,6 +113,55 @@ export const useFavoriteTracks = (query: string = '') => {
   return { data: resultData, isLoading, isError, error };
 }
 
+export const useCollection = (query: string = '', collectionId: number) => {
+
+  // DEBUG
+  console.log('in useCollections');
+
+  const { isLoading, isError, data, error } = useGetCollectionQuery(collectionId);
+  const [ filteredData, setFilteredData ] = useState<ICollection>();
+  const refreshToken = useAppSelector(selectRefreshToken)
+  const handleRefreshTokens = useRefreshToken();
+
+  useEffect( () => {
+    if (isError) {
+      if ('status' in error && error.status === 401) {
+        if (refreshToken) {
+          console.log('before handleRefreshTokens')
+          handleRefreshTokens(refreshToken)
+        }
+      }
+    }
+    if (data) filterData(data);
+  }, [data, isError, query]);
+      
+  const filterData = (data: ICollection) => {
+    const { items } = data;
+    const newItems = items.filter((item: ITrack) => item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
+    const newData = {...data};
+    newData.items = [...newItems];
+    setFilteredData(newData);
+  }
+
+  if (filteredData) {
+    return { name: filteredData.name, data: filteredData.items, isLoading, isError, error };
+  }
+  return { name: '', data: [], isLoading, isError, error };
+  // return { data: filteredData, isLoading, isError, error };
+}
+
+export const useCollectionOne = (query: string = '') => {
+  return useCollection(query, 1);
+}
+
+export const useCollectionTwo = (query: string = '') => {
+  return useCollection(query, 2);
+}
+
+export const useCollectionThree = (query: string = '') => {
+  return useCollection(query, 3);
+}
+
 export const useFilterData = () => {
   const { data } = useGetTracksQuery();
   const [ filteredData, setFilteredData ] = useState<IFilterSlice>(initialState);
@@ -122,6 +171,7 @@ export const useFilterData = () => {
   console.log('selectedData -->', selectedData);
   
   useEffect(() => { if (data) dispatch(updateFilter(data)); }, [data]);
+  
   useEffect(() => {
     console.log('in useEffect selectedData');
     if (selectedData) {
@@ -135,12 +185,13 @@ export const useFilterData = () => {
   return filteredData;
 }
 
+// not finished
 const checkUserToken = (token: string) => {
   return true;
 }
 
-const useCurrentUserId = () => {
+// not finished
+export const useCurrentUserId = () => {
   const token = useAppSelector(selectAccessToken);
   if (token) checkUserToken(token);
-  
 }

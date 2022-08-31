@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { ITrack, IUserTokens } from '../../models'
+import { ICollection, ITrack, IUserTokens } from '../../models'
 import { RootState } from '../store';
 
 export interface ILoginUser {
@@ -63,8 +63,17 @@ export const musicPlayerApi = createApi({
         method: 'DELETE',
       }),
       invalidatesTags: [{ type: 'Tracks', id: 'LIST' }]
+    }),
+    getCollection: build.query<ICollection, number> ({
+      query: (collectionId) => `catalog/selection/${collectionId}`,
+      providesTags: (result) => result?.items
+        ? [
+          ...result.items.map(({ id }) => ({ type: 'Tracks' as const, id })),
+          { type: 'Tracks', id: 'LIST' },
+        ]
+        : [{ type: 'Tracks', id: 'LIST' }],
+      }),
     })
-  })
 })
 
 export const {
@@ -73,5 +82,6 @@ export const {
   useUserTokenMutation,
   useRefreshUserTokenMutation,
   useAddTrackToFavoriteMutation,
-  useRemoveTrackFromFavoriteMutation
+  useRemoveTrackFromFavoriteMutation,
+  useGetCollectionQuery,
 } = musicPlayerApi
