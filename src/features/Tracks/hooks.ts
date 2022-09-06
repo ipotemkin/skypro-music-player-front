@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
-import { ICollection, IFilterItem, IStaredUser, ITrack } from '../../models';
-import { useGetCollectionQuery, useGetTracksQuery, useRefreshUserTokenMutation } from '../../app/MusicPlayer/music-player.api';
+import { ICollection, IFilterItem, IStaredUser, ITrack, IUser } from '../../models';
+import { useGetCollectionQuery, useGetCurrentUserQuery, useGetTracksQuery, useRefreshUserTokenMutation } from '../../app/MusicPlayer/music-player.api';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectAccessToken, selectRefreshToken, setToken } from '../../app/Auth/tokenSlice';
+import { selectAccessToken, selectRefreshToken, selectTokens, setToken } from '../../app/Auth/tokenSlice';
 import { useCookies } from 'react-cookie';
 import { IFilterSlice, initialState, selectFilter, updateFilter } from '../Filter/FilterSlice';
 import { getUserIdFromJWT } from '../../utils';
@@ -13,6 +13,7 @@ import { getUserIdFromJWT } from '../../utils';
 // монтирует его в cookies и strore
 // возвращает новый access token или ошибку
 export const useRefreshToken = () => {
+  // eslint-disable-next-line
   const [ cookies, setCookies ] = useCookies(['access']);
   const dispatch = useAppDispatch();
   const [ doRefreshToken ] = useRefreshUserTokenMutation();
@@ -52,6 +53,7 @@ export const useTracks = (query: string = '') => {
       }
     }
     if (data) filterData(data);
+  // eslint-disable-next-line
   }, [data, isError, query]);
       
   const filterData = (data: ITrack[]) => 
@@ -75,6 +77,7 @@ export const useFilteredTracks = (query: string = '') => {
 
   useEffect( () => {
     if (filterSliceData && data) filterData(data, filterSliceData);
+  // eslint-disable-next-line
   }, [data, filterSliceData, query]);
       
   const filterData = (data: ITrack[], filter: IFilterSlice) => {
@@ -133,6 +136,7 @@ export const useCollection = (query: string = '', collectionId: number) => {
       }
     }
     if (data) filterData(data);
+  // eslint-disable-next-line
   }, [data, isError, query]);
       
   const filterData = (data: ICollection) => {
@@ -194,4 +198,83 @@ const checkUserToken = (token: string) => {
 export const useCurrentUserId = () => {
   const token = useAppSelector(selectAccessToken);
   if (token) checkUserToken(token);
+}
+
+export const useLoadCredentialsFromCookies = () => {
+  const [ cookies ] = useCookies(['access', 'refresh']);
+  const dispatch = useAppDispatch();
+
+  console.log('before checking tokens');
+  
+  if (cookies && cookies.access !== '' && cookies.access !== undefined) {
+    console.log('credentials set from cookies');
+    console.log(cookies);
+    dispatch(setToken({ access: cookies.access, refresh: cookies.refresh }));
+    return true;
+  }
+
+  console.log('no credentials found in cookies');
+  return false;
+}
+
+export const useLogout = () => {
+  const [cookies, setCookies, removeCookies] = useCookies(['access', 'refresh']);
+  const dispatch = useAppDispatch();
+
+  console.log('processing logout');
+  removeCookies('access');
+  removeCookies('refresh');
+  dispatch(setToken({ access: undefined, refresh: undefined }));
+  // setCookies('access', '');
+  // setCookies('refresh', '');
+}
+
+export const useAuth = () => {
+  const dispatch = useAppDispatch();
+  
+  // проверить, есть ли токены в сторе
+  const tokens = useAppSelector(selectTokens);
+
+  if (tokens.access) {}
+    // если есть, то получаем пользователя
+      // если OK --> return
+      // если нет --> рефрешим токен
+        // если OK --> получаем пользователя
+        // если нет --> loginPage
+  
+    // если нет, проверить токены в куках
+
+      // если есть, то загрузить в стор и получить пользователя
+
+        // если пользователя не получили, то рефрешим токен
+
+          // если ОК --> получаем пользователя
+          // если нет --> loginPage
+
+      // если нет, то --> loginPage
+
+}
+
+
+// returns the current user, refreshing his token if necessary
+// if no loggedin user or the refresh token is invalid, returns undefined
+export const useCurrentUser = () => {
+  const timestampRef = useRef(Date.now()).current;
+  const { isError, data, error } = useGetCurrentUserQuery(timestampRef);
+  const [ user, setUser ] = useState<IUser | undefined>(data)
+  const doRefreshToken = useRefreshToken();
+  const refreshToken = useAppSelector(selectRefreshToken);
+
+  useEffect(() => {
+    if(data) setUser(data);
+  }, [data]);
+
+  useEffect(() => {
+    if(isError) {
+      if ('status' in error && error.status === 401 && refreshToken) doRefreshToken(refreshToken);
+      else return undefined;
+    }
+  }, [isError, error, refreshToken, doRefreshToken]);
+
+  return user;
 }

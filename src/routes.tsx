@@ -1,13 +1,16 @@
-import { Routes as ReactRoutes, Route } from 'react-router-dom'
+import { Routes as ReactRoutes, Route, Navigate } from 'react-router-dom'
 import { Login } from './pages/Login/Login'
 import { TracksPage } from './pages/TracksPage/TracksPage'
 import { Playlist } from './pages/Playlist/Playlist'
 import { Collection} from './pages/Collection/Collection'
+import { useLoadCredentialsFromCookies } from './features/Tracks/hooks'
 
 export const Routes = () => {
+  const isLoggedIn = useLoadCredentialsFromCookies()
+
   return (
     <ReactRoutes>
-      {/* <Redirect from="/" to="/login" exact /> */}
+      <Route path="/" element={<Navigate replace to={isLoggedIn ? "/tracks" : "/login"}/>} />
       <Route path="/login" element={<Login />} />
       <Route path="/tracks" element={<TracksPage />} />
       <Route path="/playlist" element={<Playlist />} />

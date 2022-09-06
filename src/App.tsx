@@ -1,23 +1,17 @@
 import { Routes } from './routes';
 import './App.css';
-import { useCookies } from 'react-cookie';
-import { useAppDispatch } from './app/hooks';
-import { setToken } from './app/Auth/tokenSlice';
-// import { Player } from './features/Player/Player';
+import { useLoadCredentialsFromCookies } from './features/Tracks/hooks';
+import { TracksPage } from './pages/TracksPage/TracksPage';
+import { Login } from './pages/Login/Login';
 
-function App() {
-  const [ cookies ] = useCookies(['access', 'refresh'])
-  const dispatch = useAppDispatch()
-
-  if (cookies) {
-    console.log('cookies set')
-    dispatch(setToken({ access: cookies.access, refresh: cookies.refresh }))
-  }
-
+function App() {  
   return (
     <div className="App">
-
       <Routes />
+
+      {/* {userLoggedIn && <TracksPage />} */}
+      {/* {!userLoggedIn && <Login />} */}
+
       {/* <Player /> */}
 
       {/* <header className="App-header">

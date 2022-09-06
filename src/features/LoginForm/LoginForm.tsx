@@ -20,6 +20,7 @@ type LoginFormProps = {
 }
 
 export const LoginForm: FC<LoginFormProps> = () => {
+  // eslint-disable-next-line
   const [ cookies, setCookies ] = useCookies(['access', 'refresh'])
   const dispatch = useAppDispatch()
   const [ loginError, setLoginError ] = useState(false)
@@ -52,6 +53,7 @@ export const LoginForm: FC<LoginFormProps> = () => {
       dispatch(setToken({ access: data.access, refresh: data.refresh }))
       navigate('/tracks')
     }
+  // eslint-disable-next-line
   }, [data])
 
   // const enter = () => console.log('enter')

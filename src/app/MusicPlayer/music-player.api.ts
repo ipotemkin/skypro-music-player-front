@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { ICollection, ITrack, IUserTokens } from '../../models'
+import { ICollection, ITrack, IUser, IUserTokens } from '../../models'
 import { checkJWTExpTime } from '../../utils';
 import { RootState } from '../store';
 
@@ -86,8 +86,11 @@ export const musicPlayerApi = createApi({
           { type: 'Tracks', id: 'LIST' },
         ]
         : [{ type: 'Tracks', id: 'LIST' }],
-      }),
-    })
+    }),
+    getCurrentUser: build.query<IUser, number> ({
+      query: (sessionId: number) => `user/me/`,
+    }),
+  }),
 })
 
 export const {
@@ -99,4 +102,5 @@ export const {
   useAddTrackToFavoriteMutation,
   useRemoveTrackFromFavoriteMutation,
   useGetCollectionQuery,
+  useGetCurrentUserQuery,
 } = musicPlayerApi

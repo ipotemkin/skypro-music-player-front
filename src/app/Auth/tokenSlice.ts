@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { useCookies } from 'react-cookie';
 import { RootState } from '../store';
 // import { fetchCount } from './counterAPI';
 
@@ -34,7 +35,6 @@ export const tokenSlice = createSlice({
       // обновляют state, но вызывают warning
       state.access = action.payload.access;
       state.refresh = action.payload.refresh;
-
       // state = {...action.payload};
       // console.log('state -->', state);
     },
