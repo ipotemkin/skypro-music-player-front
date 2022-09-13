@@ -10,12 +10,12 @@ export const Routes = () => {
 
   return (
     <ReactRoutes>
-      <Route path="/" element={<Navigate replace to={isLoggedIn ? "/tracks" : "/login"}/>} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/tracks" element={<TracksPage />} />
-      <Route path="/playlist" element={<Playlist />} />
-      <Route path="/collection/:id" element={<Collection />} />
-      {/* <Route path="*" element={<Page404 />} /> */}
+      <Route path="/" element={ <Navigate replace to={isLoggedIn ? "/tracks" : "/login"}/> } />
+      <Route path="/login" element={ <Login /> } />
+      <Route path="/tracks" element={ isLoggedIn ? <TracksPage /> : <Navigate replace to="/login"/> } />
+      <Route path="/playlist" element={ isLoggedIn ? <Playlist /> : <Navigate replace to="/login"/> }/>
+      <Route path="/collection/:id" element={ isLoggedIn ? <Collection /> : <Navigate replace to="/login"/> } />
+      <Route path="*" element={ <Navigate replace to="/" /> } />
     </ReactRoutes>
   )
 }

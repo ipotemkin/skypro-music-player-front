@@ -7,6 +7,7 @@ import { selectAccessToken, selectRefreshToken, selectTokens, setToken } from '.
 import { useCookies } from 'react-cookie';
 import { IFilterSlice, initialState, selectFilter, updateFilter } from '../Filter/FilterSlice';
 import { getUserIdFromJWT } from '../../utils';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 // возвращает функцию для обновления access токена
 // запрашивает новый access token с помощью refresh token
@@ -38,20 +39,11 @@ export const useTracks = (query: string = '') => {
   // DEBUG
   console.log('in useTracks');
 
+  useCurrentUser();
   const { isLoading, isError, data, error } = useGetTracksQuery();
   const [ filteredData, setFilteredData ] = useState<ITrack[]>([]);
-  const refreshToken = useAppSelector(selectRefreshToken)
-  const handleRefreshTokens = useRefreshToken();
 
-  useEffect( () => {
-    if (isError) {
-      if ('status' in error && error.status === 401) {
-        if (refreshToken) {
-          console.log('before handleRefreshTokens')
-          handleRefreshTokens(refreshToken)
-        }
-      }
-    }
+  useEffect( () => {    
     if (data) filterData(data);
   // eslint-disable-next-line
   }, [data, isError, query]);
@@ -255,26 +247,76 @@ export const useAuth = () => {
 
 }
 
+export const useAuthUser = () => {
+  const timestampRef = useRef(Date.now()).current;
+  return useGetCurrentUserQuery(timestampRef);
+}
 
 // returns the current user, refreshing his token if necessary
 // if no loggedin user or the refresh token is invalid, returns undefined
 export const useCurrentUser = () => {
   const timestampRef = useRef(Date.now()).current;
+  const { data, isLoading, isError, error } = useGetCurrentUserQuery(timestampRef);  
+  const doRefreshToken = useRefreshToken();
+  const refreshToken = useAppSelector(selectRefreshToken);
+  const [ resultError, setResultError ] = useState(false)
+  const navigate = useNavigate();
+  
+  const handleRefreshToken = async (rt: string) => {
+    console.log('in handleREfreshToken');
+    const result = await doRefreshToken(rt);
+    if ('error' in result) navigate('/login');
+  }
+
+  useEffect(() => {
+    console.group('useCurrentUser useEffect:');
+    console.log('isError -->', isError);
+    console.log('refreshToken -->', refreshToken);
+    console.log('error.status -->', error);
+    console.groupEnd();
+    
+    if(isError) {
+      if ('status' in error && error.status === 401 && refreshToken) {
+        console.log('refreshing token');
+        setResultError(false);
+        handleRefreshToken(refreshToken);
+      } else {
+        navigate('/login');
+      }
+    }
+  }, [isError, error, refreshToken]);
+
+  console.log('exiting useCurrentUser -->', data);
+  return  { user: data, isLoading, isError, error: resultError };
+}
+
+export const useCurrentUserOld = () => {
+  const timestampRef = useRef(Date.now()).current;
   const { isError, data, error } = useGetCurrentUserQuery(timestampRef);
+  
   const [ user, setUser ] = useState<IUser | undefined>(data)
   const doRefreshToken = useRefreshToken();
   const refreshToken = useAppSelector(selectRefreshToken);
+  const [ loaded, setLoaded ] = useState(false);
 
   useEffect(() => {
-    if(data) setUser(data);
+    if(data) { 
+      setUser(data);
+      setLoaded(true);
+    }
   }, [data]);
 
   useEffect(() => {
     if(isError) {
-      if ('status' in error && error.status === 401 && refreshToken) doRefreshToken(refreshToken);
-      else return undefined;
+      if ('status' in error && error.status === 401 && refreshToken) {
+        console.log('refreshing token');
+        const access = doRefreshToken(refreshToken);
+        console.log('access token -->', access);
+        setLoaded(true);
+      }
     }
   }, [isError, error, refreshToken, doRefreshToken]);
 
-  return user;
+  console.log('exiting useCurrentUser -->', user);
+  return  { user, loaded };
 }

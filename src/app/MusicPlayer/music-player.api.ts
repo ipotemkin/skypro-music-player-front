@@ -90,6 +90,9 @@ export const musicPlayerApi = createApi({
     getCurrentUser: build.query<IUser, number> ({
       query: (sessionId: number) => `user/me/`,
     }),
+    getCurrentUserCached: build.query<IUser, void> ({
+      query: () => `user/me/`,
+    }),
   }),
 })
 
@@ -103,4 +106,5 @@ export const {
   useRemoveTrackFromFavoriteMutation,
   useGetCollectionQuery,
   useGetCurrentUserQuery,
+  useGetCurrentUserCachedQuery,
 } = musicPlayerApi

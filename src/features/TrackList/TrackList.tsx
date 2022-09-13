@@ -7,6 +7,7 @@ import { cnTrackList } from './TrackList.classname'
 import './TrackList.css'
 
 import iconWatch from './assets/watch.svg'
+import { useCurrentUser } from '../Tracks/hooks'
 
 type TrackListProps = {
   tracks: ITrack[]
