@@ -79,7 +79,7 @@ export const musicPlayerApi = createApi({
       invalidatesTags: [{ type: 'Tracks', id: 'LIST' }]
     }),
     getCollection: build.query<ICollection, number> ({
-      query: (collectionId) => `catalog/selection/${collectionId}`,
+      query: (collectionId) => `catalog/selection/${collectionId}/`,
       providesTags: (result) => result?.items
         ? [
           ...result.items.map(({ id }) => ({ type: 'Tracks' as const, id })),
