@@ -59,7 +59,7 @@ export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar
         { data && <TrackList tracks={data} />}
       </div>
       {showSidebar && <Sidebar />}
-      {/* <Player /> */}
+      <Player data={data} trackId={36}/>
     </div>
   ) 
 }

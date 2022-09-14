@@ -86,6 +86,12 @@ body {
   cursor: pointer;
 }
 
+/* ._btn-icon_checked svg {
+  fill: transparent;
+  stroke: #ACACAC;
+  cursor: pointer;
+} */
+
 ._btn-icon:hover svg {
   fill: transparent;
   stroke: #ACACAC;

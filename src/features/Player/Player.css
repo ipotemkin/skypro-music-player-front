@@ -23,6 +23,12 @@
   background: #2E2E2E;
 }
 
+.gauge {
+  width: 50%;
+  height: 5px;
+  background: #D9D9D9;
+}
+
 .bar__player-block {
   height: 73px;
   display: -webkit-box;
@@ -126,6 +132,12 @@
   color: #ACACAC;
 } */
 
+.checked svg {
+  fill: #FFFFFF;
+  stroke: #FFFFFF;
+  /* background-color: blue; */
+}
+
 .player__btn-repeat-svg {
   width: 18px;
   height: 12px;
@@ -163,6 +175,7 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
+  gap: 12px;
 }
 
 .track-play__contain {
@@ -205,9 +218,9 @@
 }
 
 .track-play__author {
-  -ms-grid-row: 1;
-  -ms-grid-column: 2;
-  grid-area: author;
+  /* -ms-grid-row: 1;
+  -ms-grid-column: 2; */
+  /* grid-area: author; */
   min-width: 49px;
 }
 
@@ -218,13 +231,15 @@
   line-height: 24px;
   color: #FFFFFF;
   white-space: nowrap;
+  text-align: left;
 }
 
 .track-play__album {
-  -ms-grid-row: 2;
-  -ms-grid-column: 2;
-  grid-area: album;
-  min-width: 49px;
+  /* -ms-grid-row: 1;
+  -ms-grid-column: 1;
+  grid-area: album; */
+  /* min-width: 49px; */
+  width: 140px;
 }
 
 .track-play__album-link {
@@ -233,6 +248,8 @@
   font-size: 13px;
   line-height: 24px;
   color: #FFFFFF;
+
+  text-align: left;
 }
 
 .track-play__like-dis {

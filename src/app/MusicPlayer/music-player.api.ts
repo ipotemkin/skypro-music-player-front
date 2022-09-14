@@ -36,6 +36,9 @@ export const musicPlayerApi = createApi({
         ]
         : [{ type: 'Tracks', id: 'LIST' }],
     }),
+    getTrack: build.query<ITrack, number> ({
+      query: (trackId: number) => `catalog/track/${trackId}/`,
+    }),
     loginUser: build.mutation({
       query: (body: ILoginUser) => ({
         url: 'user/login/',
@@ -98,6 +101,7 @@ export const musicPlayerApi = createApi({
 
 export const {
   useGetTracksQuery,
+  useGetTrackQuery,
   useLoginUserMutation,
   useUserSignupMutation,
   useUserTokenMutation,
