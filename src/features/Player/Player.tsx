@@ -1,22 +1,11 @@
 import { FC, useEffect, useRef, useState } from 'react'
 import { useAppSelector } from '../../app/hooks'
 import { selectAccessToken } from '../../app/Auth/tokenSlice'
-import { useGetTrackQuery } from '../../app/MusicPlayer/music-player.api'
 import { IStaredUser, ITrack } from '../../models'
 import { ProgressBar } from '../ProgressBar/ProgressBar'
 import { cnPlayer, cnBar, cnTrackPlay } from './Player.classname'
 import './Player.css'
 import { getUserIdFromJWT } from '../../utils'
-
-// import iconPrev from './assets/prev.svg'
-// import iconPlay from './assets/play.svg'
-// import iconNext from './assets/next.svg'
-// import iconRepeat from './assets/repeat.svg'
-// import iconShuffle from './assets/shuffle.svg'
-// import iconNote from './assets/note.svg'
-// import iconLike from './assets/like.svg'
-// import iconDislike from './assets/dislike.svg'
-// import iconVolume from './assets/volume.svg'
 
 type PlayerProps = {
   data: ITrack[]
@@ -24,37 +13,27 @@ type PlayerProps = {
 }
 
 interface IPlayerState {
-  isPLaying: boolean;
+  isPlaying: boolean;
   mute: boolean;
   progress: number;
   loop: boolean;
-  suffle: boolean;
+  shuffle: boolean;
 }
 
 const initialPLayerState: IPlayerState = {
-  isPLaying: false,
+  isPlaying: false,
   mute: false,
   progress: 30,
   loop: false,
-  suffle: false
+  shuffle: false
 }
 
 export const Player: FC<PlayerProps> = ({ data, trackId }) => {
   const token = useAppSelector(selectAccessToken)
-  
-  
-  const [ isPlaying, setIsPlaying ] = useState(false)
-  const [ mute, setMute ] = useState(false)
-  const [ progress, setProgress ] = useState(0)
-  const [ loop, setLoop ] = useState(false)
-  const [ shuffle, setShuffle ] = useState(false)
+  const [ playerState, setPlayerState ] = useState<IPlayerState>(initialPLayerState)
   const [ currentTrack, setCurrentTrack ] = useState<ITrack>()
-  
   const [ favorite, setFavorite ] = useState<boolean>(false)
   
-
-  // const { data } = useGetTrackQuery(8)
-  console.log('Player: track -->', data)
   const audioRef = useRef<HTMLAudioElement>(null)
   const volumeRef = useRef<HTMLInputElement>(null)
   const nextRef = useRef<HTMLDivElement>(null)
@@ -65,20 +44,18 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
   }, [data, trackId])
     
   const handlePlay = () => {
-    console.log('click Play')
-
-    if (isPlaying) audioRef.current!.pause()
+    if (playerState.isPlaying) audioRef.current!.pause()
     else audioRef.current!.play()
-    setIsPlaying(prev => !prev)
+    setPlayerState(prev => ({ ...prev, isPlaying: !prev.isPlaying }))
   }
 
   const handleLoop = () => {
     audioRef.current!.loop = !audioRef.current!.loop
-    setLoop(prev => !prev)
+    setPlayerState(prev => ({ ...prev, loop: !prev.loop }))
     console.log('loop -->', audioRef.current!.loop)
   }
 
-  const handleShuffle = () => setShuffle(prev => !prev)
+  const handleShuffle = () => setPlayerState(prev => ({ ...prev, shuffle: !prev.shuffle })) // setShuffle(prev => !prev)
 
   const handleLike = () => {
 
@@ -92,7 +69,7 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
   }  
   
   const handleNextTrack = () => {
-    if (shuffle) {
+    if (playerState.shuffle) {
       const nextTrackIndex = Math.floor(Math.random()*data.length)
       setCurrentTrack(data[nextTrackIndex])
       return
@@ -106,7 +83,8 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
   }
 
   const handleMute = () => {
-    setMute(prev => !prev)
+    // setMute(prev => !prev)
+    setPlayerState(prev => ({ ...prev, mute: !prev.mute }))
     if (audioRef.current) audioRef.current.muted = !audioRef.current.muted
   }
 
@@ -125,18 +103,18 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
 
   useEffect(() => {
     audioRef.current!.onended = () => {
-      if (!loop) nextRef.current?.click()
-      else setIsPlaying(false)
+      if (!playerState.loop) nextRef.current?.click()
+      else setPlayerState(prev => ({ ...prev, isPLaying: false }))
     }  
     audioRef.current!.ontimeupdate = () => {
-      setProgress(audioRef.current!.currentTime/audioRef.current!.duration*100)
+      setPlayerState(prev => ({ ...prev, progress: audioRef.current!.currentTime/audioRef.current!.duration*100 }))
     }
   }, [])
 
   useEffect(() => {
     if (currentTrack && audioRef.current) {
-      if (isPlaying) audioRef.current.play()
-      setProgress(0)
+      if (playerState.isPlaying) audioRef.current.play()
+      setPlayerState(prev => ({ ...prev, progress: 0 }))
       setFavorite(
         currentTrack.stared_user.filter((el: IStaredUser) => el.id === (token ? getUserIdFromJWT(token) : 0)).length > 0
       )      
@@ -147,8 +125,7 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
   return (
     <div className={cnBar()}>
       <div className={cnBar('content')}>
-        {/* <div className={cnBar('player-progress', 'gauge')}></div> */}
-        <ProgressBar value={progress} />
+        <ProgressBar value={playerState.progress} />
         <div className={cnBar('player-block')}>
           <div className={cnBar('player', 'player')}>
             <div className={cnPlayer('controls')}>
@@ -165,10 +142,10 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
                   {/* {data.map(el => (<source src={el.track_file} type='audio/mpeg' key={el.id}></source>))} */}
                   {/* <source  type='audio/mpeg'></source> */}
                 </audio>
-                {!isPlaying && <svg className={cnPlayer('btn-play-svg')} width="15" height="20" viewBox="0 0 15 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {!playerState.isPlaying && <svg className={cnPlayer('btn-play-svg')} width="15" height="20" viewBox="0 0 15 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M15 10L-1.01012e-06 0.47372L-1.84293e-06 19.5263L15 10Z" fill="#D9D9D9"/>
                 </svg>}
-                {isPlaying && <svg className={cnPlayer('btn-play-svg')} width="15" height="20" viewBox="0 0 15 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {playerState.isPlaying && <svg className={cnPlayer('btn-play-svg')} width="15" height="20" viewBox="0 0 15 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"> */}
                     <g>
                       <path fill="#D9D9D9" d="M0 0h24v24H0z"></path>
@@ -187,7 +164,7 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
 
                 {/* <img className={cnPlayer('btn-next-svg')} alt="next" src={iconNext} /> */}
               </div>
-              <div className={cnPlayer('btn-repeat', loop ? '_btn-icon checked' : '_btn-icon')} onClick={handleLoop}>
+              <div className={cnPlayer('btn-repeat', playerState.loop ? '_btn-icon checked' : '_btn-icon')} onClick={handleLoop}>
               <svg className={cnPlayer('btn-repeat-svg')} width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M10 3L5 0.113249V5.88675L10 3ZM7 14.5C3.96243 14.5 1.5 12.0376 1.5 9H0.5C0.5 12.5899 3.41015 15.5 7 15.5V14.5ZM1.5 9C1.5 5.96243 3.96243 3.5 7 3.5V2.5C3.41015 2.5 0.5 5.41015 0.5 9H1.5Z"
                 fill="#696969"
@@ -199,7 +176,7 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
 
                 {/* <img className={cnPlayer('btn-repeat-svg')} alt="repeat" src={iconRepeat} /> */}
               </div>
-              <div className={cnPlayer('btn-shuffle', shuffle ? '_btn-icon checked' : '_btn-icon')} onClick={handleShuffle}>
+              <div className={cnPlayer('btn-shuffle', playerState.shuffle ? '_btn-icon checked' : '_btn-icon')} onClick={handleShuffle}>
               <svg className={cnPlayer('btn-shuffle-svg')} width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M19.5 15L14.5 12.1132V17.8868L19.5 15ZM10.1632 12.0833L9.70863 12.2916L10.1632 12.0833ZM7.33683 5.91673L6.8823 6.12505L7.33683 5.91673ZM0.5 3.5H2.79151V2.5H0.5V3.5ZM6.8823 6.12505L9.70863 12.2916L10.6177 11.8749L7.79137 5.7084L6.8823 6.12505ZM14.7085 15.5H15V14.5H14.7085V15.5ZM9.70863 12.2916C10.6047 14.2466 12.5579 15.5 14.7085 15.5V14.5C12.949 14.5 11.3508 13.4745 10.6177 11.8749L9.70863 12.2916ZM2.79151 3.5C4.55105 3.5 6.14918 4.52552 6.8823 6.12505L7.79137 5.7084C6.89533 3.75341 4.94205 2.5 2.79151 2.5V3.5Z" fill="#696969"/>
                 <path d="M19.5 3L14.5 5.88675V0.113249L19.5 3ZM10.1632 5.91673L9.70863 5.7084L10.1632 5.91673ZM7.33683 12.0833L6.8823 11.8749L7.33683 12.0833ZM0.5 14.5H2.79151V15.5H0.5V14.5ZM6.8823 11.8749L9.70863 5.7084L10.6177 6.12505L7.79137 12.2916L6.8823 11.8749ZM14.7085 2.5H15V3.5H14.7085V2.5ZM9.70863 5.7084C10.6047 3.75341 12.5579 2.5 14.7085 2.5V3.5C12.949 3.5 11.3508 4.52552 10.6177 6.12505L9.70863 5.7084ZM2.79151 14.5C4.55105 14.5 6.14918 13.4745 6.8823 11.8749L7.79137 12.2916C6.89533 14.2466 4.94205 15.5 2.79151 15.5V14.5Z" fill="#696969"/>
@@ -259,7 +236,7 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M8 0L3 5H0V13H3L8 18V0Z"/>
                 </mask>
                 <path d="M3 5V6H3.41421L3.70711 5.70711L3 5ZM8 0H9V-2.41421L7.29289 -0.707107L8 0ZM0 5V4H-1V5H0ZM0 13H-1V14H0V13ZM3 13L3.70711 12.2929L3.41421 12H3V13ZM8 18L7.29289 18.7071L9 20.4142V18H8ZM3.70711 5.70711L8.70711 0.707107L7.29289 -0.707107L2.29289 4.29289L3.70711 5.70711ZM0 6H3V4H0V6ZM1 13V5H-1V13H1ZM3 12H0V14H3V12ZM8.70711 17.2929L3.70711 12.2929L2.29289 13.7071L7.29289 18.7071L8.70711 17.2929ZM7 0V18H9V0H7Z" fill="white" mask="url(#path-1-inside-1_2985_507)"/>
-                <path d="M11 13C12.1046 13 13 11.2091 13 9C13 6.79086 12.1046 5 11 5" stroke={ mute ? "black" : "white" }/>
+                <path d="M11 13C12.1046 13 13 11.2091 13 9C13 6.79086 12.1046 5 11 5" stroke={ playerState.mute ? "black" : "white" }/>
               </svg>
 
                 {/* <img className={cnBar('volume__svg')} alt="volume" src={iconVolume} /> */}
