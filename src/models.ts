@@ -57,3 +57,11 @@ export interface IUser {
   last_name?: string;
   email: string;
 }
+
+export interface IPlayerState {
+  isPlaying: boolean;
+  mute: boolean;
+  progress: number;
+  loop: boolean;
+  shuffle: boolean;
+}

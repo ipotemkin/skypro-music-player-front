@@ -1,77 +1,21 @@
-import { FC, useMemo, useState } from 'react'
+import { FC } from 'react'
 
-import { IStaredUser, ITrack, IUser } from '../../models'
-import { checkJWTExpTime, getUserIdFromJWT, SecondsToMinSec } from '../../utils'
+import { ITrack } from '../../models'
+import { SecondsToMinSec } from '../../utils'
 
 import { cnTrack } from './Track.classname'
 
 import './Track.css'
 
-// import icon from './assets/sprite.svg'
 import note from './assets/note.svg'
-// import like from './assets/like.svg'
-import { useAddTrackToFavoriteMutation, useRemoveTrackFromFavoriteMutation } from '../../app/MusicPlayer/music-player.api'
-// import { useCookies } from 'react-cookie'
-import { useAppSelector } from '../../app/hooks'
-import { selectAccessToken, selectRefreshToken } from '../../app/Auth/tokenSlice'
-import { useCurrentUser, useRefreshToken } from '../Tracks/hooks'
-import { useNavigate } from 'react-router-dom'
+import { useFavorite } from '../Tracks/hooks'
 
 type TrackProps = {
   track: ITrack,
 }
 
 export const Track: FC<TrackProps> = ({ track }) => {
-  const token = useAppSelector(selectAccessToken)
-  const refreshToken = useAppSelector(selectRefreshToken)
-  const handleRefreshToken = useRefreshToken()
-  const [ addTrackToFavorite ] = useAddTrackToFavoriteMutation()
-  const [ removeTrackFromFavorite ] = useRemoveTrackFromFavoriteMutation()
-  
-  const navigate = useNavigate()
-  
-  const favorite = (
-    track.stared_user.filter((el: IStaredUser) => el.id === (token ? getUserIdFromJWT(token) : 0)).length > 0
-  )
-  // const favorite = (
-  //   track.stared_user.filter((el: IStaredUser) => el.id === user?.id).length > 0
-  // )
-
-  // console.log('Token in Track -->', token)
-
-  const toggleFavoriteTrack = async (trackId: number) => {
-    console.log('toggleFavoriteTrack')
-    
-    // проверяем время эскпирации токена
-    // if ((token && !checkJWTExpTime(token)) || !token) {
-    //   if (refreshToken) {
-    //     try {
-    //       await handleRefreshToken(refreshToken)
-    //     } catch {
-    //       navigate('/login')
-    //     }
-    //   }
-    //   else {
-    //     console.error('No refresh token')
-    //     navigate('/login')
-    //   }
-
-    // }
-
-    try {
-      favorite ? await removeTrackFromFavorite(trackId).unwrap() : await addTrackToFavorite(trackId).unwrap()
-    } catch (err) {
-      console.error('toggleFavoriteTrack -> catch err =', err)
-      console.log('refreshToken -->', refreshToken)
-      if (refreshToken) {
-        await handleRefreshToken(refreshToken)
-        toggleFavoriteTrack(trackId)
-      } else {
-        console.error('No refresh token')
-        navigate('/login')
-      }
-    }
-  }
+  const { favorite, toggleFavoriteTrack } = useFavorite(track)
   
   return (
       <div className={cnTrack()}>

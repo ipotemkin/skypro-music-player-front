@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 
 import { ICollection, IFilterItem, IStaredUser, ITrack, IUser } from '../../models';
-import { useGetCollectionQuery, useGetCurrentUserQuery, useGetTracksQuery, useRefreshUserTokenMutation } from '../../app/MusicPlayer/music-player.api';
+import { useAddTrackToFavoriteMutation, useGetCollectionQuery, useGetCurrentUserQuery, useGetTracksQuery, useRefreshUserTokenMutation, useRemoveTrackFromFavoriteMutation } from '../../app/MusicPlayer/music-player.api';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectAccessToken, selectRefreshToken, selectTokens, setToken } from '../../app/Auth/tokenSlice';
 import { useCookies } from 'react-cookie';
@@ -319,4 +319,61 @@ export const useCurrentUserOld = () => {
 
   console.log('exiting useCurrentUser -->', user);
   return  { user, loaded };
+}
+
+export const useFavorite = (track: ITrack | undefined) => {
+  const token = useAppSelector(selectAccessToken)
+  const refreshToken = useAppSelector(selectRefreshToken)
+  const handleRefreshToken = useRefreshToken()
+  const [ addTrackToFavorite ] = useAddTrackToFavoriteMutation()
+  const [ removeTrackFromFavorite ] = useRemoveTrackFromFavoriteMutation()
+  
+  const navigate = useNavigate()
+  
+  const favorite: boolean = (
+    track
+    ? track.stared_user.filter((el: IStaredUser) => el.id === (token ? getUserIdFromJWT(token) : 0)).length > 0
+    : false
+  )
+  // const favorite = (
+  //   track.stared_user.filter((el: IStaredUser) => el.id === user?.id).length > 0
+  // )
+
+  // console.log('Token in Track -->', token)
+
+  const toggleFavoriteTrack = async (trackId: number) => {
+    console.log('toggleFavoriteTrack')
+    
+    // проверяем время эскпирации токена
+    // if ((token && !checkJWTExpTime(token)) || !token) {
+    //   if (refreshToken) {
+    //     try {
+    //       await handleRefreshToken(refreshToken)
+    //     } catch {
+    //       navigate('/login')
+    //     }
+    //   }
+    //   else {
+    //     console.error('No refresh token')
+    //     navigate('/login')
+    //   }
+
+    // }
+
+    try {
+      favorite ? await removeTrackFromFavorite(trackId).unwrap() : await addTrackToFavorite(trackId).unwrap()
+    } catch (err) {
+      console.error('toggleFavoriteTrack -> catch err =', err)
+      console.log('refreshToken -->', refreshToken)
+      if (refreshToken) {
+        await handleRefreshToken(refreshToken)
+        toggleFavoriteTrack(trackId)
+      } else {
+        console.error('No refresh token')
+        navigate('/login')
+      }
+    }
+  }
+
+  return { favorite, toggleFavoriteTrack };
 }
