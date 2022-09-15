@@ -65,7 +65,8 @@ export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar
         { isError && <p>Error</p>}
         { data && <TrackList tracks={data} low={ showFilter? true : false }/>}
       </div>
-      {showSidebar && <Sidebar />}
+      <Sidebar />
+      {/* {showSidebar && <Sidebar />} */}
       {activeTrackId !== undefined
         && isTrackIdInList(activeTrackId.value || 0)
         && <Player data={data} trackId={activeTrackId.value || 0}/>}
