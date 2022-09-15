@@ -127,13 +127,14 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
         <div className={cnBar('player-block')}>
           <div className={cnBar('player', 'player')}>
             <div className={cnPlayer('controls')}>
-              <div className={cnPlayer('btn-prev')} onClick={handlePrevTrack}>
+              <div className={cnPlayer('btn-prev', '_btn')} onClick={handlePrevTrack}>
                 <svg className={cnPlayer('btn-prev-svg')} width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 2V12.5" stroke="white"/>
                   <path d="M3 7L12.75 0.937823L12.75 13.0622L3 7Z" fill="#D9D9D9"/>
                 </svg>
 
               </div>
+              
               <div className={cnPlayer('btn-play', '_btn')} onClick={handlePlay} >
                 <audio ref={audioRef} src={currentTrack?.track_file}>
                 </audio>
@@ -141,14 +142,15 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
                   <path d="M15 10L-1.01012e-06 0.47372L-1.84293e-06 19.5263L15 10Z" fill="#D9D9D9"/>
                 </svg>}
                 {playerState.isPlaying && <svg className={cnPlayer('btn-play-svg')} width="15" height="20" viewBox="0 0 15 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <g>
+                    {/* <g>
                       <path fill="#D9D9D9" d="M0 0h24v24H0z"></path>
                       <path d="M8 8v8h8V8H8zM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7z" fill="#D9D9D9"></path>
-                    </g>
+                    </g> */}
+                    <path d="M5 3V17 M10 3V17" stroke="#D9D9D9"/>                    
                 </svg>}
-
               </div>
-              <div ref={nextRef} className={cnPlayer('btn-next')} onClick={handleNextTrack}>
+              
+              <div ref={nextRef} className={cnPlayer('btn-next', '_btn')} onClick={handleNextTrack}>
                 <svg className={cnPlayer('btn-next-svg')} width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M15 2V12.5" stroke="white"/>
                   <path d="M13 7L3.25 0.937823L3.25 13.0622L13 7Z" fill="#D9D9D9"/>
