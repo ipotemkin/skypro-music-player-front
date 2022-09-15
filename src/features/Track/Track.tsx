@@ -9,6 +9,8 @@ import './Track.css'
 
 import note from './assets/note.svg'
 import { useFavorite } from '../Tracks/hooks'
+import { useAppDispatch } from '../../app/hooks'
+import { setActiveTrackId } from './TrackSlice'
 
 type TrackProps = {
   track: ITrack,
@@ -16,26 +18,23 @@ type TrackProps = {
 
 export const Track: FC<TrackProps> = ({ track }) => {
   const { favorite, toggleFavoriteTrack } = useFavorite(track)
+  const dispatch = useAppDispatch();
+
+  const handleSelectTrack = (trackId: number) => {
+    console.log(`clicked a song with ID=${track.id}`)
+    dispatch(setActiveTrackId(trackId))
+  }
   
   return (
-      <div className={cnTrack()}>
+      <div className={cnTrack()} onClick={() => handleSelectTrack(track.id)}>
         <div className={cnTrack('title')}>
           <div className={cnTrack('title-image')}>
             <img src={note} className={cnTrack('title-svg')} alt="" />
           </div>
-          <div className={cnTrack('title-text')}>
-            <a className="track__title-link" href="http://">{track.name}
-              {/* следующая стрчка непонятно, зачем - пока закомментировал */}
-              {/* <span className={cnTrack('title-span')}></span> */}
-            </a>
-          </div>
+          <div className={cnTrack('title-text')}>{track.name}</div>
         </div>
-        <div className={cnTrack('author')}>
-          <a className={cnTrack('author-link')} href="http://">{track.author}</a>
-        </div>
-        <div className={cnTrack('album')}>
-          <a className={cnTrack('album-link')} href="http://">{track.album}</a>
-        </div>
+        <div className={cnTrack('author')}>{track.author}</div>
+        <div className={cnTrack('album')}>{track.album}</div>
         <div className={cnTrack('time')}>
           <svg
             className={cnTrack('time-svg', { favorite })}

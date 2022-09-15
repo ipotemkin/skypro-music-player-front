@@ -8,6 +8,7 @@ import { useCookies } from 'react-cookie';
 import { IFilterSlice, initialState, selectFilter, updateFilter } from '../Filter/FilterSlice';
 import { getUserIdFromJWT } from '../../utils';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { musicPlayerApi } from '../../app/MusicPlayer/music-player.api';
 
 // возвращает функцию для обновления access токена
 // запрашивает новый access token с помощью refresh token
@@ -24,6 +25,9 @@ export const useRefreshToken = () => {
       const { access } = await doRefreshToken(refreshTokenIn).unwrap();
       setCookies('access', access);
       dispatch(setToken({ access, refresh: refreshTokenIn }));
+      const timestampRef = Date.now();
+      console.log('handleRefreshToken: initiate -->');
+      console.log(musicPlayerApi.endpoints.getCurrentUser.initiate(timestampRef));
       return { access };
     } catch(err) {
       console.log(err);

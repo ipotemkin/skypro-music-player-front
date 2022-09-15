@@ -4,6 +4,8 @@ import { ProgressBar } from '../ProgressBar/ProgressBar'
 import { cnPlayer, cnBar, cnTrackPlay } from './Player.classname'
 import './Player.css'
 import { useFavorite } from '../Tracks/hooks'
+import { useAppDispatch } from '../../app/hooks'
+import { setActiveTrackId } from '../Track/TrackSlice'
 
 type PlayerProps = {
   data: ITrack[]
@@ -21,6 +23,7 @@ const initialPLayerState: IPlayerState = {
 export const Player: FC<PlayerProps> = ({ data, trackId }) => {
   const [ playerState, setPlayerState ] = useState<IPlayerState>(initialPLayerState)
   const [ currentTrack, setCurrentTrack ] = useState<ITrack>()
+  const dispatch = useAppDispatch()
   
   const audioRef = useRef<HTMLAudioElement>(null)
   const volumeRef = useRef<HTMLInputElement>(null)
@@ -53,23 +56,31 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
     if (currentTrack) toggleFavoriteTrack(currentTrack.id)
   }
 
+  const handleSetCurrentTrack = (currentTrackArg: ITrack) => {
+    setCurrentTrack(currentTrackArg)
+    dispatch(setActiveTrackId(currentTrackArg.id))
+  }
+
   const handlePrevTrack = () => {
     const currentTrackIndex = getTrackIndex(currentTrack!.id)
     if (currentTrackIndex > 0) {
-      setCurrentTrack(data[currentTrackIndex - 1])
+      // setCurrentTrack(data[currentTrackIndex - 1])
+      handleSetCurrentTrack(data[currentTrackIndex - 1])
     }
   }  
   
   const handleNextTrack = () => {
     if (playerState.shuffle) {
       const nextTrackIndex = Math.floor(Math.random() * data.length)
-      setCurrentTrack(data[nextTrackIndex])
+      // setCurrentTrack(data[nextTrackIndex])
+      handleSetCurrentTrack(data[nextTrackIndex])
       return
     }
 
     const currentTrackIndex = getTrackIndex(currentTrack!.id)
     if (currentTrackIndex < data.length - 1) {
-      setCurrentTrack(data[currentTrackIndex + 1])
+      // setCurrentTrack(data[currentTrackIndex + 1])
+      handleSetCurrentTrack(data[currentTrackIndex + 1])
       console.log('next')
     }
   }
@@ -209,7 +220,7 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
                   className={cnBar('volume__progress-line', '_btn')}
                   type="range"
                   name="range"
-                  value={30}
+                  // value={30}
                   onChange={handleVolume}/>
               </div>
                 

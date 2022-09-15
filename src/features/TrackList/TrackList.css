@@ -18,7 +18,7 @@
   flex-direction: column;
   /* overflow-y: auto; */
   overflow-y: scroll;
-  height: 360px;
+  height: 404px;
 }
 
 .track-list__title {

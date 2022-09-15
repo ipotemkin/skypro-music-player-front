@@ -1,7 +1,9 @@
-import { configureStore, ThunkAction, Action, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/counterSlice';
 import tokenReducer from '../app/Auth/tokenSlice';
+import userReducer from '../app/Auth/userSlice';
 import filterReducer from '../features/Filter/FilterSlice';
+import trackReducer from '../features/Track/TrackSlice';
 import { musicPlayerApi } from './MusicPlayer/music-player.api';
 
 export const store = configureStore({
@@ -9,6 +11,8 @@ export const store = configureStore({
       counter: counterReducer,
       token: tokenReducer,
       filter: filterReducer,
+      activeTrackId: trackReducer,
+      user: userReducer,
       [musicPlayerApi.reducerPath]: musicPlayerApi.reducer,
   },
   middleware: getDefaultMiddleware => (

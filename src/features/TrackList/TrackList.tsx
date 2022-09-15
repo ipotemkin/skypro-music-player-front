@@ -9,12 +9,13 @@ import './TrackList.css'
 import iconWatch from './assets/watch.svg'
 
 type TrackListProps = {
-  tracks: ITrack[]
+  tracks: ITrack[],
+  low?: boolean
 }
 
-export const TrackList: FC<TrackListProps> = ({ tracks }) => {
+export const TrackList: FC<TrackListProps> = ({ tracks, low = false }) => {
   return (
-    <div className={cnTrackList()}>
+    <div className={cnTrackList()} style={ low ? { height: '54vh' } : {}}>
       <div className={cnTrackList('title')}>
         <div className={cnTrackList('title', 'col01')}>ТРЕК</div>
         <div className={cnTrackList('title', 'col02')}>ИСПОЛНИТЕЛЬ</div>

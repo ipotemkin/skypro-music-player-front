@@ -133,7 +133,7 @@
 } */
 
 .checked svg {
-  fill: #FFFFFF;
+  /* fill: #FFFFFF; */
   stroke: #FFFFFF;
   /* background-color: blue; */
 }
