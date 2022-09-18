@@ -4,6 +4,7 @@ import tokenReducer from '../app/Auth/tokenSlice';
 import userReducer from '../app/Auth/userSlice';
 import filterReducer from '../features/Filter/FilterSlice';
 import trackReducer from '../features/Track/TrackSlice';
+import playerReducer from '../features/Player/PlayerSlice';
 import { musicPlayerApi } from './MusicPlayer/music-player.api';
 
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
       filter: filterReducer,
       activeTrackId: trackReducer,
       user: userReducer,
+      player: playerReducer,
       [musicPlayerApi.reducerPath]: musicPlayerApi.reducer,
   },
   middleware: getDefaultMiddleware => (

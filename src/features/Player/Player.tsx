@@ -1,11 +1,12 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import { IPlayerState, ITrack } from '../../models'
 import { ProgressBar } from '../ProgressBar/ProgressBar'
 import { cnPlayer, cnBar, cnTrackPlay } from './Player.classname'
 import './Player.css'
 import { useFavorite } from '../Tracks/hooks'
-import { useAppDispatch } from '../../app/hooks'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { setActiveTrackId } from '../Track/TrackSlice'
+import { selectVolume, setVolume as setPlayerVolume } from './PlayerSlice'
 
 type PlayerProps = {
   data: ITrack[]
@@ -23,10 +24,10 @@ const initialPLayerState: IPlayerState = {
 export const Player: FC<PlayerProps> = ({ data, trackId }) => {
   const [ playerState, setPlayerState ] = useState<IPlayerState>(initialPLayerState)
   const [ currentTrack, setCurrentTrack ] = useState<ITrack>()
+  const [ volume, setVolume ] = useState(useAppSelector(selectVolume))
   const dispatch = useAppDispatch()
   
   const audioRef = useRef<HTMLAudioElement>(null)
-  const volumeRef = useRef<HTMLInputElement>(null)
   const nextRef = useRef<HTMLDivElement>(null)
 
   const getTrackById = (trackIdArg: number) => data.find(el => el.id === trackIdArg)
@@ -90,8 +91,11 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
     if (audioRef.current) audioRef.current.muted = !audioRef.current.muted
   }
 
-  const handleVolume = () => {
-    audioRef.current!.volume = +volumeRef.current!.value/100
+  const handleVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = +e.target.value
+    audioRef.current!.volume = value/100
+    setVolume(value)
+    dispatch(setPlayerVolume(value))
   }
 
   const getTrackIndex = (trackIdArg: number) => {
@@ -109,6 +113,8 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
     audioRef.current!.ontimeupdate = () => {
       setPlayerState(prev => ({ ...prev, progress: audioRef.current!.currentTime/audioRef.current!.duration*100 }))
     }
+    audioRef.current!.volume = volume/100
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -218,11 +224,11 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
 
               </div>
               <div className={cnBar('volume__progress', '_btn')}>
-                <input ref={volumeRef}
+                <input
                   className={cnBar('volume__progress-line', '_btn')}
                   type="range"
                   name="range"
-                  // value={30}
+                  value={volume}
                   onChange={handleVolume}/>
               </div>
                 
