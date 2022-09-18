@@ -1,4 +1,5 @@
 import { FC, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { selectUser } from '../../app/Auth/userSlice'
 import { useAppSelector } from '../../app/hooks'
 import playlist1 from './assets/playlist01.png'
@@ -54,9 +55,9 @@ export const Sidebar = () => {
         <div className={cnSidebar('list')} >
           {playlistPics.map((el, idx) => (
             <div className={cnSidebar('item')} key={el}>
-              <a className={cnSidebar('link')} href={`/collection/${idx+1}`}>
+              <Link className={cnSidebar('link')} to={`/collection/${idx+1}`}>
                 <Picture source={el} />
-              </a>
+              </Link>
             </div>            
           ))}
         </div>
