@@ -5,6 +5,9 @@ import playlist1 from './assets/playlist01.png'
 import playlist2 from './assets/playlist02.png'
 import playlist3 from './assets/playlist03.png'
 
+import { cnSidebar } from './Sidebar.classname'
+import './Sidebar.css'
+
 const playlistPics: string[] = [
   playlist1,
   playlist2,
@@ -23,9 +26,9 @@ const Picture: FC<PictureProps> = ({ source }) => {
 
   return (
     <>
-      {!loaded && <div className="sidebar__img skeleton" />}
+      {!loaded && <div className={cnSidebar('img', 'skeleton')} />}
       <img
-        className="sidebar__img"
+        className={cnSidebar('img')}
         src={source}
         alt="day's playlist"
         onLoad={handleLoaded}
@@ -40,17 +43,18 @@ export const Sidebar = () => {
 
   return (
     <div className="main__sidebar sidebar">
-      <div className="sidebar__personal">
-        <p className="sidebar__personal-name">{user.email}</p>
+      {/* <div className="sidebar__personal"> */}
+      <div className={cnSidebar('personal')}>
+        <p className={cnSidebar('personal-name')}>{user.email}</p>
         {/* <p className="sidebar__personal-name">access token = {token}</p>
         <p className="sidebar__personal-name">cokkies.access = {cookies.access}</p> */}
         {/* <div className="sidebar__avatar"></div> */}
       </div>
-      <div className="sidebar__block">
-        <div className="sidebar__list">
+      <div className={cnSidebar('block')} >
+        <div className={cnSidebar('list')} >
           {playlistPics.map((el, idx) => (
-            <div className="sidebar__item" key={el}>
-              <a className="sidebar__link" href={`/collection/${idx+1}`}>
+            <div className={cnSidebar('item')} key={el}>
+              <a className={cnSidebar('link')} href={`/collection/${idx+1}`}>
                 <Picture source={el} />
               </a>
             </div>            
