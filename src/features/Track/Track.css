@@ -38,7 +38,7 @@
           align-items: center;
   width: 447px;
 }
-  
+
 .track__title-image {
   width: 51px;
   height: 51px;
@@ -148,4 +148,13 @@
   text-align: right;
   color: #696969;
 }
-  
+
+.skeleton, .skeleton-line {
+  background-color: #313131;
+}
+
+.skeleton-line {
+  height: 16px;
+  width: 100%;
+  margin-right: 16px;
+}

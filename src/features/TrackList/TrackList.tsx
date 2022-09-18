@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useMemo } from 'react'
 
 import { Track } from '../Track/Track'
 import { ITrack } from '../../models'
@@ -10,10 +10,23 @@ import iconWatch from './assets/watch.svg'
 
 type TrackListProps = {
   tracks: ITrack[],
-  low?: boolean
+  isLoading?: boolean
 }
 
-export const TrackList: FC<TrackListProps> = ({ tracks, low = false }) => {
+const getSkeletonArray = () => {
+  const resArray = []
+  for (let i = 0; i < 20; i++) {
+    resArray.push(i)
+  }
+  return resArray
+}
+
+
+export const TrackList: FC<TrackListProps> = ({ tracks, isLoading = false }) => {
+  console.log('TrackList: isLoading =', isLoading)
+
+  const skeletonArray = useMemo(() => getSkeletonArray(), [])
+
   return (
     <div className={cnTrackList()}>
       <div className={cnTrackList('title')}>
@@ -25,7 +38,8 @@ export const TrackList: FC<TrackListProps> = ({ tracks, low = false }) => {
         </div>
       </div>
       <div className={cnTrackList('playlist')}>
-        {tracks.map(track => <Track track={track} key={track.id}/>)}
+        {isLoading && skeletonArray.map(track => <Track key={track} skeleton={true}/>)}
+        {!isLoading && tracks.map(track => <Track track={track} key={track.id}/>)}
       </div>                        
     </div>
   ) 

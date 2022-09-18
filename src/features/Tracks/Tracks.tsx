@@ -61,9 +61,10 @@ export const Tracks: FC<TracksProps> = ({ title, showFilter = false, showSidebar
         <Search onChange={handleChange} value={searchString}/>
         <h2 className={cnTracks('centerblock__title')}>{title}</h2>
         {showFilter && <Filter />}
-        { isLoading && <p>Loading...</p>}
+        {/* { isLoading && <p>Loading...</p>} */}
         { isError && <p>Error</p>}
-        { data && <TrackList tracks={data} low={ showFilter? true : false }/>}
+        {/* { data && <TrackList tracks={data} isLoading={isLoading}/>} */}
+        <TrackList tracks={data} isLoading={isLoading}/>
       </div>
       <Sidebar />
       {/* {showSidebar && <Sidebar />} */}

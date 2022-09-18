@@ -1,6 +1,7 @@
 .track-list {
   display: flex;
   flex-direction: column;
+  margin-bottom: 60px;
   /* width: 750px; */
 }
 
