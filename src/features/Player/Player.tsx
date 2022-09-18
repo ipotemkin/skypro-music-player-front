@@ -1,12 +1,13 @@
 import React, { FC, useEffect, useRef, useState } from 'react'
 import { IPlayerState, ITrack } from '../../models'
 import { ProgressBar } from '../ProgressBar/ProgressBar'
-import { cnPlayer, cnBar, cnTrackPlay } from './Player.classname'
-import './Player.css'
 import { useFavorite } from '../Tracks/hooks'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { setActiveTrackId } from '../Track/TrackSlice'
 import { selectVolume, setVolume as setPlayerVolume } from './PlayerSlice'
+
+import { cnPlayer, cnBar, cnTrackPlay } from './Player.classname'
+import './Player.css'
 
 type PlayerProps = {
   data: ITrack[]
@@ -25,13 +26,13 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
   const [ playerState, setPlayerState ] = useState<IPlayerState>(initialPLayerState)
   const [ currentTrack, setCurrentTrack ] = useState<ITrack>()
   const [ volume, setVolume ] = useState(useAppSelector(selectVolume))
+  const { favorite, toggleFavoriteTrack } = useFavorite(currentTrack)
   const dispatch = useAppDispatch()
   
   const audioRef = useRef<HTMLAudioElement>(null)
-  const nextRef = useRef<HTMLDivElement>(null)
-
+  const nextRef = useRef<HTMLDivElement>(null)  // без ref не работает
+  
   const getTrackById = (trackIdArg: number) => data.find(el => el.id === trackIdArg)
-  const { favorite, toggleFavoriteTrack } = useFavorite(currentTrack)
 
   // setting the current track
   useEffect(() => {
@@ -48,7 +49,6 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
   const handleLoop = () => {
     audioRef.current!.loop = !audioRef.current!.loop
     setPlayerState(prev => ({ ...prev, loop: !prev.loop }))
-    console.log('loop -->', audioRef.current!.loop)
   }
 
   const handleShuffle = () => setPlayerState(prev => ({ ...prev, shuffle: !prev.shuffle }))
@@ -64,26 +64,18 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
 
   const handlePrevTrack = () => {
     const currentTrackIndex = getTrackIndex(currentTrack!.id)
-    if (currentTrackIndex > 0) {
-      // setCurrentTrack(data[currentTrackIndex - 1])
-      handleSetCurrentTrack(data[currentTrackIndex - 1])
-    }
+    if (currentTrackIndex > 0) handleSetCurrentTrack(data[currentTrackIndex - 1])
   }  
   
   const handleNextTrack = () => {
     if (playerState.shuffle) {
       const nextTrackIndex = Math.floor(Math.random() * data.length)
-      // setCurrentTrack(data[nextTrackIndex])
       handleSetCurrentTrack(data[nextTrackIndex])
       return
     }
 
     const currentTrackIndex = getTrackIndex(currentTrack!.id)
-    if (currentTrackIndex < data.length - 1) {
-      // setCurrentTrack(data[currentTrackIndex + 1])
-      handleSetCurrentTrack(data[currentTrackIndex + 1])
-      console.log('next')
-    }
+    if (currentTrackIndex < data.length - 1) handleSetCurrentTrack(data[currentTrackIndex + 1])
   }
 
   const handleMute = () => {

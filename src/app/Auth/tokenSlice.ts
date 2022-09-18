@@ -16,11 +16,8 @@ export const tokenSlice = createSlice({
   initialState,
   reducers: {
     setToken: (state, action: PayloadAction<TokenState>) => {
-      // обновляют state, но вызывают warning
       state.access = action.payload.access;
       state.refresh = action.payload.refresh;
-      // state = {...action.payload};
-      // console.log('state -->', state);
     },
   },
 });

@@ -1,13 +1,20 @@
 import { useState, useEffect, useRef } from 'react'
-
-import { ICollection, IFilterItem, IStaredUser, ITrack, IUser } from '../../models';
-import { useAddTrackToFavoriteMutation, useGetCollectionQuery, useGetCurrentUserQuery, useGetTracksQuery, useRefreshUserTokenMutation, useRemoveTrackFromFavoriteMutation } from '../../app/MusicPlayer/music-player.api';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectAccessToken, selectRefreshToken, selectTokens, setToken } from '../../app/Auth/tokenSlice';
 import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
+
+import { ICollection, IFilterItem, IStaredUser, ITrack } from '../../models';
+import {
+  useAddTrackToFavoriteMutation,
+  useGetCollectionQuery,
+  useGetCurrentUserQuery,
+  useGetTracksQuery,
+  useRefreshUserTokenMutation,
+  useRemoveTrackFromFavoriteMutation
+ } from '../../app/MusicPlayer/music-player.api';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { selectAccessToken, selectRefreshToken, setToken } from '../../app/Auth/tokenSlice';
 import { IFilterSlice, initialState, selectFilter, updateFilter } from '../Filter/FilterSlice';
 import { getUserIdFromJWT } from '../../utils';
-import { Navigate, useNavigate } from 'react-router-dom';
 import { musicPlayerApi } from '../../app/MusicPlayer/music-player.api';
 
 // возвращает функцию для обновления access токена
@@ -25,12 +32,13 @@ export const useRefreshToken = () => {
       const { access } = await doRefreshToken(refreshTokenIn).unwrap();
       setCookies('access', access);
       dispatch(setToken({ access, refresh: refreshTokenIn }));
-      const timestampRef = Date.now();
-      console.log('handleRefreshToken: initiate -->');
-      console.log(musicPlayerApi.endpoints.getCurrentUser.initiate(timestampRef));
+      
+      // монтируем нового пользователя в store, но мне кажется, это не работает
+      // Date.now() используем, чтобы не брать пользователя из cache, а получать с сервера
+      console.log(musicPlayerApi.endpoints.getCurrentUser.initiate(Date.now()));
+      
       return { access };
     } catch(err) {
-      console.log(err);
       return { error: err };
     }
   }
@@ -38,16 +46,13 @@ export const useRefreshToken = () => {
   return handleRefreshToken;
 }
 
+// getting tracks, searching by track name available
 export const useTracks = (query: string = '') => {
-
-  // DEBUG
-  console.log('in useTracks');
-
   useCurrentUser();
   const { isLoading, isError, data, error } = useGetTracksQuery();
   const [ filteredData, setFilteredData ] = useState<ITrack[]>([]);
 
-  useEffect( () => {    
+  useEffect(() => {    
     if (data) filterData(data);
   // eslint-disable-next-line
   }, [data, isError, query]);
@@ -58,11 +63,8 @@ export const useTracks = (query: string = '') => {
   return { data: filteredData, isLoading, isError, error };
 }
 
+// getting filtered tracks
 export const useFilteredTracks = (query: string = '') => {
-
-  // DEBUG
-  console.log('in useFilteredTracks');
-
   const { isLoading, isError, data, error } = useTracks(query);
   const [ filteredData, setFilteredData ] = useState<ITrack[]>([]);
   const filterSliceData = useFilterData();
@@ -95,6 +97,7 @@ export const useFilteredTracks = (query: string = '') => {
   return { data: filteredData, isLoading, isError, error };
 }
 
+// getting the favorite tracks
 export const useFavoriteTracks = (query: string = '') => {
   const { isLoading, isError, data, error } = useTracks(query);
   const token = useAppSelector(selectAccessToken)
@@ -107,34 +110,26 @@ export const useFavoriteTracks = (query: string = '') => {
     ));
   }
   
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { setResultData(getFavoriteTracks(data)); }, [data]);
 
   return { data: resultData, isLoading, isError, error };
 }
 
 export const useCollection = (query: string = '', collectionId: number) => {
-
-  // DEBUG
-  console.log('in useCollections');
-
   const { isLoading, isError, data, error } = useGetCollectionQuery(collectionId);
   const [ filteredData, setFilteredData ] = useState<ICollection>();
   const refreshToken = useAppSelector(selectRefreshToken)
   const handleRefreshTokens = useRefreshToken();
 
-  useEffect( () => {
-    if (isError) {
-      if ('status' in error && error.status === 401) {
-        if (refreshToken) {
-          console.log('before handleRefreshTokens')
-          handleRefreshTokens(refreshToken)
-        }
-      }
+  useEffect(() => {
+    if (isError && 'status' in error && error.status === 401 && refreshToken) {
+      handleRefreshTokens(refreshToken);
     }
     if (data) filterData(data);
   // eslint-disable-next-line
   }, [data, isError, query]);
-      
+  
   const filterData = (data: ICollection) => {
     const { items } = data;
     const newItems = items.filter((item: ITrack) => item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
@@ -147,19 +142,6 @@ export const useCollection = (query: string = '', collectionId: number) => {
     return { name: filteredData.name, data: filteredData.items, isLoading, isError, error };
   }
   return { name: '', data: [], isLoading, isError, error };
-  // return { data: filteredData, isLoading, isError, error };
-}
-
-export const useCollectionOne = (query: string = '') => {
-  return useCollection(query, 1);
-}
-
-export const useCollectionTwo = (query: string = '') => {
-  return useCollection(query, 2);
-}
-
-export const useCollectionThree = (query: string = '') => {
-  return useCollection(query, 3);
 }
 
 export const useFilterData = () => {
@@ -168,43 +150,19 @@ export const useFilterData = () => {
   const dispatch = useAppDispatch();
   const selectedData = useAppSelector(selectFilter);
 
-  console.log('selectedData -->', selectedData);
-  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { if (data) dispatch(updateFilter(data)); }, [data]);
   
-  useEffect(() => {
-    console.log('in useEffect selectedData');
-    if (selectedData) {
-      console.log('in useEffect selectedData before setFileteredData');
-      console.log('selectedData -->', selectedData);
-      setFilteredData(selectedData);
-    }
-  }, [selectedData]);
+  useEffect(() => { if (selectedData) setFilteredData(selectedData); }, [selectedData]);
 
-  console.log('filteredData -->', filteredData);
   return filteredData;
-}
-
-// not finished
-const checkUserToken = (token: string) => {
-  return true;
-}
-
-// not finished
-export const useCurrentUserId = () => {
-  const token = useAppSelector(selectAccessToken);
-  if (token) checkUserToken(token);
 }
 
 export const useLoadCredentialsFromCookies = () => {
   const [ cookies ] = useCookies(['access', 'refresh']);
   const dispatch = useAppDispatch();
 
-  console.log('before checking tokens');
-  
   if (cookies && cookies.access !== '' && cookies.access !== undefined) {
-    console.log('credentials set from cookies');
-    console.log(cookies);
     dispatch(setToken({ access: cookies.access, refresh: cookies.refresh }));
     return true;
   }
@@ -214,6 +172,7 @@ export const useLoadCredentialsFromCookies = () => {
 }
 
 export const useLogout = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [cookies, setCookies, removeCookies] = useCookies(['access', 'refresh']);
   const dispatch = useAppDispatch();
 
@@ -221,40 +180,12 @@ export const useLogout = () => {
   removeCookies('access');
   removeCookies('refresh');
   dispatch(setToken({ access: undefined, refresh: undefined }));
-  // setCookies('access', '');
-  // setCookies('refresh', '');
 }
 
-export const useAuth = () => {
-  const dispatch = useAppDispatch();
-  
-  // проверить, есть ли токены в сторе
-  const tokens = useAppSelector(selectTokens);
-
-  if (tokens.access) {}
-    // если есть, то получаем пользователя
-      // если OK --> return
-      // если нет --> рефрешим токен
-        // если OK --> получаем пользователя
-        // если нет --> loginPage
-  
-    // если нет, проверить токены в куках
-
-      // если есть, то загрузить в стор и получить пользователя
-
-        // если пользователя не получили, то рефрешим токен
-
-          // если ОК --> получаем пользователя
-          // если нет --> loginPage
-
-      // если нет, то --> loginPage
-
-}
-
-export const useAuthUser = () => {
-  const timestampRef = useRef(Date.now()).current;
-  return useGetCurrentUserQuery(timestampRef);
-}
+// export const useAuthUser = () => {
+//   const timestampRef = useRef(Date.now()).current;
+//   return useGetCurrentUserQuery(timestampRef);
+// }
 
 // returns the current user, refreshing his token if necessary
 // if no loggedin user or the refresh token is invalid, returns undefined
@@ -267,62 +198,23 @@ export const useCurrentUser = () => {
   const navigate = useNavigate();
   
   const handleRefreshToken = async (rt: string) => {
-    console.log('in handleREfreshToken');
     const result = await doRefreshToken(rt);
     if ('error' in result) navigate('/login');
   }
 
   useEffect(() => {
-    console.group('useCurrentUser useEffect:');
-    console.log('isError -->', isError);
-    console.log('refreshToken -->', refreshToken);
-    console.log('error.status -->', error);
-    console.groupEnd();
-    
     if(isError) {
       if ('status' in error && error.status === 401 && refreshToken) {
-        console.log('refreshing token');
         setResultError(false);
         handleRefreshToken(refreshToken);
       } else {
         navigate('/login');
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError, error, refreshToken]);
 
-  console.log('exiting useCurrentUser -->', data);
   return  { user: data, isLoading, isError, error: resultError };
-}
-
-export const useCurrentUserOld = () => {
-  const timestampRef = useRef(Date.now()).current;
-  const { isError, data, error } = useGetCurrentUserQuery(timestampRef);
-  
-  const [ user, setUser ] = useState<IUser | undefined>(data)
-  const doRefreshToken = useRefreshToken();
-  const refreshToken = useAppSelector(selectRefreshToken);
-  const [ loaded, setLoaded ] = useState(false);
-
-  useEffect(() => {
-    if(data) { 
-      setUser(data);
-      setLoaded(true);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if(isError) {
-      if ('status' in error && error.status === 401 && refreshToken) {
-        console.log('refreshing token');
-        const access = doRefreshToken(refreshToken);
-        console.log('access token -->', access);
-        setLoaded(true);
-      }
-    }
-  }, [isError, error, refreshToken, doRefreshToken]);
-
-  console.log('exiting useCurrentUser -->', user);
-  return  { user, loaded };
 }
 
 export const useFavorite = (track: ITrack | undefined) => {
@@ -339,36 +231,12 @@ export const useFavorite = (track: ITrack | undefined) => {
     ? track.stared_user.filter((el: IStaredUser) => el.id === (token ? getUserIdFromJWT(token) : 0)).length > 0
     : false
   )
-  // const favorite = (
-  //   track.stared_user.filter((el: IStaredUser) => el.id === user?.id).length > 0
-  // )
-
-  // console.log('Token in Track -->', token)
 
   const toggleFavoriteTrack = async (trackId: number) => {
-    console.log('toggleFavoriteTrack')
-    
-    // проверяем время эскпирации токена
-    // if ((token && !checkJWTExpTime(token)) || !token) {
-    //   if (refreshToken) {
-    //     try {
-    //       await handleRefreshToken(refreshToken)
-    //     } catch {
-    //       navigate('/login')
-    //     }
-    //   }
-    //   else {
-    //     console.error('No refresh token')
-    //     navigate('/login')
-    //   }
-
-    // }
-
     try {
       favorite ? await removeTrackFromFavorite(trackId).unwrap() : await addTrackToFavorite(trackId).unwrap()
     } catch (err) {
       console.error('toggleFavoriteTrack -> catch err =', err)
-      console.log('refreshToken -->', refreshToken)
       if (refreshToken) {
         await handleRefreshToken(refreshToken)
         toggleFavoriteTrack(trackId)

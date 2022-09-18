@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { useDispatch } from 'react-redux';
 import { IUser } from '../../models';
 import { musicPlayerApi } from '../MusicPlayer/music-player.api';
 import { RootState } from '../store';

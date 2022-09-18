@@ -25,43 +25,35 @@ const Picture: FC<PictureProps> = ({ source }) => {
 
   const handleLoaded = () => setLoaded(true)
 
-  return (
-    <>
-      {!loaded && <div className={cnSidebar('img', 'skeleton')} />}
-      <img
-        className={cnSidebar('img')}
-        src={source}
-        alt="day's playlist"
-        onLoad={handleLoaded}
-        style={{ display: loaded ? 'block': 'none'}} 
-      />
-    </>
-  )
+  return <>
+    {!loaded && <div className={cnSidebar('img', 'skeleton')} />}
+    <img
+      className={cnSidebar('img')}
+      src={source}
+      alt="day's playlist"
+      onLoad={handleLoaded}
+      style={{ display: loaded ? 'block': 'none'}} 
+    />
+  </>
 }
 
 export const Sidebar = () => {
   const user = useAppSelector(selectUser)
 
-  return (
-    <div className="main__sidebar sidebar">
-      {/* <div className="sidebar__personal"> */}
-      <div className={cnSidebar('personal')}>
-        <p className={cnSidebar('personal-name')}>{user.email}</p>
-        {/* <p className="sidebar__personal-name">access token = {token}</p>
-        <p className="sidebar__personal-name">cokkies.access = {cookies.access}</p> */}
-        {/* <div className="sidebar__avatar"></div> */}
-      </div>
-      <div className={cnSidebar('block')} >
-        <div className={cnSidebar('list')} >
-          {playlistPics.map((el, idx) => (
-            <div className={cnSidebar('item')} key={el}>
-              <Link className={cnSidebar('link')} to={`/collection/${idx+1}`}>
-                <Picture source={el} />
-              </Link>
-            </div>            
-          ))}
-        </div>
+  return <div className="main__sidebar sidebar">
+    <div className={cnSidebar('personal')}>
+      <p className={cnSidebar('personal-name')}>{user.email}</p>
+    </div>
+    <div className={cnSidebar('block')} >
+      <div className={cnSidebar('list')} >
+        {playlistPics.map((el, idx) => (
+          <div className={cnSidebar('item')} key={el}>
+            <Link className={cnSidebar('link')} to={`/collection/${idx+1}`}>
+              <Picture source={el} />
+            </Link>
+          </div>            
+        ))}
       </div>
     </div>
-  )
+  </div>
 }
