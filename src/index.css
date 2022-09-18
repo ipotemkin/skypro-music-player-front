@@ -317,7 +317,7 @@ body {
           align-items: center;
 }
 
-.sidebar__item {
+.sidebar__item, .skeleton {
   width: 250px;
   height: 150px;
 }
@@ -336,3 +336,8 @@ body {
   height: auto;
 }
 
+.skeleton {
+  width: 250px;
+  height: 150px;
+  background-color: #313131;
+}

@@ -1,12 +1,6 @@
-// import { useCookies } from 'react-cookie'
-// import { selectAccessToken } from '../../app/Auth/tokenSlice'
-// import { useAppSelector } from '../../app/hooks'
-// import { useGetCurrentUserQuery } from '../../app/MusicPlayer/music-player.api'
-// import { useEffect, useState } from 'react'
-// import { IUser } from '../../models'
+import { FC, useState } from 'react'
 import { selectUser } from '../../app/Auth/userSlice'
 import { useAppSelector } from '../../app/hooks'
-import { useAuthUser } from '../Tracks/hooks'
 import playlist1 from './assets/playlist01.png'
 import playlist2 from './assets/playlist02.png'
 import playlist3 from './assets/playlist03.png'
@@ -16,6 +10,30 @@ const playlistPics: string[] = [
   playlist2,
   playlist3
 ]
+
+type PictureProps = {
+  source: string
+}
+
+// a component which waits until the source is loaded
+const Picture: FC<PictureProps> = ({ source }) => {
+  const [ loaded, setLoaded ] = useState(false)
+
+  const handleLoaded = () => setLoaded(true)
+
+  return (
+    <>
+      {!loaded && <div className="sidebar__img skeleton" />}
+      <img
+        className="sidebar__img"
+        src={source}
+        alt="day's playlist"
+        onLoad={handleLoaded}
+        style={{ display: loaded ? 'block': 'none'}} 
+      />
+    </>
+  )
+}
 
 export const Sidebar = () => {
   const user = useAppSelector(selectUser)
@@ -33,7 +51,7 @@ export const Sidebar = () => {
           {playlistPics.map((el, idx) => (
             <div className="sidebar__item" key={el}>
               <a className="sidebar__link" href={`/collection/${idx+1}`}>
-                <img className="sidebar__img" src={el} alt="day's playlist" />
+                <Picture source={el} />
               </a>
             </div>            
           ))}
