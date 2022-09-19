@@ -1,46 +1,146 @@
-# Getting Started with Create React App
+# Курсовая работа. React проект
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) TS template.
+# Разработка музыкального сервиса
 
-## Available Scripts
+Финальный результат этого задания - реализация музыкального сервиса, аналогичного “Яндекс.Музыке”. Описание проекта c пояснениями доступно [здесь](https://www.figma.com/community/file/1150022779859940953). 
 
-In the project directory, you can run:
+## Состав проекта
 
-### `npm start`
+Проект состоит из двух частей: фронтенд и бэкенд. 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Фронтенд-часть
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+[Верстка](https://drive.google.com/file/d/1X4NXJdNTvsmBMQqc5dEWR7Ml_UCvW_9T/view?usp=sharing)
 
-### `npm test`
+[Верстка экрана логина или регистрации](https://drive.google.com/file/d/16zzbEkS2ZDk75V60JJ2NGRCXjwJMo44e/view?usp=sharing)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**Шрифт:** 
 
-### `npm run build`
+[example stratos font (6).zip](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/85a9bcf1-ec70-4640-8c7f-5472a0b3db82/example_stratos_font_(6).zip)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Бэкенд
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Бекэнд часть можно взять здесь: [https://github.com/Stasy-cmd/music_proj](https://github.com/Stasy-cmd/music_proj)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Запросы к бэкенду
 
-### `npm run eject`
+### **Пользователи**
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+| Описание запроса | Тип запроса | Пример запроса |
+| --- | --- | --- |
+| Зарегистрироваться | POST | http://84.201.139.95:8080/user/signup/ |
+| Войти | POST | http://84.201.139.95:8080/user/login/ |
+| Получить ключ | POST | http://84.201.139.95:8080/user/token/ |
+| Обновить ключ | POST | http://84.201.139.95:8080/user/token/refresh/ |
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Треки
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+| Описание запроса | Тип запроса | Пример запроса |
+| --- | --- | --- |
+| Получить все треки | GET | http://84.201.139.95:8080/catalog/track/all/ |
+| Получить трек по id | GET | http://84.201.139.95:8080/catalog/track/<id> |
+| Получить трек по названию | GET | http://84.201.139.95:8080/catalog/track/<name> |
+| Получить трек в избранное по id | POST | http://84.201.139.95:8080/catalog/track/int:pk/favorite/ |
+| Удалить трек из избранного по id | DELETE | http://84.201.139.95:8080/catalog/track/int:pk/favorite/ |
+| Добавить треки в избранное по id | POST | http://84.201.139.95:8080/catalog/track/favorite?id=int:pk,int:pk/ |
+| Удалить треки из избранного по id | DELETE | http://84.201.139.95:8080/catalog/track/int:pk/favorite/ |
+| Добавить треки из избранного по id | POST | http://84.201.139.95:8080/catalog/track/favorite?id=int:pk,int:pk/ |
+| Посмотреть подборки | GET | http://84.201.139.95:8080/catalog/selection/ |
+| Посмотреть подборку по id | GET | http://84.201.139.95:8080/catalog/selection/int:pk/ |
+| Удалить трек из подборки по id | DELETE | http://84.201.139.95:8080/catalog/track/int:pk/delete/ |
+| Добавить трек в подборку по id | POST | http://84.201.139.95:8080/catalog/int:pk/update/ |
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+**Основные возможности бэкенда:**
 
-## Learn More
+- Регистрация (log in)
+- Возможность залогиниться и разлогиниться (sign up, sign out)
+- Витрина с доступными треками
+- Встроенный в приложение плеер (прослушивание музыки, постановка на паузу и снятие с нее, перемотка, повтор трека, shuffle плейлиста)
+- Добавление трека в избранное
+- Список подборок
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Список экранов проекта
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Визуальная схема принципа работы сервиса:  [https://github.com/Stasy-cmd/music_proj](https://github.com/Stasy-cmd/music_proj)
+
+### Экран авторизации
+
+Стартовый экран - экран "Войти".
+
+Пользователю предлагается ввести логин и пароль, если он уже зарегистрирован, и нажать "Войти". Если пользователь еще не зарегистрирован, ему необходимо нажать "Зарегистрироваться". 
+
+### Экран регистрации
+
+На экране регистрации пользователь придумывает логин и пароль, а также повторяет пароль. После этого он нажимает “Зарегистрироваться”. После регистрации пользователь снова попадает на стартовый экран “Войти”, где вводит логин и пароль заново.
+
+### Экран “Треки”
+
+Главный экран, на котором отражаются все доступные треки. Во время загрузки показывается экран скелетона. 
+
+Изначально нижний плеер скрыт. Он показывается, только когда пользователь нажимает на любой из треков. При перезагрузке страницы плеер тоже скрыт. 
+
+На главном экране реализуется сортировка треков. Пользователь вводит название трека в строке “Поиск”, и происходит их фильтрация по названию. Это значит, что, если пользователь ввел "tro", ему выдаст трек с названием "Elektro" и все треки, в названиях которых есть строка tro: "Troelf", "FooTroBar”. 
+
+***Поиск по году выпуска***
+
+Осуществляется с помощью сортировки без притягивания бэкенда. Пользователь может сортировать треки двумя способами: от старых к новым и от новых к старым. 
+
+***Поиск по исполнителю***
+
+Осуществляется с помощью бэкенда. При нажатии на “исполнителю” пользователь видит выпадающее меню, в котором показываются только первые пять элементов (остальные нужно скроллить)
+
+Пользователь может выбрать несколько исполнителей одновременно. 
+
+***Поиск по жанру***
+
+Осуществляется с помощью бэкенда. При нажатии на “жанру” пользователь видит выпадающее меню, в котором показываются только первые пять элементов (остальные нужно скроллить)
+
+Пользователь может выбрать несколько жанров одновременно.
+
+### Экраны подборок: “Плейлист дня”, “100 танцевальных хитов”, “Инди заряд”
+
+В каждой подборке отображается список треков, которые в нее входят.
+
+Поиск по исполнителю, жанру, году выпуска не осуществляется.
+
+### Экран “Мои треки”
+
+Экран с подборкой треков, которые пользователь добавил в избранное. 
+
+### Плеер
+
+![Screenshot 2022-08-26 at 12.26.33.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/4f677356-bcbb-4f8d-a38a-d649c562f3dd/Screenshot_2022-08-26_at_12.26.33.png)
+
+### Левое меню
+
+![Screenshot 2022-08-15 at 16.07.06.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/da1c04bd-d4d5-42c3-9304-7aea7d0e1c5e/Screenshot_2022-08-15_at_16.07.06.png)
+
+## API
+
+Ссылка на бэкенд: [http://51.250.72.80:8090/swagger/](http://84.201.139.95:8000/swagger/)
+
+# Запуск проекта
+
+1. Склонируйте репозиторий:
+
+```
+$ git clone https://github.com/ipotemkin/skypro-music-player-front.git
+```
+
+2. Установите зависимости:
+
+```
+$ npm i
+```
+
+3. Запустите проект:
+
+```
+$ npm start
+```
+
+4. Продакшен сборка:
+
+```
+$ npm run build
+```
