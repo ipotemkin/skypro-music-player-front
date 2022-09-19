@@ -28,32 +28,34 @@
 
 | Описание запроса | Тип запроса | Пример запроса |
 | --- | --- | --- |
-| Зарегистрироваться | POST | http://84.201.139.95:8080/user/signup/ |
-| Войти | POST | http://84.201.139.95:8080/user/login/ |
-| Получить ключ | POST | http://84.201.139.95:8080/user/token/ |
-| Обновить ключ | POST | http://84.201.139.95:8080/user/token/refresh/ |
+| Зарегистрироваться | POST | user/signup/ |
+| Войти | POST | user/login/ |
+| Получить ключ | POST | user/token/ |
+| Обновить ключ | POST | user/token/refresh/ |
+| Получить информацию от текущем пользователе | GET | user/me/ |
 
 ### Треки
 
 | Описание запроса | Тип запроса | Пример запроса |
 | --- | --- | --- |
-| Получить все треки | GET | http://84.201.139.95:8080/catalog/track/all/ |
-| Получить трек по id | GET | http://84.201.139.95:8080/catalog/track/<id> |
-| Получить трек по названию | GET | http://84.201.139.95:8080/catalog/track/<name> |
-| Получить трек в избранное по id | POST | http://84.201.139.95:8080/catalog/track/int:pk/favorite/ |
-| Удалить трек из избранного по id | DELETE | http://84.201.139.95:8080/catalog/track/int:pk/favorite/ |
-| Добавить треки в избранное по id | POST | http://84.201.139.95:8080/catalog/track/favorite?id=int:pk,int:pk/ |
-| Удалить треки из избранного по id | DELETE | http://84.201.139.95:8080/catalog/track/int:pk/favorite/ |
-| Добавить треки из избранного по id | POST | http://84.201.139.95:8080/catalog/track/favorite?id=int:pk,int:pk/ |
-| Посмотреть подборки | GET | http://84.201.139.95:8080/catalog/selection/ |
-| Посмотреть подборку по id | GET | http://84.201.139.95:8080/catalog/selection/int:pk/ |
-| Удалить трек из подборки по id | DELETE | http://84.201.139.95:8080/catalog/track/int:pk/delete/ |
-| Добавить трек в подборку по id | POST | http://84.201.139.95:8080/catalog/int:pk/update/ |
+| Получить все треки | GET | catalog/track/all/ |
+| Получить трек по id | GET | catalog/track/<id> |
+| Получить трек по названию | GET | catalog/track/<name> |
+| Получить трек в избранное по id | POST | catalog/track/int:pk/favorite/ |
+| Удалить трек из избранного по id | DELETE | catalog/track/int:pk/favorite/ |
+| Добавить треки в избранное по id | POST | catalog/track/favorite?id=int:pk,int:pk/ |
+| Удалить треки из избранного по id | DELETE | catalog/track/int:pk/favorite/ |
+| Добавить треки из избранного по id | POST | catalog/track/favorite?id=int:pk,int:pk/ |
+| Посмотреть подборки | GET | catalog/selection/ |
+| Посмотреть подборку по id | GET | catalog/selection/int:pk/ |
+| Удалить трек из подборки по id | DELETE | catalog/track/int:pk/delete/ |
+| Добавить трек в подборку по id | POST | catalog/int:pk/update/ |
 
 **Основные возможности бэкенда:**
 
 - Регистрация (log in)
 - Возможность залогиниться и разлогиниться (sign up, sign out)
+- Получение информации о текущем пользователе
 - Витрина с доступными треками
 - Встроенный в приложение плеер (прослушивание музыки, постановка на паузу и снятие с нее, перемотка, повтор трека, shuffle плейлиста)
 - Добавление трека в избранное
@@ -109,11 +111,7 @@
 
 ### Плеер
 
-![Screenshot 2022-08-26 at 12.26.33.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/4f677356-bcbb-4f8d-a38a-d649c562f3dd/Screenshot_2022-08-26_at_12.26.33.png)
-
-### Левое меню
-
-![Screenshot 2022-08-15 at 16.07.06.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/da1c04bd-d4d5-42c3-9304-7aea7d0e1c5e/Screenshot_2022-08-15_at_16.07.06.png)
+Можно проиграть трек, закольцевать проигрывание, включить режим шаффл. Достпуна регулировка громкости. Можно добавить в избранное или убрать из избранного.
 
 ## API
 
