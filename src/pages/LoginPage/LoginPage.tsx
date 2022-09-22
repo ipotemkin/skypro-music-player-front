@@ -1,14 +1,14 @@
 import { LoginForm } from "../../features/LoginForm/LoginForm"
 import { useLogout } from "../../features/Tracks/hooks"
 
-import { cnLogin } from './Login.classname'
-import './Login.css'
+import { cnLoginPage } from './LoginPage.classname'
+import './LoginPage.css'
 
-export const Login = () => {
+export const LoginPage = () => {
   useLogout()
 
   return (
-    <div className={cnLogin()}>
+    <div className={cnLoginPage()}>
       <LoginForm />
     </div>
   )
