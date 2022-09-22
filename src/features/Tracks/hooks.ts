@@ -16,6 +16,7 @@ import { selectAccessToken, selectRefreshToken, setToken } from '../../app/Auth/
 import { IFilterSlice, initialState, selectFilter, updateFilter } from '../Filter/FilterSlice';
 import { getUserIdFromJWT } from '../../utils';
 import { musicPlayerApi } from '../../app/MusicPlayer/music-player.api';
+import { ROUTES } from '../../routes';
 
 // возвращает функцию для обновления access токена
 // запрашивает новый access token с помощью refresh token
@@ -188,7 +189,7 @@ export const useCurrentUser = () => {
   
   const handleRefreshToken = async (rt: string) => {
     const result = await doRefreshToken(rt);
-    if ('error' in result) navigate('/login');
+    if ('error' in result) navigate(ROUTES.login);
   }
 
   useEffect(() => {
@@ -197,7 +198,7 @@ export const useCurrentUser = () => {
         setResultError(false);
         handleRefreshToken(refreshToken);
       } else {
-        navigate('/login');
+        navigate(ROUTES.login);
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -231,7 +232,7 @@ export const useFavorite = (track: ITrack | undefined) => {
         toggleFavoriteTrack(trackId)
       } else {
         console.error('No refresh token')
-        navigate('/login')
+        navigate(ROUTES.login)
       }
     }
   }

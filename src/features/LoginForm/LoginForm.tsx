@@ -16,6 +16,21 @@ import { useCookies } from 'react-cookie'
 import { useAppDispatch, useLogout } from '../../app/hooks'
 import { setToken } from '../../app/Auth/tokenSlice'
 
+const errorInitialState = {
+  errorUsername: false,
+  errorPassword: false,
+  errorPasswordsDiffer: false,
+}
+
+const initialState = {
+  username: '',
+  password: '',
+  passwordRepeat: '',
+  register: false,
+  enableSubmit: true,
+  ...errorInitialState
+}
+
 export const LoginForm = () => {
   // eslint-disable-next-line
   const [ cookies, setCookies ] = useCookies(['access', 'refresh'])
@@ -24,21 +39,6 @@ export const LoginForm = () => {
   const [ getUserTokens, { isError, data, error } ] = useUserTokenMutation()
   const [ postUserSignup ] = useUserSignupMutation()
   const logout = useLogout()
-
-  const errorInitialState = {
-    errorUsername: false,
-    errorPassword: false,
-    errorPasswordsDiffer: false,
-  }
-  
-  const initialState = {
-    username: '',
-    password: '',
-    passwordRepeat: '',
-    register: false,
-    enableSubmit: true,
-    ...errorInitialState
-  }
   
   const [form, setForm] = useState(initialState)
   let navigate = useNavigate()
