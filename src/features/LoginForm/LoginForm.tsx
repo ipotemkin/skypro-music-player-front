@@ -151,7 +151,7 @@ export const LoginForm = () => {
   
   return (
     <form className={cnLoginForm()} onSubmit={onSubmitHandler}>
-      <img src={logo} alt="logo" style={{ marginBottom: 30 }}/>
+      <img className={cnLoginForm('logo')} src={logo} alt="logo" />
       
       <InputField
         placeholder="Логин"
@@ -175,9 +175,9 @@ export const LoginForm = () => {
         error={getPasswordErrorMessage(form)}
       />}
       
-      { loginError && 
+      {loginError && 
         <p style={{ color: 'red' }}><small>{ error && getErrorMessage(error) }</small></p>}
-      { !loginError && <div style={{ height: 10 }}></div>}
+      {!loginError && <div className={cnLoginForm('no-login-error')} />}
       
       {!form.register && <Button type="submit">Войти</Button>}
       <Button

@@ -13,3 +13,11 @@
 
   background-color: #ffffff;
 }
+
+.login-form__logo {
+  margin-bottom: 30px;
+}
+
+.login-form__no-login-error {
+  height: 10px;
+}
