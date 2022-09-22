@@ -1,7 +1,7 @@
 import { FC } from 'react'
 
 import { ITrack } from '../../models'
-import { SecondsToMinSec } from '../../utils'
+import { secondsToMinSec } from '../../utils'
 
 import note from './assets/note.svg'
 import { useFavorite } from '../Tracks/hooks'
@@ -56,7 +56,7 @@ export const Track: FC<TrackProps> = ({ track, skeleton = false }) => {
       >
         <path d="M8.34372 2.25572H8.36529C9.29718 1.44175 11.7563 0.165765 13.9565 1.76734C17.3111 4.20921 14.2458 9.5 8.36529 13H8.34372M8.34378 2.25572H8.32221C7.39032 1.44175 4.93121 0.165765 2.73102 1.76734C-0.623552 4.20921 2.44172 9.5 8.32221 13H8.34378"/>
       </svg>        
-      <span className={cnTrack('time-text')}>{SecondsToMinSec(+(track?.duration_in_seconds || 0))}</span>
+      <span className={cnTrack('time-text')}>{secondsToMinSec(+(track?.duration_in_seconds || 0))}</span>
     </div>
   </div>
 }
