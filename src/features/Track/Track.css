@@ -39,6 +39,10 @@
   width: 447px;
 }
 
+.track__title-text {
+  text-align: left;
+}
+
 .track__title-image {
   width: 51px;
   height: 51px;
