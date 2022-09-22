@@ -1,5 +1,5 @@
+import { useLogout } from "../../app/hooks"
 import { LoginForm } from "../../features/LoginForm/LoginForm"
-import { useLogout } from "../../features/Tracks/hooks"
 
 import { cnLoginPage } from './LoginPage.classname'
 import './LoginPage.css'

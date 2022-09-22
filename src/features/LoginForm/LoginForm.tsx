@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { cnLoginForm } from './LoginForm.classname'
 import '../../index.css'
@@ -16,10 +16,7 @@ import { useCookies } from 'react-cookie'
 import { useAppDispatch } from '../../app/hooks'
 import { setToken } from '../../app/Auth/tokenSlice'
 
-type LoginFormProps = {
-}
-
-export const LoginForm: FC<LoginFormProps> = () => {
+export const LoginForm = () => {
   // eslint-disable-next-line
   const [ cookies, setCookies ] = useCookies(['access', 'refresh'])
   const dispatch = useAppDispatch()

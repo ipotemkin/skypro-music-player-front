@@ -171,17 +171,6 @@ export const useLoadCredentialsFromCookies = () => {
   return false;
 }
 
-export const useLogout = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [cookies, setCookies, removeCookies] = useCookies(['access', 'refresh']);
-  const dispatch = useAppDispatch();
-
-  console.log('processing logout');
-  removeCookies('access');
-  removeCookies('refresh');
-  dispatch(setToken({ access: undefined, refresh: undefined }));
-}
-
 // export const useAuthUser = () => {
 //   const timestampRef = useRef(Date.now()).current;
 //   return useGetCurrentUserQuery(timestampRef);
