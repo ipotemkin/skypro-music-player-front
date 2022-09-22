@@ -16,13 +16,13 @@ import './Tracks.css'
 type TracksProps = {
   title: string
   showFilter?: boolean
-  showSidebar?: boolean  // I left this variable till the final project submit
+  // showSidebar?: boolean  // I left this variable till the final project submit
   hook: Function  // set a hook to show playlists or collections
   collectionId?: number
 }
 
 export const Tracks: FC<TracksProps> = ({
-  title, showFilter = false, showSidebar = false, hook, collectionId
+  title, showFilter = false, hook, collectionId
 }) => {
   const [ searchString, setSearchString ] = useState('')
   const { isLoading, isError, data } = collectionId ? hook(searchString, collectionId) : hook(searchString)  
