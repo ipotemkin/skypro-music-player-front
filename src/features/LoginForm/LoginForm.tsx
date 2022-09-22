@@ -10,11 +10,11 @@ import './LoginForm.css'
 import { InputField } from '../InputField/InputField'
 import { useNavigate } from 'react-router-dom'
 import { ISignupUser, useUserSignupMutation, useUserTokenMutation } from '../../app/MusicPlayer/music-player.api'
-import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
-import { SerializedError } from '@reduxjs/toolkit'
 import { useCookies } from 'react-cookie'
 import { useAppDispatch, useLogout } from '../../app/hooks'
 import { setToken } from '../../app/Auth/tokenSlice'
+import { getErrorMessage, getPasswordErrorMessage, isPasswordsIdentical, isPasswordValid, isUsernameValid } from './validators'
+import { ILoginFormState } from '../../models'
 
 const errorInitialState = {
   errorUsername: false,
@@ -22,7 +22,7 @@ const errorInitialState = {
   errorPasswordsDiffer: false,
 }
 
-const initialState = {
+const initialState: ILoginFormState = {
   username: '',
   password: '',
   passwordRepeat: '',
@@ -39,7 +39,6 @@ export const LoginForm = () => {
   const [ getUserTokens, { isError, data, error } ] = useUserTokenMutation()
   const [ postUserSignup ] = useUserSignupMutation()
   const logout = useLogout()
-  
   const [form, setForm] = useState(initialState)
   let navigate = useNavigate()
 
@@ -58,8 +57,6 @@ export const LoginForm = () => {
     }
   // eslint-disable-next-line
   }, [data])
-
-  // const enter = () => console.log('enter')
   
   const handleRegister = () => {
     if (!form.register) setForm({ ...initialState, register: true, enableSubmit: false })
@@ -76,13 +73,13 @@ export const LoginForm = () => {
   
   const isFormValid = () => {
     
-    const usernameValid = isUsernameValid()
+    const usernameValid = isUsernameValid(form.username)
     if (!usernameValid) setForm(prev => ({ ...prev, errorUsername: true }))
     
     if (form.register && (form.password.length || form.passwordRepeat.length)) {
       
       // если пароли не идентичны
-      if (!isPasswordsIdentical()) {
+      if (!isPasswordsIdentical(form.password, form.passwordRepeat)) {
         setForm(prev => ({ ...prev, errorPasswordsDiffer: true }))
         return false
       }
@@ -92,7 +89,7 @@ export const LoginForm = () => {
       return false
     }
     
-    const passwordValid = isPasswordValid()
+    const passwordValid = isPasswordValid(form.password)
     if (!passwordValid) setForm(prev => ({ ...prev, errorPassword: true }))
 
     if (usernameValid && passwordValid) return true
@@ -126,28 +123,12 @@ export const LoginForm = () => {
       // здесь должен быть выход из формы
       console.log({ 'username': form.username, 'password': form.password })
       handleLoginUser()
-      // navigate('/tracks')
     }
 
   }
 
-  const isPasswordsIdentical = () => form.password === form.passwordRepeat
-
-  // Здесь может быть валидатор username
-  const isUsernameValid = () => form.username.length
-
-  // Здесь может быть валидатор пароля
-  const isPasswordValid = () => form.password.length
-
-  const getPasswordErrorMessage = () => {
-    if (form.register && form.errorPasswordsDiffer) return "Пароли не совпадают"
-    if (form.errorPassword) return "Введите пароль"
-    return ""
-  }
-
   const handleLoginUser = async () => {
     try {
-      // await LoginUser({ email: form.username, password: form.password }).unwrap()
       const { data: newTokens } = await getUserTokens({ email: form.username, password: form.password }).unwrap()
       console.log('newTokens -->', newTokens)
 
@@ -167,22 +148,9 @@ export const LoginForm = () => {
       console.log(`user signup error: ${JSON.stringify(err)}`)
     }
   }
-
-  const getErrorMessage = (error: FetchBaseQueryError | SerializedError) => {
-    if ('status' in error && 'data' in error) {
-      const resArray = []
-      const tempData = Object(error.data)
-      for (let item in tempData) resArray.push(tempData[item])
-      return resArray.join(', ')
-    }
-    return ''
-  }
   
   return (
     <form className={cnLoginForm()} onSubmit={onSubmitHandler}>
-      {/* { username && <p style={{ color: 'black' }}>{username}</p>} */}
-      {/* { data && <p style={{ color: 'black' }}>{JSON.stringify(data)}</p>} */}
-
       <img src={logo} alt="logo" style={{ marginBottom: 30 }}/>
       
       <InputField
@@ -196,7 +164,7 @@ export const LoginForm = () => {
         placeholder="Пароль"
         value={form.password}
         onChange={handleGetInputField('password')}
-        error={getPasswordErrorMessage()}
+        error={getPasswordErrorMessage(form)}
       />
       
       {form.register && <InputField
@@ -204,7 +172,7 @@ export const LoginForm = () => {
         placeholder="Повторите пароль"
         value={form.passwordRepeat}
         onChange={handleGetInputField('passwordRepeat')}
-        error={getPasswordErrorMessage()}
+        error={getPasswordErrorMessage(form)}
       />}
       
       { loginError && 
