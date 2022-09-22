@@ -13,7 +13,7 @@ import { ISignupUser, useUserSignupMutation, useUserTokenMutation } from '../../
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import { SerializedError } from '@reduxjs/toolkit'
 import { useCookies } from 'react-cookie'
-import { useAppDispatch } from '../../app/hooks'
+import { useAppDispatch, useLogout } from '../../app/hooks'
 import { setToken } from '../../app/Auth/tokenSlice'
 
 export const LoginForm = () => {
@@ -23,6 +23,7 @@ export const LoginForm = () => {
   const [ loginError, setLoginError ] = useState(false)
   const [ getUserTokens, { isError, data, error } ] = useUserTokenMutation()
   const [ postUserSignup ] = useUserSignupMutation()
+  const logout = useLogout()
 
   const errorInitialState = {
     errorUsername: false,
@@ -42,6 +43,11 @@ export const LoginForm = () => {
   const [form, setForm] = useState(initialState)
   let navigate = useNavigate()
 
+  useEffect(() => {
+    logout()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  
   useEffect(() => { 
     if (data) {
       console.log('tokens -->', data)
