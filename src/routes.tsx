@@ -2,7 +2,7 @@ import { Routes as ReactRoutes, Route, Navigate } from 'react-router-dom'
 import { LoginPage } from './pages/LoginPage/LoginPage'
 import { TracksPage } from './pages/TracksPage/TracksPage'
 import { PlaylistPage } from './pages/PlaylistPage/PlaylistPage'
-import { Collection} from './pages/Collection/Collection'
+import { Collection } from './pages/CollectionPage/CollectionPage'
 import { useLoadCredentialsFromCookies } from './features/Tracks/hooks'
 
 export const Routes = () => {
