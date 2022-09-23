@@ -21,3 +21,7 @@
 .login-form__no-login-error {
   height: 10px;
 }
+
+.login-form__login-error {
+  color: red;
+}

@@ -176,7 +176,7 @@ export const LoginForm = () => {
       />}
       
       {loginError && 
-        <p style={{ color: 'red' }}><small>{ error && getErrorMessage(error) }</small></p>}
+        <p className={cnLoginForm('login-error')}><small>{ error && getErrorMessage(error) }</small></p>}
       {!loginError && <div className={cnLoginForm('no-login-error')} />}
       
       {!form.register && <Button type="submit">Войти</Button>}

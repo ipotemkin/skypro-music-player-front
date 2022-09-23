@@ -2,10 +2,8 @@ import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { SerializedError } from '@reduxjs/toolkit';
 import { ILoginFormState } from "../../models";
 
-  // Здесь может быть валидатор username
   export const isUsernameValid = (value: string) => value.length;
 
-  // Здесь может быть валидатор пароля
   export const isPasswordValid = (value: string) => value.length;
 
   export const isPasswordsIdentical = (password: string, passwordRepeat: string) => password === passwordRepeat;
