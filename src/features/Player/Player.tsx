@@ -1,19 +1,16 @@
 import React, { FC, useEffect, useRef, useState } from 'react'
+
 import { IPlayerState, ITrack } from '../../models'
 import { ProgressBar } from '../ProgressBar/ProgressBar'
 import { useFavorite } from '../Tracks/hooks'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { setActiveTrackId } from '../Track/TrackSlice'
 import { selectVolume, setVolume as setPlayerVolume } from './PlayerSlice'
+import { PauseIcon, PlayIcon, PrevIcon, NextIcon, LoopIcon, ShuffleIcon } from '../icons'
 
 import { cnPlayer, cnBar, cnTrackPlay } from './Player.classname'
 import './Player.css'
-import PauseIcon from '../icons/PauseIcon'
-import PlayIcon from '../icons/PlayIcon'
-import PrevIcon from '../icons/PrevIcon'
-import NextIcon from '../icons/NextIcon'
-import LoopIcon from '../icons/LoopIcon'
-import ShuffleIcon from '../icons/ShuffleIcon'
+
 
 type PlayerProps = {
   data: ITrack[]
