@@ -6,7 +6,7 @@ import { useFavorite } from '../Tracks/hooks'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { setActiveTrackId } from '../Track/TrackSlice'
 import { selectVolume, setVolume as setPlayerVolume } from './PlayerSlice'
-import { PauseIcon, PlayIcon, PrevIcon, NextIcon, LoopIcon, ShuffleIcon } from '../icons'
+import { PauseIcon, PlayIcon, PrevIcon, NextIcon, LoopIcon, ShuffleIcon, TrackIcon } from '../icons'
 
 import { cnPlayer, cnBar, cnTrackPlay } from './Player.classname'
 import './Player.css'
@@ -154,12 +154,7 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
             <div className={cnPlayer('track-play', 'track-play')}>
               <div className={cnTrackPlay('contain')}>
                 <div className={cnTrackPlay('image')}>
-                  <svg className={cnTrackPlay('svg')} width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8 16V1.9697L19 1V13" stroke="#4E4E4E"/>
-                    <ellipse cx="4.5" cy="16" rx="3.5" ry="2" stroke="#4E4E4E"/>
-                    <ellipse cx="15.5" cy="13" rx="3.5" ry="2" stroke="#4E4E4E"/>
-                  </svg>
-
+                  <TrackIcon/>
                 </div>
                 <div className={cnTrackPlay('author')}>
                   <p className={cnTrackPlay('author-link')}>{ currentTrack?.name }</p>
