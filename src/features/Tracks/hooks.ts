@@ -18,6 +18,12 @@ import { getUserIdFromJWT } from '../../utils';
 import { musicPlayerApi } from '../../app/MusicPlayer/music-player.api';
 import { ROUTES } from '../../routes';
 
+
+const getFilteredData = (data: ITrack[], query: string = '') => 
+  data.filter((item: ITrack) => item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
+);
+
+
 // возвращает функцию для обновления access токена
 // запрашивает новый access token с помощью refresh token
 // монтирует его в cookies и strore
@@ -58,8 +64,7 @@ export const useTracks = (query: string = '') => {
   // eslint-disable-next-line
   }, [data, isError, query]);
       
-  const filterData = (data: ITrack[]) => 
-    setFilteredData(data.filter((item: ITrack) => item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())));
+  const filterData = (data: ITrack[]) => setFilteredData(getFilteredData(data, query));
 
   return { data: filteredData, isLoading, isError, error };
 }
@@ -132,11 +137,10 @@ export const useCollection = (query: string = '', collectionId: number) => {
   }, [data, isError, query]);
   
   const filterData = (data: ICollection) => {
-    const { items } = data;
-    const newItems = items.filter((item: ITrack) => item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
-    const newData = {...data};
-    newData.items = [...newItems];
-    setFilteredData(newData);
+    setFilteredData({
+      ...data,
+      items: getFilteredData(data.items, query)
+    });
   }
 
   if (filteredData) {
@@ -171,11 +175,6 @@ export const useLoadCredentialsFromCookies = () => {
   console.log('no credentials found in cookies');
   return false;
 }
-
-// export const useAuthUser = () => {
-//   const timestampRef = useRef(Date.now()).current;
-//   return useGetCurrentUserQuery(timestampRef);
-// }
 
 // returns the current user, refreshing his token if necessary
 // if no loggedin user or the refresh token is invalid, returns undefined

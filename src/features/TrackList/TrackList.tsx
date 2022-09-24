@@ -24,9 +24,9 @@ export const TrackList: FC<TrackListProps> = ({ tracks, isLoading = false }) => 
 
   return <div className={cnTrackList()}>
     <div className={cnTrackList('title')}>
-      <div className={cnTrackList('title', 'col01')}>ТРЕК</div>
-      <div className={cnTrackList('title', 'col02')}>ИСПОЛНИТЕЛЬ</div>
-      <div className={cnTrackList('title', 'col03')}>АЛЬБОМ</div>
+      <div className={cnTrackList('title', 'col01')}>трек</div>
+      <div className={cnTrackList('title', 'col02')}>исполнитель</div>
+      <div className={cnTrackList('title', 'col03')}>альбом</div>
       <div className={cnTrackList('title', 'col04')}>
         <img className={cnTrackList('title__svg')} src={iconWatch} alt="time" />
       </div>
