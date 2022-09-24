@@ -143,33 +143,34 @@ export const useLoadCredentialsFromCookies = () => {
   return false;
 }
 
-export const useFavorite = (track: ITrack | undefined) => {
-  const token = useAppSelector(selectAccessToken)
-  const refreshToken = useAppSelector(selectRefreshToken)
-  const handleRefreshToken = useRefreshToken()
-  const [ addTrackToFavorite ] = useAddTrackToFavoriteMutation()
-  const [ removeTrackFromFavorite ] = useRemoveTrackFromFavoriteMutation()
+export const useFavorite = (track?: ITrack) => {
+  const token = useAppSelector(selectAccessToken);
+  const refreshToken = useAppSelector(selectRefreshToken);
+  const handleRefreshToken = useRefreshToken();
+  const [ addTrackToFavorite ] = useAddTrackToFavoriteMutation();
+  const [ removeTrackFromFavorite ] = useRemoveTrackFromFavoriteMutation();
+  const navigate = useNavigate();
   
-  const navigate = useNavigate()
+  const isCurrentUserInStaredUser = (starredUser: IStaredUser[]) => {
+    const user = starredUser.find((el: IStaredUser) => el.id === (token ? getUserIdFromJWT(token) : 0));
+    if (user) return true;
+    return false;
+  }
   
-  const favorite: boolean = (
-    track
-    ? track.stared_user.filter((el: IStaredUser) => el.id === (token ? getUserIdFromJWT(token) : 0)).length > 0
-    : false
-  )
+  const favorite: boolean = track ? isCurrentUserInStaredUser(track.stared_user) : false;
 
   const toggleFavoriteTrack = async (trackId: number) => {
-    const handler = favorite ? removeTrackFromFavorite : addTrackToFavorite
+    const handler = favorite ? removeTrackFromFavorite : addTrackToFavorite;
     try {
-      await handler(trackId).unwrap()
+      await handler(trackId).unwrap();
     } catch (err) {
-      console.error('toggleFavoriteTrack -> catch err =', err)
+      console.error('toggleFavoriteTrack -> catch err =', err);
       if (refreshToken) {
-        await handleRefreshToken(refreshToken)
-        toggleFavoriteTrack(trackId)
+        await handleRefreshToken(refreshToken);
+        toggleFavoriteTrack(trackId);
       } else {
-        console.error('No refresh token')
-        navigate(ROUTES.login)
+        console.error('No refresh token');
+        navigate(ROUTES.login);
       }
     }
   }
