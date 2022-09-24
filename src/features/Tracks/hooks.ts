@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,52 +6,19 @@ import { ICollection, IFilterItem, IStaredUser, ITrack } from '../../models';
 import {
   useAddTrackToFavoriteMutation,
   useGetCollectionQuery,
-  useGetCurrentUserQuery,
   useGetTracksQuery,
-  useRefreshUserTokenMutation,
   useRemoveTrackFromFavoriteMutation
  } from '../../app/MusicPlayer/music-player.api';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector, useCurrentUser, useRefreshToken } from '../../app/hooks';
 import { selectAccessToken, selectRefreshToken, setToken } from '../../app/Auth/tokenSlice';
 import { IFilterSlice, initialState, selectFilter, updateFilter } from '../Filter/FilterSlice';
 import { getUserIdFromJWT } from '../../utils';
-import { musicPlayerApi } from '../../app/MusicPlayer/music-player.api';
 import { ROUTES } from '../../routes';
 
 
 const getFilteredData = (data: ITrack[], query: string = '') => 
   data.filter((item: ITrack) => item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
 );
-
-
-// возвращает функцию для обновления access токена
-// запрашивает новый access token с помощью refresh token
-// монтирует его в cookies и strore
-// возвращает новый access token или ошибку
-export const useRefreshToken = () => {
-  // eslint-disable-next-line
-  const [ cookies, setCookies ] = useCookies(['access']);
-  const dispatch = useAppDispatch();
-  const [ doRefreshToken ] = useRefreshUserTokenMutation();
-  
-  const handleRefreshToken = async (refreshTokenIn: string) => {
-    try {
-      const { access } = await doRefreshToken(refreshTokenIn).unwrap();
-      setCookies('access', access);
-      dispatch(setToken({ access, refresh: refreshTokenIn }));
-      
-      // монтируем нового пользователя в store, но мне кажется, это не работает
-      // Date.now() используем, чтобы не брать пользователя из cache, а получать с сервера
-      console.log(musicPlayerApi.endpoints.getCurrentUser.initiate(Date.now()));
-      
-      return { access };
-    } catch(err) {
-      return { error: err };
-    }
-  }
-  
-  return handleRefreshToken;
-}
 
 // getting tracks, searching by track name available
 export const useTracks = (query: string = '') => {
@@ -174,36 +141,6 @@ export const useLoadCredentialsFromCookies = () => {
 
   console.log('no credentials found in cookies');
   return false;
-}
-
-// returns the current user, refreshing his token if necessary
-// if no loggedin user or the refresh token is invalid, returns undefined
-export const useCurrentUser = () => {
-  const timestampRef = useRef(Date.now()).current;
-  const { data, isLoading, isError, error } = useGetCurrentUserQuery(timestampRef);  
-  const doRefreshToken = useRefreshToken();
-  const refreshToken = useAppSelector(selectRefreshToken);
-  const [ resultError, setResultError ] = useState(false)
-  const navigate = useNavigate();
-  
-  const handleRefreshToken = async (rt: string) => {
-    const result = await doRefreshToken(rt);
-    if ('error' in result) navigate(ROUTES.login);
-  }
-
-  useEffect(() => {
-    if(isError) {
-      if ('status' in error && error.status === 401 && refreshToken) {
-        setResultError(false);
-        handleRefreshToken(refreshToken);
-      } else {
-        navigate(ROUTES.login);
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isError, error, refreshToken]);
-
-  return  { user: data, isLoading, isError, error: resultError };
 }
 
 export const useFavorite = (track: ITrack | undefined) => {
