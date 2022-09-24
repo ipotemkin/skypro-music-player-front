@@ -43,6 +43,7 @@
   
 .col01 {
   width: 447px;
+  min-width: 200px;
 }
 
 .col02 {

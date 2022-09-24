@@ -37,6 +37,7 @@
       -ms-flex-align: center;
           align-items: center;
   width: 447px;
+  min-width: 200px;
 }
 
 .track__title-text {
