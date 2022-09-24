@@ -159,8 +159,9 @@ export const useFavorite = (track: ITrack | undefined) => {
   )
 
   const toggleFavoriteTrack = async (trackId: number) => {
+    const handler = favorite ? removeTrackFromFavorite : addTrackToFavorite
     try {
-      favorite ? await removeTrackFromFavorite(trackId).unwrap() : await addTrackToFavorite(trackId).unwrap()
+      await handler(trackId).unwrap()
     } catch (err) {
       console.error('toggleFavoriteTrack -> catch err =', err)
       if (refreshToken) {
