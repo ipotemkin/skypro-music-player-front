@@ -175,9 +175,11 @@ export const LoginForm = () => {
         error={getPasswordErrorMessage(form)}
       />}
       
-      {loginError && 
-        <p className={cnLoginForm('login-error')}><small>{ error && getErrorMessage(error) }</small></p>}
-      {!loginError && <div className={cnLoginForm('no-login-error')} />}
+      {
+        loginError
+        ? <p className={cnLoginForm('login-error')}><small>{ error && getErrorMessage(error) }</small></p>
+        : <div className={cnLoginForm('no-login-error')} />
+      }
       
       {!form.register && <Button type="submit">Войти</Button>}
       <Button

@@ -20,7 +20,7 @@ type TrackListProps = {
 }
 
 export const TrackList: FC<TrackListProps> = ({ tracks, isLoading = false }) => {
-  const skeletonArray = useMemo(() => getSkeletonArray(), [])
+  const skeletonArray = getSkeletonArray()
 
   return <div className={cnTrackList()}>
     <div className={cnTrackList('title')}>
