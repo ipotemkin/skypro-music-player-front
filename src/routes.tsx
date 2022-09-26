@@ -1,21 +1,42 @@
-import { Routes as ReactRoutes, Route, Navigate } from 'react-router-dom'
-import { Login } from './pages/Login/Login'
+import { Routes as ReactRoutes, Route, Navigate, Outlet } from 'react-router-dom'
+import { LoginPage } from './pages/LoginPage/LoginPage'
 import { TracksPage } from './pages/TracksPage/TracksPage'
-import { Playlist } from './pages/Playlist/Playlist'
-import { Collection} from './pages/Collection/Collection'
+import { PlaylistPage } from './pages/PlaylistPage/PlaylistPage'
+import { Collection } from './pages/CollectionPage/CollectionPage'
 import { useLoadCredentialsFromCookies } from './features/Tracks/hooks'
+import { FC } from 'react'
+
+export const ROUTES = {
+  home: '/',
+  login: '/login',
+  tracks: '/tracks',
+  playlist: '/playlist',
+  collection: '/collection'
+}
+
+type ProtectedRouteProps = {
+  redirectPath?: string;
+  isAllowed: boolean;
+}
+
+const ProtectedRoute: FC<ProtectedRouteProps> = ({ redirectPath = ROUTES.login, isAllowed }) => {
+  if (!isAllowed) return <Navigate to={redirectPath} replace={true} />
+  return <Outlet />
+}
 
 export const Routes = () => {
   const isLoggedIn = useLoadCredentialsFromCookies()
 
   return (
     <ReactRoutes>
-      <Route path="/" element={ <Navigate replace to={isLoggedIn ? "/tracks" : "/login"}/> } />
-      <Route path="/login" element={ <Login /> } />
-      <Route path="/tracks" element={ isLoggedIn ? <TracksPage /> : <Navigate replace to="/login"/> } />
-      <Route path="/playlist" element={ isLoggedIn ? <Playlist /> : <Navigate replace to="/login"/> }/>
-      <Route path="/collection/:id" element={ isLoggedIn ? <Collection /> : <Navigate replace to="/login"/> } />
-      <Route path="*" element={ <Navigate replace to="/" /> } />
+      <Route path={ROUTES.login} element={ <LoginPage /> } />
+      <Route element={<ProtectedRoute isAllowed={isLoggedIn} />}>
+        <Route path={ROUTES.home} element={ <TracksPage /> } />
+        <Route path={ROUTES.tracks} element={ <TracksPage /> } />
+        <Route path={ROUTES.playlist} element={ <PlaylistPage /> } />
+        <Route path={`${ROUTES.collection}/:id`} element={ <Collection /> } />
+        <Route path="*" element={ <Navigate replace to={ROUTES.home} /> } />      
+      </Route>
     </ReactRoutes>
   )
 }

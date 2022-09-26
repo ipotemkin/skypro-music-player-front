@@ -273,7 +273,8 @@
 
 .track-play__like, .track-play__dislike:hover {
   fill: transparent;
-  stroke: #ACACAC;
+  /* stroke: #ACACAC; */
+  stroke: #696969;
 }
 
 .track-play__like-svg {

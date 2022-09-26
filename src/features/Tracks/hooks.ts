@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,45 +6,19 @@ import { ICollection, IFilterItem, IStaredUser, ITrack } from '../../models';
 import {
   useAddTrackToFavoriteMutation,
   useGetCollectionQuery,
-  useGetCurrentUserQuery,
   useGetTracksQuery,
-  useRefreshUserTokenMutation,
   useRemoveTrackFromFavoriteMutation
  } from '../../app/MusicPlayer/music-player.api';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector, useCurrentUser, useRefreshToken } from '../../app/hooks';
 import { selectAccessToken, selectRefreshToken, setToken } from '../../app/Auth/tokenSlice';
 import { IFilterSlice, initialState, selectFilter, updateFilter } from '../Filter/FilterSlice';
 import { getUserIdFromJWT } from '../../utils';
-import { musicPlayerApi } from '../../app/MusicPlayer/music-player.api';
+import { ROUTES } from '../../routes';
 
-// возвращает функцию для обновления access токена
-// запрашивает новый access token с помощью refresh token
-// монтирует его в cookies и strore
-// возвращает новый access token или ошибку
-export const useRefreshToken = () => {
-  // eslint-disable-next-line
-  const [ cookies, setCookies ] = useCookies(['access']);
-  const dispatch = useAppDispatch();
-  const [ doRefreshToken ] = useRefreshUserTokenMutation();
-  
-  const handleRefreshToken = async (refreshTokenIn: string) => {
-    try {
-      const { access } = await doRefreshToken(refreshTokenIn).unwrap();
-      setCookies('access', access);
-      dispatch(setToken({ access, refresh: refreshTokenIn }));
-      
-      // монтируем нового пользователя в store, но мне кажется, это не работает
-      // Date.now() используем, чтобы не брать пользователя из cache, а получать с сервера
-      console.log(musicPlayerApi.endpoints.getCurrentUser.initiate(Date.now()));
-      
-      return { access };
-    } catch(err) {
-      return { error: err };
-    }
-  }
-  
-  return handleRefreshToken;
-}
+
+const getFilteredData = (data: ITrack[], query: string = '') => 
+  data.filter((item: ITrack) => item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
+);
 
 // getting tracks, searching by track name available
 export const useTracks = (query: string = '') => {
@@ -57,8 +31,7 @@ export const useTracks = (query: string = '') => {
   // eslint-disable-next-line
   }, [data, isError, query]);
       
-  const filterData = (data: ITrack[]) => 
-    setFilteredData(data.filter((item: ITrack) => item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())));
+  const filterData = (data: ITrack[]) => setFilteredData(getFilteredData(data, query));
 
   return { data: filteredData, isLoading, isError, error };
 }
@@ -131,11 +104,10 @@ export const useCollection = (query: string = '', collectionId: number) => {
   }, [data, isError, query]);
   
   const filterData = (data: ICollection) => {
-    const { items } = data;
-    const newItems = items.filter((item: ITrack) => item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
-    const newData = {...data};
-    newData.items = [...newItems];
-    setFilteredData(newData);
+    setFilteredData({
+      ...data,
+      items: getFilteredData(data.items, query)
+    });
   }
 
   if (filteredData) {
@@ -171,78 +143,34 @@ export const useLoadCredentialsFromCookies = () => {
   return false;
 }
 
-export const useLogout = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [cookies, setCookies, removeCookies] = useCookies(['access', 'refresh']);
-  const dispatch = useAppDispatch();
-
-  console.log('processing logout');
-  removeCookies('access');
-  removeCookies('refresh');
-  dispatch(setToken({ access: undefined, refresh: undefined }));
-}
-
-// export const useAuthUser = () => {
-//   const timestampRef = useRef(Date.now()).current;
-//   return useGetCurrentUserQuery(timestampRef);
-// }
-
-// returns the current user, refreshing his token if necessary
-// if no loggedin user or the refresh token is invalid, returns undefined
-export const useCurrentUser = () => {
-  const timestampRef = useRef(Date.now()).current;
-  const { data, isLoading, isError, error } = useGetCurrentUserQuery(timestampRef);  
-  const doRefreshToken = useRefreshToken();
+export const useFavorite = (track?: ITrack) => {
+  const token = useAppSelector(selectAccessToken);
   const refreshToken = useAppSelector(selectRefreshToken);
-  const [ resultError, setResultError ] = useState(false)
+  const handleRefreshToken = useRefreshToken();
+  const [ addTrackToFavorite ] = useAddTrackToFavoriteMutation();
+  const [ removeTrackFromFavorite ] = useRemoveTrackFromFavoriteMutation();
   const navigate = useNavigate();
   
-  const handleRefreshToken = async (rt: string) => {
-    const result = await doRefreshToken(rt);
-    if ('error' in result) navigate('/login');
+  const isCurrentUserInStaredUser = (starredUser: IStaredUser[]) => {
+    const user = starredUser.find((el: IStaredUser) => el.id === (token ? getUserIdFromJWT(token) : 0));
+    if (user) return true;
+    return false;
   }
-
-  useEffect(() => {
-    if(isError) {
-      if ('status' in error && error.status === 401 && refreshToken) {
-        setResultError(false);
-        handleRefreshToken(refreshToken);
-      } else {
-        navigate('/login');
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isError, error, refreshToken]);
-
-  return  { user: data, isLoading, isError, error: resultError };
-}
-
-export const useFavorite = (track: ITrack | undefined) => {
-  const token = useAppSelector(selectAccessToken)
-  const refreshToken = useAppSelector(selectRefreshToken)
-  const handleRefreshToken = useRefreshToken()
-  const [ addTrackToFavorite ] = useAddTrackToFavoriteMutation()
-  const [ removeTrackFromFavorite ] = useRemoveTrackFromFavoriteMutation()
   
-  const navigate = useNavigate()
-  
-  const favorite: boolean = (
-    track
-    ? track.stared_user.filter((el: IStaredUser) => el.id === (token ? getUserIdFromJWT(token) : 0)).length > 0
-    : false
-  )
+  const favorite: boolean = track ? isCurrentUserInStaredUser(track.stared_user) : false;
 
   const toggleFavoriteTrack = async (trackId: number) => {
+    const handler = favorite ? removeTrackFromFavorite : addTrackToFavorite;
     try {
-      favorite ? await removeTrackFromFavorite(trackId).unwrap() : await addTrackToFavorite(trackId).unwrap()
+      await handler(trackId).unwrap();
     } catch (err) {
-      console.error('toggleFavoriteTrack -> catch err =', err)
+      console.error('toggleFavoriteTrack -> catch err =', err);
       if (refreshToken) {
-        await handleRefreshToken(refreshToken)
-        toggleFavoriteTrack(trackId)
+        await handleRefreshToken(refreshToken);
+        toggleFavoriteTrack(trackId);
       } else {
-        console.error('No refresh token')
-        navigate('/login')
+        console.error('No refresh token');
+        navigate(ROUTES.login);
       }
     }
   }

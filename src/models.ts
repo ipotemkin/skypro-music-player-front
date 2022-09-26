@@ -65,3 +65,14 @@ export interface IPlayerState {
   loop: boolean;
   shuffle: boolean;
 }
+
+export interface ILoginFormState {
+  username: string;
+  password: string;
+  passwordRepeat: string;
+  register: boolean;
+  enableSubmit: boolean;
+  errorUsername: boolean;
+  errorPassword: boolean;
+  errorPasswordsDiffer: boolean;
+}

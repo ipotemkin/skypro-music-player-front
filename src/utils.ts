@@ -1,6 +1,4 @@
-import { useCookies } from "react-cookie";
-
-export const SecondsToMinSec = (secondsIn: number) => {
+export const secondsToMinSec = (secondsIn: number) => {
   const minutes = Math.floor(secondsIn / 60);
   const seconds = secondsIn % 60;
 

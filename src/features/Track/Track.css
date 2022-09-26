@@ -37,6 +37,11 @@
       -ms-flex-align: center;
           align-items: center;
   width: 447px;
+  min-width: 200px;
+}
+
+.track__title-text {
+  text-align: left;
 }
 
 .track__title-image {
@@ -128,8 +133,12 @@
 }
 
 .track__time-svg {
-  width: 14px;
-  height: 12px;
+  /* width: 14px;
+  height: 12px; */
+  
+  width: 16px;
+  height: 16px;
+  
   margin-right: 17px;
   fill: transparent;
   stroke: #696969;
