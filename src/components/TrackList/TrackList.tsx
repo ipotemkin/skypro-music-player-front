@@ -2,11 +2,9 @@ import { FC } from 'react'
 
 import { Track } from '../Track/Track'
 import { ITrack } from '../../models'
-
+import WatchIcon from '../../icons/WatchIcon'
 import { cnTrackList } from './TrackList.classname'
 import './TrackList.css'
-
-import iconWatch from './assets/watch.svg'
 
 const getSkeletonArray = () => {
   const resArray = []
@@ -28,7 +26,7 @@ export const TrackList: FC<TrackListProps> = ({ tracks, isLoading = false }) => 
       <div className={cnTrackList('title', 'col02')}>исполнитель</div>
       <div className={cnTrackList('title', 'col03')}>альбом</div>
       <div className={cnTrackList('title', 'col04')}>
-        <img className={cnTrackList('title__svg')} src={iconWatch} alt="time" />
+        <div className={cnTrackList('title__svg')}><WatchIcon/></div>
       </div>
     </div>
     <div className={cnTrackList('playlist')}>
