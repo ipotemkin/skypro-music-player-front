@@ -41,7 +41,7 @@ export const Tracks: FC<TracksProps> = ({
       <TrackList tracks={data} isLoading={isLoading}/>
     </div>
     <Sidebar />
-    {activeTrackId !== undefined && isTrackIdInList(activeTrackId.value || 0)
-      && <Player data={data} trackId={activeTrackId.value || 0}/>}
+    {activeTrackId !== undefined && isTrackIdInList(activeTrackId || 0)
+      && <Player data={data} trackId={activeTrackId || 0}/>}
   </div>
 }

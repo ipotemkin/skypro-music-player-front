@@ -1,26 +1,26 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 
-export interface ITrackSlice {
-  value: number | undefined
+interface ITrackSlice {
+  id: number | undefined
 }
 
-export const initialState: ITrackSlice = {
-  value: undefined
+const initialState: ITrackSlice = {
+  id: undefined
 }
 
 export const trackSlice = createSlice({
-  name: 'activeTrackId',
+  name: 'track',
   initialState,
   reducers: {
     setActiveTrackId: (state, action: PayloadAction<number>) => {
-      state.value = action.payload
+      state.id = action.payload
     }
   }
 });
 
 export const { setActiveTrackId } = trackSlice.actions;
 
-export const selectActiveTrackId = (state: RootState) => state.activeTrackId;
+export const selectActiveTrackId = (state: RootState) => state.track.id;
 
 export default trackSlice.reducer;

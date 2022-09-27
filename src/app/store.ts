@@ -10,7 +10,7 @@ export const store = configureStore({
   reducer: {
       token: tokenReducer,
       filter: filterReducer,
-      activeTrackId: trackReducer,
+      track: trackReducer,
       user: userReducer,
       player: playerReducer,
       [musicPlayerApi.reducerPath]: musicPlayerApi.reducer,
