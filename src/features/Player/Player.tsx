@@ -16,7 +16,7 @@ import {
   TrackIcon,
   HeartIcon,
   VolumeIcon
-} from '../icons'
+} from '../../icons'
 
 import { cnPlayer, cnBar, cnTrackPlay } from './Player.classname'
 import './Player.css'

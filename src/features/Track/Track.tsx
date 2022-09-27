@@ -10,7 +10,7 @@ import { setActiveTrackId } from './TrackSlice'
 
 import { cnTrack } from './Track.classname'
 import './Track.css'
-import { HeartIcon } from '../icons'
+import { HeartIcon } from '../../icons'
 
 type TrackProps = {
   track?: ITrack,
