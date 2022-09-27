@@ -1,10 +1,10 @@
 import { FC, useState } from "react"
-import { useAppDispatch } from "../../hooks"
+import { useAppDispatch } from "../../hooks/appHooks"
 import { FieldNames, setFilterField } from "./FilterSlice"
 import { IFilterItem } from "../../models"
 import { FilterButton } from "../FilterButton/FilterButton"
 import { FilterPopup } from "../FilterPopup/FilterPopup"
-import { useFilterData } from "../Tracks/hooks"
+import { useFilterData } from "../../hooks/trackHooks"
 
 import { cnFilter } from "./Filter.classname"
 import './Filter.css'

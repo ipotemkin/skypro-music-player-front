@@ -1,15 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { ROUTES } from './routes';
-import { selectRefreshToken, setToken } from './slices/tokenSlice';
-import { musicPlayerApi, useGetCurrentUserQuery, useRefreshUserTokenMutation } from './slices/music-player.api';
-import type { RootState, AppDispatch } from './store';
-
-// Use throughout your app instead of plain `useDispatch` and `useSelector`
-export const useAppDispatch = () => useDispatch<AppDispatch>();
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+import { ROUTES } from '../routes';
+import { selectRefreshToken, setToken } from '../slices/tokenSlice';
+import { musicPlayerApi, useGetCurrentUserQuery, useRefreshUserTokenMutation } from '../slices/music-player.api';
+import { useAppDispatch, useAppSelector } from './appHooks';
 
 export const useLogout = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

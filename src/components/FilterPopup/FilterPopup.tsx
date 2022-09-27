@@ -5,7 +5,7 @@ import { IFilterItem } from '../../models'
 import './FilterPopup.css'
 
 import { cnFilterPopup } from './FilterPopup.classname'
-import { useAppDispatch } from '../../hooks'
+import { useAppDispatch } from '../../hooks/appHooks'
 import { toggleFilter, FieldNames } from '../Filter/FilterSlice'
 
 

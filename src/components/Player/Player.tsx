@@ -2,8 +2,8 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 
 import { IPlayerState, ITrack } from '../../models'
 import { ProgressBar } from '../ProgressBar/ProgressBar'
-import { useFavoriteTrack } from '../Tracks/hooks'
-import { useAppDispatch, useAppSelector } from '../../hooks'
+import { useFavoriteTrack } from '../../hooks/trackHooks'
+import { useAppDispatch, useAppSelector } from '../../hooks/appHooks'
 import { setActiveTrackId } from '../../slices/trackSlice'
 import { selectVolume, setVolume as setPlayerVolume } from '../../slices/playerSlice'
 import { 

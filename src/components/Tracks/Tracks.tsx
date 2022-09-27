@@ -6,7 +6,7 @@ import { Search } from '../Search/Search'
 import { SideMenu } from '../SideMenu/SideMenu'
 import { Sidebar } from '../Sidebar/Sidebar'
 import { Player } from '../Player/Player'
-import { useAppSelector } from '../../hooks'
+import { useAppSelector } from '../../hooks/appHooks'
 import { selectActiveTrackId } from '../../slices/trackSlice'
 import { ITrack } from '../../models'
 

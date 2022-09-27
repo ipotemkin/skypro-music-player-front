@@ -2,18 +2,19 @@ import { useState, useEffect } from 'react'
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 
-import { ICollection, IFilterItem, IStaredUser, ITrack } from '../../models';
+import { ICollection, IFilterItem, IStaredUser, ITrack } from '../models';
 import {
   useAddTrackToFavoriteMutation,
   useGetCollectionQuery,
   useGetTracksQuery,
   useRemoveTrackFromFavoriteMutation
- } from '../../slices/music-player.api';
-import { useAppDispatch, useAppSelector, useCurrentUser, useRefreshToken } from '../../hooks';
-import { selectAccessToken, selectRefreshToken, setToken } from '../../slices/tokenSlice';
-import { IFilterSlice, initialState, selectFilter, updateFilter } from '../Filter/FilterSlice';
-import { getFavoriteTracksByUserToken, getUserIdFromJWT } from '../../utils';
-import { ROUTES } from '../../routes';
+ } from '../slices/music-player.api';
+import { useAppDispatch, useAppSelector } from './appHooks';
+import { useCurrentUser, useRefreshToken } from './userHooks';
+import { selectAccessToken, selectRefreshToken, setToken } from '../slices/tokenSlice';
+import { IFilterSlice, initialState, selectFilter, updateFilter } from '../components/Filter/FilterSlice';
+import { getFavoriteTracksByUserToken, getUserIdFromJWT } from '../utils';
+import { ROUTES } from '../routes';
 
 
 const getFilteredData = (data: ITrack[], query = '') => 

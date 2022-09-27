@@ -1,7 +1,7 @@
 import { FC, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { selectUser } from '../../slices/userSlice'
-import { useAppSelector } from '../../hooks'
+import { useAppSelector } from '../../hooks/appHooks'
 import playlist1 from './assets/playlist01.png'
 import playlist2 from './assets/playlist02.png'
 import playlist3 from './assets/playlist03.png'
