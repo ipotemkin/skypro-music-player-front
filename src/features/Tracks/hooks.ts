@@ -16,12 +16,12 @@ import { getUserIdFromJWT } from '../../utils';
 import { ROUTES } from '../../routes';
 
 
-const getFilteredData = (data: ITrack[], query: string = '') => 
+const getFilteredData = (data: ITrack[], query = '') => 
   data.filter((item: ITrack) => item.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
 );
 
 // getting tracks, searching by track name available
-export const useTracks = (query: string = '') => {
+export const useTracks = (query = '') => {
   useCurrentUser();
   const { isLoading, isError, data, error } = useGetTracksQuery();
   const [ filteredData, setFilteredData ] = useState<ITrack[]>([]);
@@ -37,7 +37,7 @@ export const useTracks = (query: string = '') => {
 }
 
 // getting filtered tracks
-export const useFilteredTracks = (query: string = '') => {
+export const useFilteredTracks = (query = '') => {
   const { isLoading, isError, data, error } = useTracks(query);
   const [ filteredData, setFilteredData ] = useState<ITrack[]>([]);
   const filterSliceData = useFilterData();
@@ -71,7 +71,7 @@ export const useFilteredTracks = (query: string = '') => {
 }
 
 // getting the favorite tracks
-export const useFavoriteTracks = (query: string = '') => {
+export const useFavoriteTracks = (query = '') => {
   const { isLoading, isError, data, error } = useTracks(query);
   const token = useAppSelector(selectAccessToken)
   const [ resultData, setResultData ] = useState<ITrack[]>([])
@@ -89,7 +89,7 @@ export const useFavoriteTracks = (query: string = '') => {
   return { data: resultData, isLoading, isError, error };
 }
 
-export const useCollection = (query: string = '', collectionId: number = 1) => {
+export const useCollection = (query = '', collectionId = 1) => {
   const { isLoading, isError, data, error } = useGetCollectionQuery(collectionId);
   const [ filteredData, setFilteredData ] = useState<ICollection>();
   const refreshToken = useAppSelector(selectRefreshToken)
