@@ -22,7 +22,6 @@ export const musicPlayerApi = createApi({
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).token.access;
       if (token && checkJWTExpTime(token)) headers.set('authorization', `Bearer ${token}`);
-      console.log('headers token-->', token);
       return headers;
     },
   }),

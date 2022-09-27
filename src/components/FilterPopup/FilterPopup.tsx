@@ -17,9 +17,6 @@ type FilterPopupProps = {
 
 export const FilterPopup: FC<FilterPopupProps> = ({ data, shown = false, field }) => {
   const dispatch = useAppDispatch()
-  console.group('FilterPopup:')
-  console.log('data -->', data)
-  console.groupEnd()
   
   return (
     <div className={cnFilterPopup({'shown': shown})}>
@@ -28,8 +25,6 @@ export const FilterPopup: FC<FilterPopupProps> = ({ data, shown = false, field }
           className={cnFilterPopup('item', {'selected': item.selected})} 
           key={item.value}
           onClick={() => {
-            console.log('filter click!')
-            console.log(item.value)
             dispatch(toggleFilter({ field, value: item.value }))
           }}
         >

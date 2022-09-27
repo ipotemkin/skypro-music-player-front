@@ -14,7 +14,13 @@ import { useCookies } from 'react-cookie'
 import { useAppDispatch } from '../../hooks/appHooks'
 import { useLogout } from '../../hooks/userHooks'
 import { setToken } from '../../slices/tokenSlice'
-import { getErrorMessage, getPasswordErrorMessage, isPasswordsIdentical, isPasswordValid, isUsernameValid } from './validators'
+import {
+  getErrorMessage,
+  getPasswordErrorMessage,
+  isPasswordsIdentical,
+  isPasswordValid,
+  isUsernameValid
+} from './validators'
 import { ILoginFormState } from '../../models'
 
 const errorInitialState = {
@@ -37,7 +43,7 @@ export const LoginForm = () => {
   const [ cookies, setCookies ] = useCookies(['access', 'refresh'])
   const dispatch = useAppDispatch()
   const [ loginError, setLoginError ] = useState(false)
-  const [ getUserTokens, { isError, data, error } ] = useUserTokenMutation()
+  const [ getUserTokens, { data, error } ] = useUserTokenMutation()
   const [ postUserSignup ] = useUserSignupMutation()
   const logout = useLogout()
   const [form, setForm] = useState(initialState)
@@ -50,7 +56,6 @@ export const LoginForm = () => {
   
   useEffect(() => { 
     if (data) {
-      console.log('tokens -->', data)
       setCookies('access', data.access)    
       setCookies('refresh', data.refresh)
       dispatch(setToken({ access: data.access, refresh: data.refresh }))
@@ -100,7 +105,6 @@ export const LoginForm = () => {
 
   const onSubmitHandler = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('submit')
 
     if (!form.enableSubmit) {
       setForm(prev => ({ ...prev, enableSubmit: true }))
@@ -117,12 +121,10 @@ export const LoginForm = () => {
         })
         
         setForm(initialState)
-        console.log('user signup')
         return
       }
 
       // здесь должен быть выход из формы
-      console.log({ 'username': form.username, 'password': form.password })
       handleLoginUser()
     }
 
@@ -130,16 +132,10 @@ export const LoginForm = () => {
 
   const handleLoginUser = async () => {
     try {
-      const { data: newTokens } = await getUserTokens({ email: form.username, password: form.password }).unwrap()
-      console.log('newTokens -->', newTokens)
-
-      console.log(data)
+      await getUserTokens({ email: form.username, password: form.password }).unwrap()
     } catch {
       setLoginError(true)
-    }
-    
-    console.log('data -->', data)
-    console.log('isError -->', isError)
+    }    
   }
 
   const handleUserSignup = async (payload: ISignupUser) => {

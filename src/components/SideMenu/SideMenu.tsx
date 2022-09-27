@@ -14,10 +14,7 @@ type SideMenuProps = {
 export const SideMenu: FC<SideMenuProps> = () => {
   const [menuShown, setMenuShown] = useState(true)
   
-  const burgerClickHandler = () => {
-    console.log('burger menu')
-    setMenuShown(!menuShown)
-  }
+  const burgerClickHandler = () => setMenuShown(!menuShown)
 
   return (
     <nav className={cnSideMenu()}>
