@@ -5,7 +5,7 @@ import { ProgressBar } from '../ProgressBar/ProgressBar'
 import { useFavoriteTrack } from '../Tracks/hooks'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { setActiveTrackId } from '../../slices/trackSlice'
-import { selectVolume, setVolume as setPlayerVolume } from './PlayerSlice'
+import { selectVolume, setVolume as setPlayerVolume } from '../../slices/playerSlice'
 import { 
   PauseIcon,
   PlayIcon,

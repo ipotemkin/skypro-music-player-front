@@ -3,7 +3,7 @@ import tokenReducer from './slices/tokenSlice';
 import userReducer from './slices/userSlice';
 import filterReducer from './components/Filter/FilterSlice';
 import trackReducer from './slices/trackSlice';
-import playerReducer from './components/Player/PlayerSlice';
+import playerReducer from './slices/playerSlice';
 import { musicPlayerApi } from './slices/music-player.api';
 
 export const store = configureStore({

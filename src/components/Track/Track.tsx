@@ -2,15 +2,12 @@ import { FC } from 'react'
 
 import { ITrack } from '../../models'
 import { secondsToMinSec } from '../../utils'
-
-import note from './assets/note.svg'
 import { useFavoriteTrack } from '../Tracks/hooks'
 import { useAppDispatch } from '../../hooks'
 import { setActiveTrackId } from '../../slices/trackSlice'
-
+import { HeartIcon, TrackIcon } from '../../icons'
 import { cnTrack } from './Track.classname'
 import './Track.css'
-import { HeartIcon } from '../../icons'
 
 type TrackProps = {
   track?: ITrack,
@@ -41,7 +38,7 @@ export const Track: FC<TrackProps> = ({ track, skeleton = false }) => {
   return <div className={cnTrack()} onClick={() => handleSelectTrack(track?.id || 0)}>
     <div className={cnTrack('title')}>
       <div className={cnTrack('title-image')}>
-        <img src={note} className={cnTrack('title-svg')} alt="Иконка альбома" />
+        <div className={cnTrack('title-svg')}><TrackIcon/></div>
       </div>
       <div className={cnTrack('title-text')}>{track?.name}</div>
     </div>
