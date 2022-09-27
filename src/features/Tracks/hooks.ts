@@ -89,7 +89,7 @@ export const useFavoriteTracks = (query: string = '') => {
   return { data: resultData, isLoading, isError, error };
 }
 
-export const useCollection = (query: string = '', collectionId: number) => {
+export const useCollection = (query: string = '', collectionId: number = 1) => {
   const { isLoading, isError, data, error } = useGetCollectionQuery(collectionId);
   const [ filteredData, setFilteredData ] = useState<ICollection>();
   const refreshToken = useAppSelector(selectRefreshToken)

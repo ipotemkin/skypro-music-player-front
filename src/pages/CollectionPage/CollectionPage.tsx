@@ -7,5 +7,5 @@ export const Collection = () => {
     const idx = Number(id) || 1
     const { name } = useCollection('', idx)
 
-    return <Tracks title={name} hook={useCollection} collectionId={idx}/>
+    return <Tracks title={name} tracksHook={useCollection} collectionId={idx}/>
 }
