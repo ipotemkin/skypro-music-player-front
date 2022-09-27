@@ -5,8 +5,8 @@ import { secondsToMinSec } from '../../utils'
 
 import note from './assets/note.svg'
 import { useFavoriteTrack } from '../Tracks/hooks'
-import { useAppDispatch } from '../../app/hooks'
-import { setActiveTrackId } from './TrackSlice'
+import { useAppDispatch } from '../../hooks'
+import { setActiveTrackId } from '../../slices/trackSlice'
 
 import { cnTrack } from './Track.classname'
 import './Track.css'

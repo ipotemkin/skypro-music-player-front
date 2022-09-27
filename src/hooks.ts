@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '../routes';
-import { selectRefreshToken, setToken } from './Auth/tokenSlice';
-import { musicPlayerApi, useGetCurrentUserQuery, useRefreshUserTokenMutation } from './MusicPlayer/music-player.api';
+import { ROUTES } from './routes';
+import { selectRefreshToken, setToken } from './slices/tokenSlice';
+import { musicPlayerApi, useGetCurrentUserQuery, useRefreshUserTokenMutation } from './slices/music-player.api';
 import type { RootState, AppDispatch } from './store';
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`

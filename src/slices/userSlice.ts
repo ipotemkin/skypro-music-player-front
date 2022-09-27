@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { IUser } from '../../models';
-import { musicPlayerApi } from '../MusicPlayer/music-player.api';
+import { IUser } from '../models';
+import { musicPlayerApi } from './music-player.api';
 import { RootState } from '../store';
 
 const initialState: IUser = {

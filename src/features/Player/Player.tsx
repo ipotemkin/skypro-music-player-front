@@ -3,8 +3,8 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 import { IPlayerState, ITrack } from '../../models'
 import { ProgressBar } from '../ProgressBar/ProgressBar'
 import { useFavoriteTrack } from '../Tracks/hooks'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { setActiveTrackId } from '../Track/TrackSlice'
+import { useAppDispatch, useAppSelector } from '../../hooks'
+import { setActiveTrackId } from '../../slices/trackSlice'
 import { selectVolume, setVolume as setPlayerVolume } from './PlayerSlice'
 import { 
   PauseIcon,

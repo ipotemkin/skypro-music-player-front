@@ -8,9 +8,9 @@ import {
   useGetCollectionQuery,
   useGetTracksQuery,
   useRemoveTrackFromFavoriteMutation
- } from '../../app/MusicPlayer/music-player.api';
-import { useAppDispatch, useAppSelector, useCurrentUser, useRefreshToken } from '../../app/hooks';
-import { selectAccessToken, selectRefreshToken, setToken } from '../../app/Auth/tokenSlice';
+ } from '../../slices/music-player.api';
+import { useAppDispatch, useAppSelector, useCurrentUser, useRefreshToken } from '../../hooks';
+import { selectAccessToken, selectRefreshToken, setToken } from '../../slices/tokenSlice';
 import { IFilterSlice, initialState, selectFilter, updateFilter } from '../Filter/FilterSlice';
 import { getFavoriteTracksByUserToken, getUserIdFromJWT } from '../../utils';
 import { ROUTES } from '../../routes';

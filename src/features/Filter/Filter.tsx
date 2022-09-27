@@ -1,5 +1,5 @@
 import { FC, useState } from "react"
-import { useAppDispatch } from "../../app/hooks"
+import { useAppDispatch } from "../../hooks"
 import { FieldNames, setFilterField } from "./FilterSlice"
 import { IFilterItem } from "../../models"
 import { FilterButton } from "../FilterButton/FilterButton"

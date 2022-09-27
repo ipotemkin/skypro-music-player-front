@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { ICollection, ITrack, IUser, IUserTokens } from '../../models'
-import { checkJWTExpTime } from '../../utils';
+import { ICollection, ITrack, IUser, IUserTokens } from '../models'
+import { checkJWTExpTime } from '../utils';
 import { RootState } from '../store';
 
 export interface ILoginUser {
