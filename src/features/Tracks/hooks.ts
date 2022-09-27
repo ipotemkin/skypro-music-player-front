@@ -27,12 +27,9 @@ export const useTracks = (query = '') => {
   const [ filteredData, setFilteredData ] = useState<ITrack[]>([]);
 
   useEffect(() => {    
-    if (data) filterData(data);
-  // eslint-disable-next-line
+    if (data) setFilteredData(getFilteredData(data, query));
   }, [data, isError, query]);
       
-  const filterData = (data: ITrack[]) => setFilteredData(getFilteredData(data, query));
-
   return { data: filteredData, isLoading, isError, error };
 }
 
@@ -143,7 +140,7 @@ export const useLoadCredentialsFromCookies = () => {
   return false;
 }
 
-export const useFavorite = (track?: ITrack) => {
+export const useFavoriteTrack = (track?: ITrack) => {
   const token = useAppSelector(selectAccessToken);
   const refreshToken = useAppSelector(selectRefreshToken);
   const handleRefreshToken = useRefreshToken();
@@ -151,13 +148,13 @@ export const useFavorite = (track?: ITrack) => {
   const [ removeTrackFromFavorite ] = useRemoveTrackFromFavoriteMutation();
   const navigate = useNavigate();
   
-  const isCurrentUserInStaredUser = (starredUser: IStaredUser[]) => {
+  const isUserInStaredUser = (starredUser: IStaredUser[]) => {
     const user = starredUser.find((el: IStaredUser) => el.id === (token ? getUserIdFromJWT(token) : 0));
     if (user) return true;
     return false;
   }
   
-  const favorite: boolean = track ? isCurrentUserInStaredUser(track.stared_user) : false;
+  const favorite: boolean = track ? isUserInStaredUser(track.stared_user) : false;
 
   const toggleFavoriteTrack = async (trackId: number) => {
     const handler = favorite ? removeTrackFromFavorite : addTrackToFavorite;

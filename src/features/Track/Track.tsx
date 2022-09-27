@@ -4,7 +4,7 @@ import { ITrack } from '../../models'
 import { secondsToMinSec } from '../../utils'
 
 import note from './assets/note.svg'
-import { useFavorite } from '../Tracks/hooks'
+import { useFavoriteTrack } from '../Tracks/hooks'
 import { useAppDispatch } from '../../app/hooks'
 import { setActiveTrackId } from './TrackSlice'
 
@@ -18,7 +18,7 @@ type TrackProps = {
 }
 
 export const Track: FC<TrackProps> = ({ track, skeleton = false }) => {
-  const { favorite, toggleFavoriteTrack } = useFavorite(track)
+  const { favorite, toggleFavoriteTrack } = useFavoriteTrack(track)
   const dispatch = useAppDispatch()
 
   const handleSelectTrack = (trackId: number) => dispatch(setActiveTrackId(trackId))

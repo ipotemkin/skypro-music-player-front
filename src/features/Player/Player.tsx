@@ -2,7 +2,7 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 
 import { IPlayerState, ITrack } from '../../models'
 import { ProgressBar } from '../ProgressBar/ProgressBar'
-import { useFavorite } from '../Tracks/hooks'
+import { useFavoriteTrack } from '../Tracks/hooks'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { setActiveTrackId } from '../Track/TrackSlice'
 import { selectVolume, setVolume as setPlayerVolume } from './PlayerSlice'
@@ -38,7 +38,7 @@ export const Player: FC<PlayerProps> = ({ data, trackId }) => {
   const [ playerState, setPlayerState ] = useState<IPlayerState>(initialPLayerState)
   const [ currentTrack, setCurrentTrack ] = useState<ITrack>()
   const [ volume, setVolume ] = useState(useAppSelector(selectVolume))
-  const { favorite, toggleFavoriteTrack } = useFavorite(currentTrack)
+  const { favorite, toggleFavoriteTrack } = useFavoriteTrack(currentTrack)
   const dispatch = useAppDispatch()
   
   const audioRef = useRef<HTMLAudioElement>(null)
