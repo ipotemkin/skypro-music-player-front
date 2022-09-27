@@ -12,7 +12,7 @@ import {
 import { useAppDispatch, useAppSelector, useCurrentUser, useRefreshToken } from '../../app/hooks';
 import { selectAccessToken, selectRefreshToken, setToken } from '../../app/Auth/tokenSlice';
 import { IFilterSlice, initialState, selectFilter, updateFilter } from '../Filter/FilterSlice';
-import { getUserIdFromJWT } from '../../utils';
+import { getFavoriteTracksByUserToken, getUserIdFromJWT } from '../../utils';
 import { ROUTES } from '../../routes';
 
 
@@ -72,16 +72,11 @@ export const useFavoriteTracks = (query = '') => {
   const { isLoading, isError, data, error } = useTracks(query);
   const token = useAppSelector(selectAccessToken)
   const [ resultData, setResultData ] = useState<ITrack[]>([])
-
-  const getFavoriteTracks = (data: ITrack[]) => {
-    if (!token) return [];
-    return data.filter((track: ITrack) => track.stared_user.find(
-      (el: IStaredUser) => el.id === getUserIdFromJWT(token)
-    ));
-  }
-  
+    
+  useEffect(() => {
+    setResultData(getFavoriteTracksByUserToken(data, token));
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { setResultData(getFavoriteTracks(data)); }, [data]);
+}, [data]);
 
   return { data: resultData, isLoading, isError, error };
 }

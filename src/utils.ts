@@ -1,3 +1,5 @@
+import { IStaredUser, ITrack } from "./models";
+
 export const secondsToMinSec = (secondsIn: number) => {
   const minutes = Math.floor(secondsIn / 60);
   const seconds = secondsIn % 60;
@@ -27,4 +29,15 @@ export const getJWTExpTime = (token: string) => {
 
 export const checkJWTExpTime = (token: string) => {
   return new Date() < getJWTExpTime(token);
+}
+
+export const getFavoriteTracksByUserId = (tracks: ITrack[], userID: number) => {
+  return tracks.filter(
+    (track: ITrack) => track.stared_user.find((el: IStaredUser) => el.id === userID)
+  );
+}
+
+export const getFavoriteTracksByUserToken = (tracks: ITrack[], token?: string) => {
+  if (!token) return [];
+  return getFavoriteTracksByUserId(tracks, getUserIdFromJWT(token));
 }
