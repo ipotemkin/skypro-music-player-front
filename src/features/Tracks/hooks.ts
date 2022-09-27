@@ -161,10 +161,9 @@ export const useFavoriteTrack = (track?: ITrack) => {
     try {
       await handler(trackId).unwrap();
     } catch (err) {
-      console.error('toggleFavoriteTrack -> catch err =', err);
       if (refreshToken) {
         await handleRefreshToken(refreshToken);
-        toggleFavoriteTrack(trackId);
+        await toggleFavoriteTrack(trackId);
       } else {
         console.error('No refresh token');
         navigate(ROUTES.login);

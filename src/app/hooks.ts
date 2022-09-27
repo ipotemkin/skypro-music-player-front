@@ -41,9 +41,11 @@ export const useCurrentUser = () => {
     if ('error' in result) navigate(ROUTES.login);
   }
 
+  const shouldRefreshTokens = () => error ? 'status' in error && error.status === 401 : false;
+
   useEffect(() => {
     if(isError) {
-      if ('status' in error && error.status === 401 && refreshToken) {
+      if (shouldRefreshTokens() && refreshToken) {
         setResultError(false);
         handleRefreshToken(refreshToken);
       } else {
@@ -51,7 +53,7 @@ export const useCurrentUser = () => {
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isError, error, refreshToken]);
+  }, [isError, refreshToken]);
 
   return  { user: data, isLoading, isError, error: resultError };
 }
