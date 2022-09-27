@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
-import { useCollection } from "../../features/Tracks/hooks"
-import { Tracks } from "../../features/Tracks/Tracks"
+import { useCollection } from "../../components/Tracks/hooks"
+import { Tracks } from "../../components/Tracks/Tracks"
       
 export const Collection = () => {
     const { id } = useParams()

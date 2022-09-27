@@ -1,4 +1,4 @@
-import { useFilteredTracks } from '../../features/Tracks/hooks'
-import { Tracks } from '../../features/Tracks/Tracks'
+import { useFilteredTracks } from '../../components/Tracks/hooks'
+import { Tracks } from '../../components/Tracks/Tracks'
     
 export const TracksPage = () => <Tracks title="Треки" showFilter tracksHook={useFilteredTracks}/>

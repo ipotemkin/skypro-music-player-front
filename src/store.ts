@@ -1,9 +1,9 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import tokenReducer from './slices/tokenSlice';
 import userReducer from './slices/userSlice';
-import filterReducer from './features/Filter/FilterSlice';
+import filterReducer from './components/Filter/FilterSlice';
 import trackReducer from './slices/trackSlice';
-import playerReducer from './features/Player/PlayerSlice';
+import playerReducer from './components/Player/PlayerSlice';
 import { musicPlayerApi } from './slices/music-player.api';
 
 export const store = configureStore({
