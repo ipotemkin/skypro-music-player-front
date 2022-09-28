@@ -76,8 +76,7 @@ export const useFavoriteTracks = (query = '') => {
     
   useEffect(() => {
     setResultData(getFavoriteTracksByUserToken(data, token));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [data]);
+}, [data, token]);
 
   return { data: resultData, isLoading, isError, error };
 }
@@ -115,8 +114,7 @@ export const useFilterData = () => {
   const dispatch = useAppDispatch();
   const selectedData = useAppSelector(selectFilter);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { if (data) dispatch(updateFilter(data)); }, [data]);
+  useEffect(() => { if (data) dispatch(updateFilter(data)); }, [data, dispatch]);
   
   useEffect(() => { if (selectedData) setFilteredData(selectedData); }, [selectedData]);
 
