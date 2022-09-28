@@ -8,7 +8,7 @@ import {
   useGetCollectionQuery,
   useGetTracksQuery,
   useRemoveTrackFromFavoriteMutation
- } from '../slices/music-player.api';
+ } from '../api/music-player.api';
 import { useAppDispatch, useAppSelector } from './appHooks';
 import { useCurrentUser, useRefreshToken } from './userHooks';
 import { selectAccessToken, selectRefreshToken, setToken } from '../slices/tokenSlice';

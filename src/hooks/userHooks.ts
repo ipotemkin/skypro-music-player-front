@@ -3,7 +3,7 @@ import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../routes';
 import { selectRefreshToken, setToken } from '../slices/tokenSlice';
-import { musicPlayerApi, useGetCurrentUserQuery, useRefreshUserTokenMutation } from '../slices/music-player.api';
+import { musicPlayerApi, useGetCurrentUserQuery, useRefreshUserTokenMutation } from '../api/music-player.api';
 import { useAppDispatch, useAppSelector } from './appHooks';
 
 export const useLogout = () => {
