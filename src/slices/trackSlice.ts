@@ -2,11 +2,10 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 
 interface ITrackSlice {
-  id: number | undefined
+  id?: number
 }
 
 const initialState: ITrackSlice = {
-  id: undefined
 }
 
 export const trackSlice = createSlice({
