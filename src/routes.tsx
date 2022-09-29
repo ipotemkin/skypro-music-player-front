@@ -3,7 +3,7 @@ import { LoginPage } from './pages/LoginPage/LoginPage'
 import { TracksPage } from './pages/TracksPage/TracksPage'
 import { PlaylistPage } from './pages/PlaylistPage/PlaylistPage'
 import { Collection } from './pages/CollectionPage/CollectionPage'
-import { useLoadCredentialsFromCookies } from './features/Tracks/hooks'
+import { useLoadCredentialsFromCookies } from './hooks/trackHooks'
 import { FC } from 'react'
 
 export const ROUTES = {

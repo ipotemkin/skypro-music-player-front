@@ -1,4 +1,4 @@
-import { LoginForm } from "../../features/LoginForm/LoginForm"
+import { LoginForm } from "../../components/LoginForm/LoginForm"
 
 import { cnLoginPage } from './LoginPage.classname'
 import './LoginPage.css'
