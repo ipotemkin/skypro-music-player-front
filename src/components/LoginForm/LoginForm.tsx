@@ -27,6 +27,7 @@ const errorInitialState = {
   errorUsername: false,
   errorPassword: false,
   errorPasswordsDiffer: false,
+  error: undefined,
 }
 
 const initialState: ILoginFormState = {
@@ -35,7 +36,7 @@ const initialState: ILoginFormState = {
   passwordRepeat: '',
   register: false,
   enableSubmit: true,
-  ...errorInitialState
+  ...errorInitialState,
 }
 
 export const LoginForm = () => {
@@ -106,6 +107,8 @@ export const LoginForm = () => {
   const onSubmitHandler = (e: React.FormEvent) => {
     e.preventDefault()
 
+    console.log('enanableSubmit -->', form.enableSubmit)
+
     if (!form.enableSubmit) {
       setForm(prev => ({ ...prev, enableSubmit: true }))
       return
@@ -118,9 +121,7 @@ export const LoginForm = () => {
           username: form.username,
           email: form.username,
           password: form.password
-        })
-        
-        setForm(initialState)
+        })        
         return
       }
 
@@ -141,8 +142,11 @@ export const LoginForm = () => {
   const handleUserSignup = async (payload: ISignupUser) => {
     try {
       await postUserSignup(payload).unwrap()
+      setForm(initialState)
     } catch (err) {
       console.log(`user signup error: ${JSON.stringify(err)}`)
+      setForm(prev => ({...prev, error: Object(err) }))
+      setLoginError(true)
     }
   }
   
@@ -174,7 +178,13 @@ export const LoginForm = () => {
       
       {
         loginError
-        ? <p className={cnLoginForm('login-error')}><small>{ error && getErrorMessage(error) }</small></p>
+        ? <p className={cnLoginForm('login-error')}>
+            <small>
+              { error
+                ? getErrorMessage(error)
+                : (form.error ?  getErrorMessage(form.error) : '')}
+            </small>
+          </p>
         : <div className={cnLoginForm('no-login-error')} />
       }
       
