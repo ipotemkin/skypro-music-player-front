@@ -160,6 +160,7 @@
 
 .skeleton, .skeleton-line {
   background-color: #313131;
+  border-radius: 3px;
 }
 
 .skeleton-line {
