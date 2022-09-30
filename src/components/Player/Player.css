@@ -73,6 +73,17 @@
   padding: 0 92px 0 0;
 }
 
+.bar__volume__content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bar__volume__image {
+  display: flex;
+  justify-content: center;
+}
+
 .player__controls {
   display: -webkit-box;
   display: -ms-flexbox;

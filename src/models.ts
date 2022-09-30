@@ -1,10 +1,7 @@
-import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
-import { SerializedError } from '@reduxjs/toolkit';
-
 export interface ITracks {
   count: number;
-  next: string | null;
-  previous: string | null;
+  next?: string;
+  previous?: string;
   results: ITrack[];
 }
 
@@ -12,11 +9,11 @@ export interface ITrack {
   id: number;
   name: string;
   author: string;
-  release_date?: string | null;
+  release_date?: string;
   genre: string;
   duration_in_seconds: number;
   album: string;
-  logo?: string | null;
+  logo?: string;
   track_file?: string;
   stared_user: IStaredUser[];
 }
