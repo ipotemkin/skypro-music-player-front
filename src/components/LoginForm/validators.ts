@@ -24,7 +24,13 @@ import { getFirstSentense, truncate } from './utils';
         getFirstSentense(resArray.join(', ')),
         70
       );  
-
     }
     return '';
   }
+
+export const getErrorListMessage = (errorList: any[]) => {
+  for(let error of errorList) {
+    if (error) return getErrorMessage(error);
+  }
+  return '';
+}

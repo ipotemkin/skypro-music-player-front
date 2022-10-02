@@ -15,7 +15,7 @@ import { useAppDispatch } from '../../hooks/appHooks'
 import { useLogout } from '../../hooks/userHooks'
 import { setToken } from '../../slices/tokenSlice'
 import {
-  getErrorMessage,
+  getErrorListMessage,
   getPasswordErrorMessage,
   isPasswordsIdentical,
   isPasswordValid,
@@ -27,7 +27,7 @@ const errorInitialState = {
   errorUsername: false,
   errorPassword: false,
   errorPasswordsDiffer: false,
-  error: undefined,
+  error: null,
 }
 
 const initialState: ILoginFormState = {
@@ -69,7 +69,9 @@ export const LoginForm = () => {
     if (!form.register) setForm({ ...initialState, register: true, enableSubmit: false })
   }
 
-  const handleGetInputField = (fieldName: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleGetInputField = (
+    fieldName: 'username' | 'password' | 'passwordRepeat'
+  ) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm(prev => ({
       ...prev,
       [fieldName]: e.target.value,
@@ -104,10 +106,8 @@ export const LoginForm = () => {
     return false
   }
 
-  const onSubmitHandler = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-
-    console.log('enanableSubmit -->', form.enableSubmit)
 
     if (!form.enableSubmit) {
       setForm(prev => ({ ...prev, enableSubmit: true }))
@@ -151,7 +151,7 @@ export const LoginForm = () => {
   }
   
   return (
-    <form className={cnLoginForm()} onSubmit={onSubmitHandler}>
+    <form className={cnLoginForm()} onSubmit={handleSubmit}>
       <img className={cnLoginForm('logo')} src={logo} alt="logo" />
       
       <InputField
@@ -176,17 +176,11 @@ export const LoginForm = () => {
         error={getPasswordErrorMessage(form)}
       />}
       
-      {
-        loginError
-        ? <p className={cnLoginForm('login-error')}>
-            <small>
-              { error
-                ? getErrorMessage(error)
-                : (form.error ?  getErrorMessage(form.error) : '')}
-            </small>
-          </p>
-        : <div className={cnLoginForm('no-login-error')} />
-      }
+      <p className={cnLoginForm(loginError ? 'login-error' : 'no-login-error')}>
+          <small>
+            { getErrorListMessage([ error, form.error ]) }
+          </small>
+      </p>
       
       {!form.register && <Button type="submit">Войти</Button>}
       <Button

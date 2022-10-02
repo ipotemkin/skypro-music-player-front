@@ -75,5 +75,5 @@ export interface ILoginFormState {
   errorUsername: boolean;
   errorPassword: boolean;
   errorPasswordsDiffer: boolean;
-  error?: object;
+  error: object | null;
 }
