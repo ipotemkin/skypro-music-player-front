@@ -1,3 +1,6 @@
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
+import { SerializedError } from '@reduxjs/toolkit';
+
 export interface ITracks {
   count: number;
   next?: string;
@@ -75,5 +78,5 @@ export interface ILoginFormState {
   errorUsername: boolean;
   errorPassword: boolean;
   errorPasswordsDiffer: boolean;
-  error: object | null;
+  error: FetchBaseQueryError | SerializedError | null;
 }
