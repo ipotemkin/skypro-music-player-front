@@ -1,4 +1,8 @@
 import { useFavoriteTracks } from "../../hooks/trackHooks"
 import { Tracks } from "../../components/Tracks/Tracks"
-      
-export const PlaylistPage = () => <Tracks title="Мой плейлист" tracksHook={useFavoriteTracks}/>
+
+import '../../index.css'
+
+export const PlaylistPage = () => <div className="center">
+  <Tracks title="Мой плейлист" tracksHook={useFavoriteTracks}/>
+</div>

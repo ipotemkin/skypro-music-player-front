@@ -66,7 +66,7 @@ export const musicPlayerApi = createApi({
         body: { 'refresh': body },
       })
     }),
-    addTrackToFavorite: build.mutation({
+    addTrackToFavorite: build.mutation<void, number>({
       query: (trackId: number) => ({
         url: `catalog/track/${trackId}/favorite/`,
         method: 'POST',

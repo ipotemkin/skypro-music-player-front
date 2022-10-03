@@ -26,7 +26,7 @@ const Picture: FC<PictureProps> = ({ source }) => {
   const handleLoaded = () => setLoaded(true)
 
   return <>
-    {!loaded && <div className={cnSidebar('img', 'skeleton')} />}
+    {!loaded && <div className={cnSidebar('img', 'skeleton-collection')} />}
     <img
       className={cnSidebar('img')}
       src={source}

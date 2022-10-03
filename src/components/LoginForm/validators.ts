@@ -1,6 +1,7 @@
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { SerializedError } from '@reduxjs/toolkit';
 import { ILoginFormState } from "../../models";
+import { getFirstSentense, truncate } from './utils';
 
   export const isUsernameValid = (value: string) => value.length;
 
@@ -19,7 +20,17 @@ import { ILoginFormState } from "../../models";
       const resArray = [];
       const tempData = Object(error.data);
       for (let item in tempData) resArray.push(tempData[item]);
-      return resArray.join(', ');
+      return truncate(
+        getFirstSentense(resArray.join(', ')),
+        70
+      );  
     }
     return '';
   }
+
+export const getErrorListMessage = (errorList: any[]) => {
+  for(let error of errorList) {
+    if (error) return getErrorMessage(error);
+  }
+  return '';
+}

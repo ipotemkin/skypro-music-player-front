@@ -17,6 +17,12 @@
           box-sizing: border-box;
 }
 
+.center {
+  background-color: #181818;
+  padding-left: calc(50% - 600px);
+  padding-right: calc(50% - 600px);
+}
+
 a,
 a:visited {
   text-decoration: none;
